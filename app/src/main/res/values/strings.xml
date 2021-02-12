@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">Velotracker</string>
+    <string name="tab_text_1">Главная</string>
+    <string name="tab_text_2">Статистика</string>
+    <string name="tab_text_3">История</string>
+    <string name="tab_text_4">Настройки</string>
+
+    <string name="access_token">pk.eyJ1IjoiY2xveSIsImEiOiJja2g3aXBwNTMwZGFvMnRydG02Z2N1cThmIn0.DnBlGpercJNbzT0Nz7UPhw</string>
+    <string name="start_navigating">Start navigating</string>
+    <string name="my_location">My location</string>
+    <string name="user_location_permission_explanation">EXPLANATION_HERE</string>
+    <string name="user_location_permission_not_granted" />
+    <string name="new_location">wqe</string>
+    <string name="title_activity_training">TrainingActivity</string>
+    <!-- Strings used for fragments for navigation -->
+
+    <string name="Time">Длительность</string>
+    <string name="Speed">Скорость(км/ч)</string>
+
+    <string name="History">История</string>
+    <string name="Statistic">Статистика</string>
+    <string name="Settings">Настройки</string>
+    <string name="total_distanceU"><u>  Общее расстояние  </u></string>
+    <string name="total_distance">Общее расстояние</string>
+    <string name="last_record">последняя запись</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="snackbar_text">Разрешение \"Местоположениe\" не предоставлено</string>
+
+
+
+
+    <string name="notification_stop_action_text">Stop</string>
+    <string name="notification_text_title">Awake is running</string>
+    <string name="notification_text_content">Click to open the app</string>
+    <string name="notification_channel_name">Awake Notifications</string>
+    <string name="notification_channel_id">awake_channel_id</string>
+    <string name="notification_title">notification_title11</string>
+    <string name="notification_message">notification_message11</string>
+    <string name="ticker_text">ticker_text</string>
+
+</resources>
