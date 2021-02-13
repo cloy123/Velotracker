@@ -34,17 +34,11 @@ public class CurrentTraining{
     public List<List<LatLng>> Lines = new ArrayList<>();
     public List<LatLng> currentLine = new ArrayList<>();
 
-
     public List<Integer> heights = new ArrayList<>();
 
     public boolean isRunning = true;
 
-    public long Time = 0;
-
-    public Location originLocation = null;
-
-
-
+    //public Location originLocation = null;
 
     public void Pause(){
         isRunning = false;
@@ -72,78 +66,4 @@ public class CurrentTraining{
 
     public CurrentTraining() {
     }
-
-    public static CurrentTraining  LoadTrainingsData(Context context)
-    {
-        InputStreamReader streamReader = null;
-        FileInputStream fileInputStream = null;
-        try{
-            fileInputStream = context.openFileInput(TRAINING_FILE_NAME);
-            streamReader = new InputStreamReader(fileInputStream);
-            Gson gson = new Gson();
-            DataItems dataItems = gson.fromJson(streamReader, DataItems.class);
-            return  dataItems.getTrainings();
-        }
-        catch (IOException ex){
-            ex.printStackTrace();
-        }
-        finally {
-            if (streamReader != null) {
-                try {
-                    streamReader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (fileInputStream != null) {
-                try {
-                    fileInputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return null;
-    }
-
-    public static boolean Save(Context context, CurrentTraining currentTraining)
-    {
-        Gson gson = new Gson();
-        DataItems dataItems = new DataItems();
-        dataItems.setTrainings(currentTraining);
-        String jsonString = gson.toJson(dataItems);
-
-        FileOutputStream fileOutputStream = null;
-
-        try {
-            fileOutputStream = context.openFileOutput(TRAINING_FILE_NAME, Context.MODE_PRIVATE);
-            fileOutputStream.write(jsonString.getBytes());
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (fileOutputStream != null) {
-                try {
-                    fileOutputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return false;
-    }
-
-
-    private static class DataItems {
-        private CurrentTraining currentTraining;
-
-        CurrentTraining getTrainings() {
-            return currentTraining;
-        }
-        void setTrainings(CurrentTraining trainings) {
-            this.currentTraining = currentTraining;
-        }
-    }
-
-
 }

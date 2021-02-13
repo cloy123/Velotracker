@@ -1,7 +1,6 @@
 package com.govnokoder.velotracker;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -12,49 +11,22 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Icon;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.AsyncTask;
-import android.os.Binder;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.os.SystemClock;
-import android.util.Log;
 import android.widget.Chronometer;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 
-import com.govnokoder.velotracker.BL.Controller.TrainingController;
 import com.govnokoder.velotracker.BL.CurrentTraining;
 import com.govnokoder.velotracker.BL.LocListenerInterface;
-import com.govnokoder.velotracker.BL.Model.Date;
-import com.govnokoder.velotracker.BL.Model.Time;
-import com.govnokoder.velotracker.BL.Model.Training;
 import com.govnokoder.velotracker.BL.MyLocListener;
-import com.govnokoder.velotracker.messages.MessageActivityToService;
-import com.govnokoder.velotracker.messages.MessageServiceToActivity;
-import com.mapbox.android.core.location.LocationEngine;
-import com.mapbox.android.core.location.LocationEngineCallback;
-import com.mapbox.android.core.location.LocationEngineProvider;
-import com.mapbox.android.core.location.LocationEngineRequest;
-import com.mapbox.android.core.location.LocationEngineResult;
-import com.mapbox.mapboxsdk.Mapbox;
+import com.govnokoder.velotracker.messages.MessageEvent;
 import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.location.LocationComponent;
-import com.mapbox.mapboxsdk.plugins.annotation.LineManager;
-import com.mapbox.mapboxsdk.plugins.annotation.LineOptions;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 
 public class TrainingService extends Service implements LocListenerInterface {
@@ -63,12 +35,9 @@ public class TrainingService extends Service implements LocListenerInterface {
     private static final String NOTIF_CHANNEL_ID = "Channel_Id";
     private static final int ONGOING_NOTIFICATION_ID = 333;
 
-
     private Location originLocation;
 
-
     private Icon myIcon = null;
-
 
     //Training
     public Chronometer chronometer;
@@ -77,17 +46,10 @@ public class TrainingService extends Service implements LocListenerInterface {
     private long DEFAULT_INTERVAL_IN_MILLISECONDS = 500L;
     private long DEFAULT_MAX_WAIT_TIME = DEFAULT_INTERVAL_IN_MILLISECONDS * 5;
 
-
     CurrentTraining currentTraining;
-
 
     private MyLocListener myLocListener;
     private LocationManager locationManager;
-
-
-    private long startTime;
-    private long stopTime;
-
 
     private void init() {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -158,6 +120,7 @@ public class TrainingService extends Service implements LocListenerInterface {
     @Override
     public void onCreate() {
         super.onCreate();
+        EventBus.getDefault().register(this);
         myIcon = Icon.createWithResource(this, R.drawable.ic_launcher_foreground);
         chronometer = new Chronometer(this);
         chronometer.setBase(SystemClock.elapsedRealtime());
@@ -168,42 +131,27 @@ public class TrainingService extends Service implements LocListenerInterface {
 
     @Override
     public void onDestroy() {
-        //Toast.makeText(this, "service done", Toast.LENGTH_SHORT).show();
-        currentTraining.Time += SystemClock.elapsedRealtime() - startTime;
-        EventBus.getDefault().post(new MessageServiceToActivity(currentTraining));
+        EventBus.getDefault().post(new MessageEvent(currentTraining));
         locationManager.removeUpdates(myLocListener);
-        EventBus.getDefault().unregister(this);
+        //EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 
 
 
-//    // This method will be called when a MessageEvent is posted (in the UI thread for Toast)
-//    @Subscribe(threadMode = ThreadMode.ASYNC)
-//    public void onMessageEvent(MessageActivityToService event) {
-//        currentTraining = event.currentTraining;
-//    }
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        currentTraining = null;
-        startForeground("Сервис работает");
-        currentTraining = CurrentTraining.LoadTrainingsData(this);
-        if(currentTraining == null){
-            stopSelf();
-        }
-        //chronometer = new Chronometer(this);
-//        chronometer.setBase(currentTraining.Time);
-        if(currentTraining.isRunning){
-           // chronometer.start();
-          //  currentTraining.Time = SystemClock.elapsedRealtime();
-            startTime = SystemClock.elapsedRealtime();
-        }
-//       EventBus.getDefault().register(this);
+        startForeground("start");
         init();
         return START_STICKY;
     }
 
+    @Subscribe//(threadMode = ThreadMode.MAIN)
+    public void onEvent(MessageEvent event) {
+        currentTraining = event.currentTraining;
+        EventBus.getDefault().unregister(this);
+        startForeground("Сервис работает");
+    }
 
 
     public void startForeground(String string) {

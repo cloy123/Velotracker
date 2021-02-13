@@ -1,18 +1,9 @@
 package com.govnokoder.velotracker;
 
 import android.annotation.SuppressLint;
-import android.app.ActivityManager;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.os.Message;
-import android.os.Messenger;
-import android.os.Parcel;
-import android.os.RemoteException;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
@@ -23,16 +14,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.govnokoder.velotracker.BL.Controller.TrainingController;
 import com.govnokoder.velotracker.BL.CurrentTraining;
-import com.govnokoder.velotracker.BL.Model.Date;
 import com.govnokoder.velotracker.BL.Model.Time;
 import com.govnokoder.velotracker.BL.Model.Training;
-import com.govnokoder.velotracker.messages.MessageActivityToService;
-import com.govnokoder.velotracker.messages.MessageServiceToActivity;
+import com.govnokoder.velotracker.messages.MessageEvent;
 import com.mapbox.android.core.location.LocationEngine;
 import com.mapbox.android.core.location.LocationEngineCallback;
 import com.mapbox.android.core.location.LocationEngineProvider;
@@ -59,12 +46,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.ref.WeakReference;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.ArrayList;
 import java.util.List;
 
-import static com.govnokoder.velotracker.R.drawable.abc_ic_menu_cut_mtrl_alpha;
 import static com.govnokoder.velotracker.R.drawable.tracking_on;
 
 public class TrainingActivity extends AppCompatActivity implements OnMapReadyCallback, OnCameraTrackingChangedListener{
@@ -101,10 +84,6 @@ public class TrainingActivity extends AppCompatActivity implements OnMapReadyCal
     private boolean isFinish = false;
 
     private Location originLocation;
-
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,16 +152,6 @@ public class TrainingActivity extends AppCompatActivity implements OnMapReadyCal
         chronometer.start();
         currentTraining.isRunning = true;
     }
-
-
-
-    // This method will be called when a MessageEvent is posted (in the UI thread for Toast)
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(MessageServiceToActivity event) {
-        currentTraining = event.currentTraining;
-        chronometer.setBase(currentTraining.Time);
-    }
-
 
     @Override
     public void onMapReady(@NonNull final MapboxMap mapboxMap) {
@@ -280,7 +249,6 @@ public class TrainingActivity extends AppCompatActivity implements OnMapReadyCal
     protected void onResume() {
         super.onResume();
         mapView.onResume();
-        //EventBus.getDefault().post(new MessageActivityToService(currentTraining));
         Intent intent = new Intent(this, TrainingService.class);
         stopService(intent);
         //TODO тут забрать у сервиса экземпляр currentActivity
@@ -289,19 +257,18 @@ public class TrainingActivity extends AppCompatActivity implements OnMapReadyCal
     @Override
     protected void onPause() {
         super.onPause();
+        EventBus.getDefault().unregister(this);
         mapView.onPause();
         if(!isFinish){
-            currentTraining.Time = chronometer.getBase();
-            CurrentTraining.Save(this, currentTraining);
             Intent intent = new Intent(this, TrainingService.class);
             startForegroundService(intent);
-            //EventBus.getDefault().post(new MessageActivityToService(currentTraining));
+            finish();
         }
         else {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
-            //TODO тут передать сервису экземпляр currentActivity
+        //TODO тут передать сервису экземпляр currentActivity
     }
 
     @Override
@@ -310,7 +277,7 @@ public class TrainingActivity extends AppCompatActivity implements OnMapReadyCal
             locationEngine.removeLocationUpdates(callback);
         }
         mapView.onStop();
-        EventBus.getDefault().unregister(this);
+        // EventBus.getDefault().unregister(this);
         super.onStop();
     }
 
@@ -318,6 +285,12 @@ public class TrainingActivity extends AppCompatActivity implements OnMapReadyCal
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         mapView.onSaveInstanceState(outState);
+    }
+
+    @Subscribe//(threadMode = ThreadMode.MAIN)
+    public void onEvent(MessageEvent event) {
+        currentTraining = event.currentTraining;
+        //EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -334,6 +307,9 @@ public class TrainingActivity extends AppCompatActivity implements OnMapReadyCal
             locationEngine.removeLocationUpdates(callback);
         }
         mapView.onDestroy();
+        if(!isFinish){
+            EventBus.getDefault().post(new MessageEvent(currentTraining));
+        }
     }
 
     @Override
