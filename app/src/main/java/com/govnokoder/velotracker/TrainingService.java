@@ -27,6 +27,7 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 
 public class TrainingService extends Service implements LocListenerInterface {
@@ -35,7 +36,7 @@ public class TrainingService extends Service implements LocListenerInterface {
     private static final String NOTIF_CHANNEL_ID = "Channel_Id";
     private static final int ONGOING_NOTIFICATION_ID = 333;
 
-    private Location originLocation;
+    //private Location originLocation;
 
     private Icon myIcon = null;
 
@@ -79,8 +80,8 @@ public class TrainingService extends Service implements LocListenerInterface {
 
                     double speed = location.getSpeed() * 3.6;
                     double distance = 0;
-                    if(originLocation != null) {
-                        distance = originLocation.distanceTo(location)/1000;
+                    if(currentTraining.originLocation != null) {
+                        distance = currentTraining.originLocation.distanceTo(location)/1000;
                     }
                     int height = (int)location.getAltitude();
 
@@ -106,7 +107,7 @@ public class TrainingService extends Service implements LocListenerInterface {
                     currentTraining.AverageSpeed = 0;
 
                 }
-                originLocation = location;
+                currentTraining.originLocation = location;
             }
         }
     }
@@ -121,6 +122,11 @@ public class TrainingService extends Service implements LocListenerInterface {
     public void onCreate() {
         super.onCreate();
         EventBus.getDefault().register(this);
+        currentTraining = EventBus.getDefault().getStickyEvent(MessageEvent.class).currentTraining;
+        if(currentTraining != null){
+            EventBus.getDefault().removeAllStickyEvents();
+            EventBus.getDefault().unregister(this);
+        }
         myIcon = Icon.createWithResource(this, R.drawable.ic_launcher_foreground);
         chronometer = new Chronometer(this);
         chronometer.setBase(SystemClock.elapsedRealtime());
@@ -131,13 +137,11 @@ public class TrainingService extends Service implements LocListenerInterface {
 
     @Override
     public void onDestroy() {
-        EventBus.getDefault().post(new MessageEvent(currentTraining));
+        EventBus.getDefault().postSticky(new MessageEvent(currentTraining));
         locationManager.removeUpdates(myLocListener);
         //EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
-
-
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -146,7 +150,7 @@ public class TrainingService extends Service implements LocListenerInterface {
         return START_STICKY;
     }
 
-    @Subscribe//(threadMode = ThreadMode.MAIN)
+    @Subscribe(sticky = true, threadMode = ThreadMode.POSTING)
     public void onEvent(MessageEvent event) {
         currentTraining = event.currentTraining;
         EventBus.getDefault().unregister(this);
@@ -158,9 +162,10 @@ public class TrainingService extends Service implements LocListenerInterface {
         String CHANNEL_DEFAULT_IMPORTANCE = createChannel(this);
 
         Intent notificationIntent = new Intent(this, TrainingActivity.class);
+
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 1010, notificationIntent, 0);
 
-        Intent intent = new Intent(this, TrainingActivity.class);
+        //Intent intent = new Intent(this, MainActivity.class);
         //PendingIntent pendingIntent1 = PendingIntent.getActivity(this, ONGOING_NOTIFICATION_ID, intent, 0);
 
         //Notification.Action action1 = new Notification.Action.Builder(myIcon, "Stop", pendingIntent).build();

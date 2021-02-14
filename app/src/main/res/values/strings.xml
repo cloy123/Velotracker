@@ -27,8 +27,6 @@
     <string name="snackbar_text">Разрешение \"Местоположениe\" не предоставлено</string>
 
 
-
-
     <string name="notification_stop_action_text">Stop</string>
     <string name="notification_text_title">Awake is running</string>
     <string name="notification_text_content">Click to open the app</string>
@@ -37,5 +35,6 @@
     <string name="notification_title">notification_title11</string>
     <string name="notification_message">notification_message11</string>
     <string name="ticker_text">ticker_text</string>
+    <string name="title_activity_training2">TrainingActivity2</string>
 
 </resources>

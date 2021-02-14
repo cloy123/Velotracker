@@ -38,7 +38,7 @@ public class CurrentTraining{
 
     public boolean isRunning = true;
 
-    //public Location originLocation = null;
+    public Location originLocation = null;
 
     public void Pause(){
         isRunning = false;

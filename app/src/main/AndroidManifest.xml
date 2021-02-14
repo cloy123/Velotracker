@@ -4,26 +4,31 @@
     package="com.govnokoder.velotracker">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
-
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Velotracker">
-        <activity android:name=".SettingsActivity" />
-        <activity android:name=".LookTraining" />
+
         <activity
             android:name=".TrainingActivity"
-            android:label="@string/title_activity_training"
-            android:screenOrientation="portrait" />
+            android:label="@string/title_activity_training2"
+            android:theme="@style/Theme.Velotracker.NoActionBar"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".SettingsActivity" />
+
+        <activity android:name=".LookTraining" />
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -35,10 +40,10 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".TrainingService"
+        <service
+            android:name=".TrainingService"
             android:enabled="true"
             android:exported="true" />
-
     </application>
 
 </manifest>

@@ -1,27 +1,18 @@
 package com.govnokoder.velotracker;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.location.LocationManager;
-import android.location.LocationProvider;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.Settings;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
@@ -39,17 +30,6 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.govnokoder.velotracker.ui.main.PageStart;
 import com.govnokoder.velotracker.ui.main.ViewPagerAdapter;
-import com.mapbox.android.core.permissions.PermissionsManager;
-
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import java.io.File;
-import java.io.IOException;
-import java.security.Permission;
-import java.security.Permissions;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements PageStart.onSomeEventListener {
 
@@ -137,6 +117,17 @@ public class MainActivity extends AppCompatActivity implements PageStart.onSomeE
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+//        try {
+//            if(EventBus.getDefault().getStickyEvent(MessageEvent.class).currentTraining != null){
+//                Intent intent = new Intent(getApplicationContext(), TrainingActivity2.class);
+//                startActivity(intent);
+//            }
+//        }catch (Exception ignored){}
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         boolean allowed = false;
         String currentPer = permissions[0];
@@ -203,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements PageStart.onSomeE
                 return;
             }
         }
-        Intent intent = new Intent(getApplicationContext(), TrainingActivity.class);
+        Intent intent = new Intent(this, TrainingActivity.class);
         startActivity(intent);
     }
 
