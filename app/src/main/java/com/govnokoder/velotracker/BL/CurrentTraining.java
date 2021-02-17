@@ -29,7 +29,8 @@ public class CurrentTraining{
 
     public double WayLength = 0;//в *.***км
     public double MaxSpeed = 0;
-    public double AverageSpeed = 0;
+    public double currentSpeed = 0;
+    public double averageSpeed = 0;
 
     public List<List<LatLng>> Lines = new ArrayList<>();
     public List<LatLng> currentLine = new ArrayList<>();
@@ -55,12 +56,12 @@ public class CurrentTraining{
 
     public void StopAndSave(Context context, Time time) {
         TrainingController trainingController = new TrainingController(context);
-        AverageSpeed = ((WayLength*1000) / (time.Hours*3600 + time.Minutes*60 + time.Seconds))*3.6;
+        averageSpeed = ((WayLength*1000) / (time.Hours*3600 + time.Minutes*60 + time.Seconds))*3.6;
         if(Lines.size() == 0) {
             return;
         }
         LatLng startPoint = new LatLng(Lines.get(0).get(0).getLatitude(), Lines.get(0).get(0).getLongitude());
-        trainingController.setNewTrainingData(context, Date, time, WayLength, MaxSpeed, AverageSpeed, Lines, startPoint, heights);
+        trainingController.setNewTrainingData(context, Date, time, WayLength, MaxSpeed, averageSpeed, Lines, startPoint, heights);
     }
 
 

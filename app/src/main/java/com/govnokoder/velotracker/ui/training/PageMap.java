@@ -401,7 +401,7 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
                             if(speed > fragment.currentTraining.MaxSpeed) {
                                 fragment.currentTraining.MaxSpeed = speed;
                             }
-                            fragment.currentTraining.AverageSpeed = speed;
+                            fragment.currentTraining.currentSpeed = speed;
                             //длина пути
                             fragment.currentTraining.WayLength += distance;
                             //путь
@@ -426,7 +426,7 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
                         }
                     }else {
                         //скорость
-                        fragment.currentTraining.AverageSpeed = 0;
+                        fragment.currentTraining.currentSpeed = 0;
                         fragment.CurrentSpeedTextView.setText("0");
 
                     }

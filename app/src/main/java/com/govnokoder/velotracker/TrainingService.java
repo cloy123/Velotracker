@@ -95,7 +95,7 @@ public class TrainingService extends Service implements LocListenerInterface {
                         if(speed > currentTraining.MaxSpeed) {
                             currentTraining.MaxSpeed = speed;
                         }
-                        currentTraining.AverageSpeed = speed;
+                        currentTraining.currentSpeed = speed;
                         //длина пути
                         currentTraining.WayLength += distance;
                         //путь
@@ -108,7 +108,7 @@ public class TrainingService extends Service implements LocListenerInterface {
                     }
                 }else {
                     //скорость
-                    currentTraining.AverageSpeed = 0;
+                    currentTraining.currentSpeed = 0;
 
                 }
                 currentTraining.originLocation = location;
