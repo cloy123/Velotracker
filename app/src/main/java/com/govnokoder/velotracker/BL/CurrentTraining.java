@@ -25,7 +25,7 @@ public class CurrentTraining{
     private static final String TRAINING_FILE_NAME = "CurrentTraining.json";
 
     public Date Date = new Date(0,0,0);
-    public Time AllTime = new Time(0,0,0);
+    public Time Time = new Time(0,0,0);
 
     public double WayLength = 0;//в *.***км
     public double MaxSpeed = 0;

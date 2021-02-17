@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Icon;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.widget.Chronometer;
@@ -20,6 +21,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 
 import com.govnokoder.velotracker.BL.CurrentTraining;
+import com.govnokoder.velotracker.BL.Model.Time;
 import com.govnokoder.velotracker.BL.LocListenerInterface;
 import com.govnokoder.velotracker.BL.MyLocListener;
 import com.govnokoder.velotracker.messages.MessageEvent;
@@ -51,6 +53,8 @@ public class TrainingService extends Service implements LocListenerInterface {
 
     private MyLocListener myLocListener;
     private LocationManager locationManager;
+
+    private CountDownTimer countDownTimer;
 
     private void init() {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -98,7 +102,7 @@ public class TrainingService extends Service implements LocListenerInterface {
                         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                         currentTraining.currentLine.add(latLng);
 
-                        startForeground(Double.toString(location.getLongitude()));
+                        //startForeground(Double.toString(location.getLongitude()));
                         //Высота
                         currentTraining.heights.add(height);
                     }
@@ -128,9 +132,21 @@ public class TrainingService extends Service implements LocListenerInterface {
             EventBus.getDefault().unregister(this);
         }
         myIcon = Icon.createWithResource(this, R.drawable.ic_launcher_foreground);
-        chronometer = new Chronometer(this);
-        chronometer.setBase(SystemClock.elapsedRealtime());
-        chronometer.start();
+        countDownTimer = new CountDownTimer(Long.MAX_VALUE, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                if(currentTraining != null){
+                    currentTraining.Time.addSecond();
+                    startForeground(currentTraining.toString());
+                }
+            }
+
+            @Override
+            public void onFinish() {
+                countDownTimer.start();
+            }
+        };
+        countDownTimer.start();
     }
 
 

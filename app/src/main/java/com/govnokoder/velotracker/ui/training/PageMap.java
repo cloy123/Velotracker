@@ -304,6 +304,7 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
     public void onStop() {
         super.onStop();
         if(!isFinish){
+            currentTraining.Time = Time.getSecondsFromDurationString(chronometer.getText().toString());;
             Intent intent = new Intent(getActivity().getApplicationContext(), TrainingService.class);
             getActivity().startForegroundService(intent);
             EventBus.getDefault().postSticky(new MessageEvent(currentTraining));

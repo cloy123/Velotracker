@@ -25,6 +25,23 @@ public class Time {
         Seconds = 0;
     }
 
+    public void addSecond(){
+        if(Seconds == 59){
+            Seconds =0;
+            addMinute();
+        }
+        else {
+            Seconds +=1;
+        }
+    }
+
+    private void addMinute(){
+        if(Minutes == 59){
+            Minutes = 0;
+            Hours +=1;
+        }
+    }
+
     public int getAllSeconds() {
         return Seconds + (Minutes*60) + (Hours*3600);
     }
