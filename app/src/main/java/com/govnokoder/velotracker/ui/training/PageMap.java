@@ -23,6 +23,7 @@ import androidx.fragment.app.Fragment;
 import com.govnokoder.velotracker.BL.CurrentTraining;
 import com.govnokoder.velotracker.BL.Model.Time;
 import com.govnokoder.velotracker.BL.Model.Training;
+import com.govnokoder.velotracker.BL.MyChronometer;
 import com.govnokoder.velotracker.MainActivity;
 import com.govnokoder.velotracker.R;
 import com.govnokoder.velotracker.TrainingService;
@@ -55,6 +56,8 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
+import android.os.CountDownTimer;
+
 import static com.govnokoder.velotracker.R.drawable.tracking_on;
 
 
@@ -78,7 +81,9 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
 
     private LineManager lineManager;
 
-    private Chronometer chronometer;
+    private MyChronometer myChronometer;
+
+    private CountDownTimer countDownTimer;
 
     private long lastPause;
 
@@ -119,6 +124,9 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
 
+        myChronometer = result.findViewById(R.id.chronometer);
+        myChronometer.Start();
+
         CurrentSpeedTextView = (TextView) result.findViewById(R.id.CurrentSpeedText);
         WayLengthTextView = (TextView) result.findViewById(R.id.WayLengthText);
 
@@ -136,7 +144,7 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
                 StopButton.setVisibility(View.VISIBLE);
 
                 lastPause = SystemClock.elapsedRealtime();
-                chronometer.stop();
+                myChronometer.Stop();
                 currentTraining.Pause();
             }
         });
@@ -151,10 +159,8 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
                 ResumeButton.setEnabled(false);
                 StopButton.setVisibility(View.INVISIBLE);
                 StopButton.setEnabled(false);
-
                 currentTraining.Resume();
-                chronometer.setBase(chronometer.getBase() + SystemClock.elapsedRealtime() - lastPause);
-                chronometer.start();
+                myChronometer.Start();
             }
         });
 
@@ -163,7 +169,8 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
             @Override
             public void onClick(View v) {
                 //TODO проверка на то сколько прошло времени
-                Time time = Time.getSecondsFromDurationString(chronometer.getText().toString());
+                Time time = myChronometer.getTime();
+                myChronometer.Stop();
                 currentTraining.StopAndSave(getContext(), time);
                 isFinish = true;
                 getActivity().finish();
@@ -171,9 +178,7 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
         });
         currentTraining.Date.setCurrentDate();
 
-        chronometer = (Chronometer) result.findViewById(R.id.chronometer);
-        chronometer.setBase(SystemClock.elapsedRealtime());
-        chronometer.start();
+
         currentTraining.isRunning = true;
 
         LocationButton = result.findViewById(R.id.locationButton);
@@ -281,6 +286,9 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
             if(currentTraining != null){
                 EventBus.getDefault().removeAllStickyEvents();
                 EventBus.getDefault().unregister(this);
+                myChronometer.setTime(currentTraining.Time);
+                myChronometer.Start();
+                Toast.makeText(getContext(), String.valueOf(currentTraining.chronometerTime + SystemClock.elapsedRealtime() - currentTraining.startServiceTime), Toast.LENGTH_LONG).show();
             }
         }catch (Exception ignored){
         }
@@ -304,7 +312,7 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
     public void onStop() {
         super.onStop();
         if(!isFinish){
-            currentTraining.Time = Time.getSecondsFromDurationString(chronometer.getText().toString());;
+            currentTraining.Time = myChronometer.getTime();
             Intent intent = new Intent(getActivity().getApplicationContext(), TrainingService.class);
             getActivity().startForegroundService(intent);
             EventBus.getDefault().postSticky(new MessageEvent(currentTraining));
@@ -312,6 +320,7 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
         }
         else {
             currentTraining = new CurrentTraining();
+            myChronometer.Start();
             EventBus.getDefault().removeAllStickyEvents();
             Intent intent = new Intent(getActivity().getApplicationContext(), MainActivity.class);
             startActivity(intent);

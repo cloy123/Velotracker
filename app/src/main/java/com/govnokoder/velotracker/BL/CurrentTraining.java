@@ -41,6 +41,9 @@ public class CurrentTraining{
 
     public Location originLocation = null;
 
+    public long startServiceTime = 0;
+    public long chronometerTime;
+
     public void Pause(){
         isRunning = false;
         List<LatLng> q = new ArrayList<>();

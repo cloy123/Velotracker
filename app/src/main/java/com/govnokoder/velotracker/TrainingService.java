@@ -136,8 +136,10 @@ public class TrainingService extends Service implements LocListenerInterface {
             @Override
             public void onTick(long millisUntilFinished) {
                 if(currentTraining != null){
-                    currentTraining.Time.addSecond();
-                    startForeground(currentTraining.toString());
+                    if(currentTraining.isRunning){
+                        currentTraining.Time.addSecond();
+                    }
+                    startForeground(currentTraining.Time.toString());
                 }
             }
 
@@ -153,6 +155,7 @@ public class TrainingService extends Service implements LocListenerInterface {
 
     @Override
     public void onDestroy() {
+        countDownTimer.cancel();
         EventBus.getDefault().postSticky(new MessageEvent(currentTraining));
         locationManager.removeUpdates(myLocListener);
         //EventBus.getDefault().unregister(this);
