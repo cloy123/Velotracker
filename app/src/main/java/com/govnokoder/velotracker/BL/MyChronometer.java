@@ -13,11 +13,14 @@ import com.govnokoder.velotracker.BL.Model.Time;
 public class MyChronometer extends androidx.appcompat.widget.AppCompatTextView {
 
     Time time = new Time(0,0,0);
+    boolean isRunning = false;
     boolean isPause = true;
     CountDownTimer countDownTimer = new CountDownTimer(Long.MAX_VALUE, 1000) {
         @Override
         public void onTick(long millisUntilFinished) {
-            time.addSecond();
+            if(!isPause){
+                time.addSecond();
+            }
             String s = "";
             if(time.Hours != 0){
                 if(time.Hours < 10){
@@ -36,14 +39,12 @@ public class MyChronometer extends androidx.appcompat.widget.AppCompatTextView {
             }else {
                 s += time.Seconds;
             }
-            setText(time.toString());
+            setText(s);
         }
 
         @Override
         public void onFinish() {
-            if(!isPause){
                 countDownTimer.start();
-            }
         }
     };
 
@@ -68,14 +69,24 @@ public class MyChronometer extends androidx.appcompat.widget.AppCompatTextView {
     }
 
     public void Start(){
-        if(isPause){
+        if(!isRunning){
             countDownTimer.start();
         }
+        isPause = false;
+        isRunning = true;
+    }
+
+    public void Pause(){
+        isPause = true;
+    }
+
+    public void Resume(){
+        isPause = false;
     }
 
     public void Stop(){
-        if(!isPause){
-            countDownTimer.cancel();
-        }
+        countDownTimer.cancel();
+        isPause = true;
+        isRunning = false;
     }
 }

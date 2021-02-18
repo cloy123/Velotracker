@@ -39,6 +39,8 @@ public class Time {
         if(Minutes == 59){
             Minutes = 0;
             Hours +=1;
+        } else{
+            Minutes += 1;
         }
     }
 

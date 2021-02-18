@@ -19,6 +19,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.govnokoder.velotracker.BL.CurrentTraining;
 import com.govnokoder.velotracker.BL.Model.Time;
@@ -125,57 +126,19 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
         mapView.getMapAsync(this);
 
         myChronometer = result.findViewById(R.id.chronometer);
-        myChronometer.Start();
+        //myChronometer.Start();
 
         CurrentSpeedTextView = (TextView) result.findViewById(R.id.CurrentSpeedText);
         WayLengthTextView = (TextView) result.findViewById(R.id.WayLengthText);
 
         PauseButton = (Button) result.findViewById(R.id.PauseButton);
-        PauseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PauseButton.setVisibility(View.INVISIBLE);
-                PauseButton.setEnabled(false);
-
-                ResumeButton.setEnabled(true);
-                ResumeButton.setVisibility(View.VISIBLE);
-
-                StopButton.setEnabled(true);
-                StopButton.setVisibility(View.VISIBLE);
-
-                lastPause = SystemClock.elapsedRealtime();
-                myChronometer.Stop();
-                currentTraining.Pause();
-            }
-        });
-
+        PauseButton.setOnClickListener(this::onClickPauseButton);
         ResumeButton = (Button) result.findViewById(R.id.ResumeButton);
-        ResumeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PauseButton.setVisibility(View.VISIBLE);
-                PauseButton.setEnabled(true);
-                ResumeButton.setVisibility(View.INVISIBLE);
-                ResumeButton.setEnabled(false);
-                StopButton.setVisibility(View.INVISIBLE);
-                StopButton.setEnabled(false);
-                currentTraining.Resume();
-                myChronometer.Start();
-            }
-        });
-
+        ResumeButton.setOnClickListener(this::onClickResumeButton);
         StopButton = (Button) result.findViewById(R.id.StopButton);
-        StopButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO проверка на то сколько прошло времени
-                Time time = myChronometer.getTime();
-                myChronometer.Stop();
-                currentTraining.StopAndSave(getContext(), time);
-                isFinish = true;
-                getActivity().finish();
-            }
-        });
+        StopButton.setOnClickListener(this::onClickStopButton);
+
+
         currentTraining.Date.setCurrentDate();
 
 
@@ -183,6 +146,41 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
 
         LocationButton = result.findViewById(R.id.locationButton);
         return result;
+    }
+
+    private void onClickPauseButton(View v){
+        PauseButton.setVisibility(View.INVISIBLE);
+        PauseButton.setEnabled(false);
+        ResumeButton.setEnabled(true);
+        ResumeButton.setVisibility(View.VISIBLE);
+        StopButton.setEnabled(true);
+        StopButton.setVisibility(View.VISIBLE);
+        if(currentTraining != null && currentTraining.isRunning){
+            myChronometer.Pause();
+            currentTraining.Pause();
+        }
+    }
+
+    private void onClickResumeButton(View v){
+        PauseButton.setVisibility(View.VISIBLE);
+        PauseButton.setEnabled(true);
+        ResumeButton.setVisibility(View.INVISIBLE);
+        ResumeButton.setEnabled(false);
+        StopButton.setVisibility(View.INVISIBLE);
+        StopButton.setEnabled(false);
+        if(currentTraining != null && !currentTraining.isRunning){
+            currentTraining.Resume();
+            myChronometer.Resume();
+        }
+    }
+
+    private void onClickStopButton(View v){
+        //TODO проверка на то сколько прошло времени
+        Time time = myChronometer.getTime();
+        myChronometer.Stop();
+        currentTraining.StopAndSave(getContext(), time);
+        isFinish = true;
+        getActivity().finish();
     }
 
     @Override
@@ -287,9 +285,14 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
                 EventBus.getDefault().removeAllStickyEvents();
                 EventBus.getDefault().unregister(this);
                 myChronometer.setTime(currentTraining.Time);
-                myChronometer.Start();
+                if(currentTraining.isRunning){
+                    myChronometer.Start();
+                }else {
+                    onClickPauseButton(PauseButton);
+                }
             }
         }catch (Exception ignored){
+            myChronometer.Start();
         }
         //TODO тут забрать у сервиса экземпляр currentActivity
     }
@@ -303,6 +306,8 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
     @Subscribe(sticky = true, threadMode = ThreadMode.POSTING)
     public void onEvent(MessageEvent event) {
         currentTraining = event.currentTraining;
+        myChronometer.setTime(currentTraining.Time);
+        //myChronometer.Start();
         EventBus.getDefault().unregister(this);
     }
 
@@ -311,6 +316,7 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
         super.onStop();
         if(!isFinish){
             currentTraining.Time = myChronometer.getTime();
+            myChronometer.Stop();
             Intent intent = new Intent(getContext(), TrainingService.class);
             getActivity().startForegroundService(intent);
             EventBus.getDefault().postSticky(new MessageEvent(currentTraining));
@@ -345,6 +351,7 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
     @Override
     public void onDestroy() {
         // Prevent leaks
+        myChronometer.Stop();
         if (locationEngine != null) {
             locationEngine.removeLocationUpdates(callback);
         }
@@ -440,8 +447,11 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
                     fragment.currentTraining.originLocation = location;
                     //местоположение
                     fragment.mapboxMap.getLocationComponent().forceLocationUpdate(location);
+
                 }
             }
+
+
 
         }
 
