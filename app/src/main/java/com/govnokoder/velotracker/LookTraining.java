@@ -109,9 +109,6 @@ public class LookTraining extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    private void setCameraPosition(Location location) {
-        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 17.0));
-    }
 
     private void setCameraPositionLoc(LatLng latLng) {
         mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17.0));

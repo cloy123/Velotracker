@@ -279,7 +279,7 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
     public void onResume() {
         super.onResume();
         mapView.onResume();
-        Intent intent = new Intent(getActivity().getApplicationContext(), TrainingService.class);
+        Intent intent = new Intent(getContext(), TrainingService.class);
         getActivity().stopService(intent);
         try {
             currentTraining = EventBus.getDefault().getStickyEvent(MessageEvent.class).currentTraining;
@@ -288,7 +288,6 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
                 EventBus.getDefault().unregister(this);
                 myChronometer.setTime(currentTraining.Time);
                 myChronometer.Start();
-                Toast.makeText(getContext(), String.valueOf(currentTraining.chronometerTime + SystemClock.elapsedRealtime() - currentTraining.startServiceTime), Toast.LENGTH_LONG).show();
             }
         }catch (Exception ignored){
         }
@@ -299,7 +298,6 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
     public void onPause() {
         super.onPause();
         mapView.onPause();
-        //TODO тут передать сервису экземпляр currentActivity
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.POSTING)
@@ -313,14 +311,14 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
         super.onStop();
         if(!isFinish){
             currentTraining.Time = myChronometer.getTime();
-            Intent intent = new Intent(getActivity().getApplicationContext(), TrainingService.class);
+            Intent intent = new Intent(getContext(), TrainingService.class);
             getActivity().startForegroundService(intent);
             EventBus.getDefault().postSticky(new MessageEvent(currentTraining));
             getActivity().finish();
         }
         else {
             currentTraining = new CurrentTraining();
-            myChronometer.Start();
+            myChronometer.Stop();
             EventBus.getDefault().removeAllStickyEvents();
             Intent intent = new Intent(getActivity().getApplicationContext(), MainActivity.class);
             startActivity(intent);
@@ -465,6 +463,4 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
             }
         }
     }
-
-
 }

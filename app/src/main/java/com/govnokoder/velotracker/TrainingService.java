@@ -33,21 +33,11 @@ import org.greenrobot.eventbus.ThreadMode;
 
 
 public class TrainingService extends Service implements LocListenerInterface {
-
-    private static final int NOTIF_ID = 1;
-    private static final String NOTIF_CHANNEL_ID = "Channel_Id";
     private static final int ONGOING_NOTIFICATION_ID = 333;
-
-    //private Location originLocation;
-
     private Icon myIcon = null;
-
-    //Training
-    public Chronometer chronometer;
 
     //Location
     private long DEFAULT_INTERVAL_IN_MILLISECONDS = 500L;
-    private long DEFAULT_MAX_WAIT_TIME = DEFAULT_INTERVAL_IN_MILLISECONDS * 5;
 
     CurrentTraining currentTraining;
 
@@ -61,13 +51,6 @@ public class TrainingService extends Service implements LocListenerInterface {
         myLocListener = new MyLocListener();
         myLocListener.setLocListenerInterface(this);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return;
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, DEFAULT_INTERVAL_IN_MILLISECONDS, 1, myLocListener);
@@ -78,8 +61,6 @@ public class TrainingService extends Service implements LocListenerInterface {
 
         if (currentTraining != null) {
             if (location != null) {
-
-                //TODO доделать нормально
                 if(location.hasSpeed()){
 
                     double speed = location.getSpeed() * 3.6;
@@ -109,7 +90,6 @@ public class TrainingService extends Service implements LocListenerInterface {
                 }else {
                     //скорость
                     currentTraining.currentSpeed = 0;
-
                 }
                 currentTraining.originLocation = location;
             }
@@ -131,7 +111,7 @@ public class TrainingService extends Service implements LocListenerInterface {
             EventBus.getDefault().removeAllStickyEvents();
             EventBus.getDefault().unregister(this);
         }
-        myIcon = Icon.createWithResource(this, R.drawable.ic_launcher_foreground);
+        myIcon = Icon.createWithResource(this, R.mipmap.ic_launcher);
         countDownTimer = new CountDownTimer(Long.MAX_VALUE, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -142,13 +122,16 @@ public class TrainingService extends Service implements LocListenerInterface {
                     startForeground(currentTraining.Time.toString());
                 }
             }
-
             @Override
             public void onFinish() {
-                countDownTimer.start();
+                if(currentTraining.isRunning){
+                    countDownTimer.start();
+                }
             }
         };
-        countDownTimer.start();
+        if(currentTraining != null && currentTraining.isRunning){
+            countDownTimer.start();
+        }
     }
 
 
@@ -158,7 +141,6 @@ public class TrainingService extends Service implements LocListenerInterface {
         countDownTimer.cancel();
         EventBus.getDefault().postSticky(new MessageEvent(currentTraining));
         locationManager.removeUpdates(myLocListener);
-        //EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 
@@ -203,14 +185,13 @@ public class TrainingService extends Service implements LocListenerInterface {
                         .build();
 // Notification ID cannot be 0.
         startForeground(ONGOING_NOTIFICATION_ID, notification);
-
     }
 
     private String createChannel(Service context){
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         String id = context.getString(R.string.notification_channel_id);
         String name = context.getString(R.string.notification_channel_name);
-        int importance = NotificationManager.IMPORTANCE_HIGH;//.IMPORTANCE_DEFAULT
+        int importance = NotificationManager.IMPORTANCE_DEFAULT;//.IMPORTANCE_DEFAULT IMPORTANCE_HIGH
         notificationManager.createNotificationChannel(new NotificationChannel(id, name, importance));
         return id;
     }

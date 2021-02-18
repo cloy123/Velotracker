@@ -18,6 +18,24 @@ public class MyChronometer extends androidx.appcompat.widget.AppCompatTextView {
         @Override
         public void onTick(long millisUntilFinished) {
             time.addSecond();
+            String s = "";
+            if(time.Hours != 0){
+                if(time.Hours < 10){
+                    s += "0" + time.Hours + ":";
+                }else {
+                    s += time.Hours + ":";
+                }
+            }
+            if(time.Minutes < 10){
+                s += "0" + time.Minutes + ":";
+            }else {
+                s += time.Minutes + ":";
+            }
+            if (time.Seconds < 10) {
+                s += "0" + time.Seconds;
+            }else {
+                s += time.Seconds;
+            }
             setText(time.toString());
         }
 
@@ -60,5 +78,4 @@ public class MyChronometer extends androidx.appcompat.widget.AppCompatTextView {
             countDownTimer.cancel();
         }
     }
-
 }
