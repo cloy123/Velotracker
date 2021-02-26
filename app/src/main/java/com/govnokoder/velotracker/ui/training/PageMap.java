@@ -126,6 +126,7 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
         mapView.getMapAsync(this);
 
         myChronometer = result.findViewById(R.id.chronometer);
+
         //myChronometer.Start();
 
         CurrentSpeedTextView = (TextView) result.findViewById(R.id.CurrentSpeedText);
@@ -138,9 +139,7 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
         StopButton = (Button) result.findViewById(R.id.StopButton);
         StopButton.setOnClickListener(this::onClickStopButton);
 
-
         currentTraining.Date.setCurrentDate();
-
 
         currentTraining.isRunning = true;
 
@@ -294,6 +293,12 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
         }catch (Exception ignored){
             myChronometer.Start();
         }
+        myChronometer.setOnTickListenerInterface(new MyChronometer.OnTickListenerInterface() {
+            @Override
+            public void OnTick(Time time) {
+                EventBus.getDefault().postSticky(currentTraining);
+            }
+        });
         //TODO тут забрать у сервиса экземпляр currentActivity
     }
 
@@ -442,12 +447,10 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
                         //скорость
                         fragment.currentTraining.currentSpeed = 0;
                         fragment.CurrentSpeedTextView.setText("0");
-
                     }
                     fragment.currentTraining.originLocation = location;
                     //местоположение
                     fragment.mapboxMap.getLocationComponent().forceLocationUpdate(location);
-
                 }
             }
 

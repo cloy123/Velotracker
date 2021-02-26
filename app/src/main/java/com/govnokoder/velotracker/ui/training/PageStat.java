@@ -83,6 +83,12 @@ public class PageStat extends Fragment {
     }
 
 
+
+
+
+
+
+
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);

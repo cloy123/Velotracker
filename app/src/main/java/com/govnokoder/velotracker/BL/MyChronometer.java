@@ -10,11 +10,17 @@ import androidx.annotation.Nullable;
 
 import com.govnokoder.velotracker.BL.Model.Time;
 
-public class MyChronometer extends androidx.appcompat.widget.AppCompatTextView {
+public class MyChronometer extends androidx.appcompat.widget.AppCompatTextView{
 
     Time time = new Time(0,0,0);
     boolean isRunning = false;
     boolean isPause = true;
+    OnTickListenerInterface onTickListenerInterface;
+
+    public void setOnTickListenerInterface(OnTickListenerInterface onTickListenerInterface){
+        this.onTickListenerInterface = onTickListenerInterface;
+    }
+
     CountDownTimer countDownTimer = new CountDownTimer(Long.MAX_VALUE, 1000) {
         @Override
         public void onTick(long millisUntilFinished) {
@@ -40,6 +46,7 @@ public class MyChronometer extends androidx.appcompat.widget.AppCompatTextView {
                 s += time.Seconds;
             }
             setText(s);
+            onTickListenerInterface.OnTick(time);
         }
 
         @Override
@@ -89,4 +96,11 @@ public class MyChronometer extends androidx.appcompat.widget.AppCompatTextView {
         isPause = true;
         isRunning = false;
     }
+
+    public interface OnTickListenerInterface{
+        public void OnTick(Time time);
+    }
+
 }
+
+
