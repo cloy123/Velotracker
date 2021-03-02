@@ -4,6 +4,7 @@ import android.content.Context;
 import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.widget.LinearLayout;
 
 import com.google.gson.Gson;
 import com.govnokoder.velotracker.BL.Controller.TrainingController;
@@ -28,29 +29,33 @@ public class CurrentTraining{
     public Time Time = new Time(0,0,0);
 
     public double WayLength = 0;//в *.***км
+
+    public List<Double> SpeedList = new ArrayList<>();
     public double MaxSpeed = 0;
-    public double currentSpeed = 0;
-    public double averageSpeed = 0;
+    public double CurrentSpeed = 0;
+    public double SumSpeed = 0;
+    public double AverageSpeed = 0;
 
     public List<List<LatLng>> Lines = new ArrayList<>();
-    public List<LatLng> currentLine = new ArrayList<>();
+    public List<LatLng> CurrentLine = new ArrayList<>();
 
-    public List<Integer> heights = new ArrayList<>();
+    public List<Long> Heights = new ArrayList<>();
+    public long MaxHeight = Long.MIN_VALUE;
+    public long MinHeight = Long.MAX_VALUE;
+    public long SumHeight = 0;
+    public long AverageHeight = 0;
 
     public boolean isRunning = true;
 
     public Location originLocation = null;
 
-    public long startServiceTime = 0;
-    public long chronometerTime;
-
     public void Pause(){
         isRunning = false;
         List<LatLng> q = new ArrayList<>();
-        for (LatLng latlng: currentLine) {
+        for (LatLng latlng: CurrentLine) {
             q.add(new LatLng(latlng.getLatitude(), latlng.getLongitude()));
         }Lines.add(q);
-        currentLine = new ArrayList<>();
+        CurrentLine = new ArrayList<>();
     }
 
     public void Resume(){
@@ -59,12 +64,12 @@ public class CurrentTraining{
 
     public void StopAndSave(Context context, Time time) {
         TrainingController trainingController = new TrainingController(context);
-        averageSpeed = ((WayLength*1000) / (time.Hours*3600 + time.Minutes*60 + time.Seconds))*3.6;
+        AverageSpeed = ((WayLength*1000) / (time.Hours*3600 + time.Minutes*60 + time.Seconds))*3.6;
         if(Lines.size() == 0) {
             return;
         }
         LatLng startPoint = new LatLng(Lines.get(0).get(0).getLatitude(), Lines.get(0).get(0).getLongitude());
-        trainingController.setNewTrainingData(context, Date, time, WayLength, MaxSpeed, averageSpeed, Lines, startPoint, heights);
+        trainingController.setNewTrainingData(context, Date, time, WayLength, MaxSpeed, AverageSpeed, Lines, startPoint, Heights, AverageHeight, MaxHeight, MinHeight);
     }
 
 

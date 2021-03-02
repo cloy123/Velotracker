@@ -51,7 +51,7 @@ public class TrainingController {
 
     public void setNewTrainingData(Context context, Date date, Time time, double wayLength,
                                    double maxSpeed, double averageSpeed, List<List<LatLng>> lines,
-                                   LatLng startPoint, List<Integer> heights){
+                                   LatLng startPoint, List<Long> heights, long averageHeight, long maxHeight, long minHeight){
         currentTraining = new Training();
         currentTraining.Date = date;
         currentTraining.AllTime = time;
@@ -62,14 +62,10 @@ public class TrainingController {
 
         currentTraining.setStartPoint(startPoint);
 
-        currentTraining.MaxHeight = Collections.max(heights);
-        currentTraining.MinHeight = Collections.min(heights);
-        int averageHeight = 0;
-        for (int h: heights) {
-            averageHeight += h;
-        }
-        averageHeight = averageHeight / heights.size();
+        currentTraining.MaxHeight = maxHeight;
+        currentTraining.MinHeight = minHeight;
         currentTraining.AverageHeight = averageHeight;
+        currentTraining.Heights = heights;
 
         trainings.add(currentTraining);
         Save(context);

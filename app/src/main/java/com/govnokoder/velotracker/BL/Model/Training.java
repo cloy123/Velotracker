@@ -18,9 +18,10 @@ public class Training {
     private double startLatitude;
     private double startLongitude;
 
-    public double MaxHeight;
-    public double MinHeight;
-    public double AverageHeight;
+    public long MaxHeight;
+    public long MinHeight;
+    public long AverageHeight;
+    public List<Long> Heights = new ArrayList<>();
 
     public Time getTemp(String unit){
         if(WayLength > 0 && AllTime != null && AllTime.getAllSeconds() > 0) {

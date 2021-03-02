@@ -15,6 +15,7 @@ public class MyChronometer extends androidx.appcompat.widget.AppCompatTextView{
     Time time = new Time(0,0,0);
     boolean isRunning = false;
     boolean isPause = true;
+    private String stringTime = "00:00";
     OnTickListenerInterface onTickListenerInterface;
 
     public void setOnTickListenerInterface(OnTickListenerInterface onTickListenerInterface){
@@ -27,26 +28,26 @@ public class MyChronometer extends androidx.appcompat.widget.AppCompatTextView{
             if(!isPause){
                 time.addSecond();
             }
-            String s = "";
+            stringTime = "";
             if(time.Hours != 0){
                 if(time.Hours < 10){
-                    s += "0" + time.Hours + ":";
+                    stringTime += "0" + time.Hours + ":";
                 }else {
-                    s += time.Hours + ":";
+                    stringTime += time.Hours + ":";
                 }
             }
             if(time.Minutes < 10){
-                s += "0" + time.Minutes + ":";
+                stringTime += "0" + time.Minutes + ":";
             }else {
-                s += time.Minutes + ":";
+                stringTime += time.Minutes + ":";
             }
             if (time.Seconds < 10) {
-                s += "0" + time.Seconds;
+                stringTime += "0" + time.Seconds;
             }else {
-                s += time.Seconds;
+                stringTime += time.Seconds;
             }
-            setText(s);
             onTickListenerInterface.OnTick(time);
+            setText(stringTime);
         }
 
         @Override

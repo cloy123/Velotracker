@@ -5,15 +5,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.govnokoder.velotracker.BL.CurrentTraining;
 import com.govnokoder.velotracker.BL.Model.Training;
 import com.govnokoder.velotracker.R;
 import com.govnokoder.velotracker.messages.MessageEvent;
+import com.govnokoder.velotracker.messages.SharedViewModel;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -22,10 +26,14 @@ import org.greenrobot.eventbus.ThreadMode;
 public class PageStat extends Fragment {
     private int pageNumber;
 
-    private TextView timeText, destText, speedText, averageSpeedText, maxSpeedText, tempText, heightText, averageHeightText,
+    private TextView timeText, wayLengthText, speedText, averageSpeedText, maxSpeedText, heightText, averageHeightText,
                         minHeightText, maxHeightText;
 
-    private CurrentTraining currentTraining;
+    //private CurrentTraining currentTraining;
+
+    public void setCurrentTraining(CurrentTraining currentTraining) {
+        timeText.setText(currentTraining.Time.toString());
+    }
 
     public static PageStat newInstance(int page){
         PageStat fragment = new PageStat();
@@ -48,11 +56,10 @@ public class PageStat extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View result = inflater.inflate(R.layout.training_stat_page, container, false);
         timeText = result.findViewById(R.id.TimeText);
-        destText = result.findViewById(R.id.distanceText);
+        wayLengthText = result.findViewById(R.id.wayLengthText);
         speedText = result.findViewById(R.id.speedText);
         averageSpeedText = result.findViewById(R.id.averageSpeedText);
         maxSpeedText = result.findViewById(R.id.maxSpeedText);
-        tempText = result.findViewById(R.id.tempText);
         heightText = result.findViewById(R.id.heightText);
         averageHeightText = result.findViewById(R.id.averageHeightText);
         minHeightText = result.findViewById(R.id.minHeightText);
@@ -61,34 +68,33 @@ public class PageStat extends Fragment {
     }
 
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
     public void onResume() {
-        EventBus.getDefault().register(this);
         super.onResume();
+        SharedViewModel model = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+        model.message.observe(getViewLifecycleOwner(), new Observer<CurrentTraining>() {
+            @Override
+            public void onChanged(CurrentTraining currentTraining) {
+                if(currentTraining != null){
+                    timeText.setText(currentTraining.Time.toString());
+                    wayLengthText.setText(String.valueOf(Training.round(currentTraining.WayLength, 2)));
+                    speedText.setText(String.valueOf(Training.round(currentTraining.CurrentSpeed, 1)));
+                    averageSpeedText.setText(String.valueOf(Training.round(currentTraining.AverageSpeed, 1)));
+                    maxSpeedText.setText(String.valueOf(Training.round(currentTraining.MaxSpeed, 1)));
+                    if(currentTraining.Heights.size() > 0){
+                        heightText.setText(String.valueOf(currentTraining.Heights.get(currentTraining.Heights.size()-1)));
+                        maxHeightText.setText(String.valueOf(currentTraining.MaxHeight));
+                        minHeightText.setText(String.valueOf(currentTraining.MinHeight));
+                        averageHeightText.setText(String.valueOf(currentTraining.AverageHeight));
+                    }
+                }
+            }
+        });
     }
-
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    private void getMessage(MessageEvent event){
-        currentTraining = event.currentTraining;
-        if(currentTraining != null){
-            timeText.setText(currentTraining.Time.toString());
-            destText.setText(Double.toString(Training.round(currentTraining.WayLength, 1)));
-            speedText.setText(Double.toString(Training.round(currentTraining.currentSpeed, 1)));
-            Double avSpeed = ((currentTraining.WayLength*1000) / (currentTraining.Time.Hours*3600 + currentTraining.Time.Minutes*60 + currentTraining.Time.Seconds))*3.6;
-            averageSpeedText.setText(Double.toString(Training.round(avSpeed, 1)));
-            maxSpeedText.setText(Double.toString(Training.round(currentTraining.MaxSpeed, 1)));
-
-            tempText.setText(Double.toString(currentTraining.WayLength));
-        }
-    }
-
-
-
-
-
-
-
-
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);

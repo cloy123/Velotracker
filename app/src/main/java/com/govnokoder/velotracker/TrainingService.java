@@ -68,7 +68,7 @@ public class TrainingService extends Service implements LocListenerInterface {
                     if(currentTraining.originLocation != null) {
                         distance = currentTraining.originLocation.distanceTo(location)/1000;
                     }
-                    int height = (int)location.getAltitude();
+                    long height = (long) location.getAltitude();
 
 
                     if(currentTraining.isRunning) {
@@ -76,20 +76,24 @@ public class TrainingService extends Service implements LocListenerInterface {
                         if(speed > currentTraining.MaxSpeed) {
                             currentTraining.MaxSpeed = speed;
                         }
-                        currentTraining.currentSpeed = speed;
+                        currentTraining.CurrentSpeed = speed;
                         //длина пути
                         currentTraining.WayLength += distance;
                         //путь
                         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                        currentTraining.currentLine.add(latLng);
+                        currentTraining.CurrentLine.add(latLng);
 
                         //startForeground(Double.toString(location.getLongitude()));
                         //Высота
-                        currentTraining.heights.add(height);
+                        currentTraining.Heights.add(height);
+                        currentTraining.MinHeight = Long.min(height, currentTraining.MinHeight);
+                        currentTraining.MaxHeight = Long.max(height, currentTraining.MaxHeight);
+                        currentTraining.SumHeight += height;
+                        currentTraining.AverageHeight = currentTraining.SumHeight / currentTraining.Heights.size();
                     }
                 }else {
                     //скорость
-                    currentTraining.currentSpeed = 0;
+                    currentTraining.CurrentSpeed = 0;
                 }
                 currentTraining.originLocation = location;
             }

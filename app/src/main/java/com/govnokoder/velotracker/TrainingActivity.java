@@ -12,14 +12,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.govnokoder.velotracker.BL.CurrentTraining;
+import com.govnokoder.velotracker.ui.training.PageMap;
+import com.govnokoder.velotracker.ui.training.PageStat;
 import com.govnokoder.velotracker.ui.training.ViewPagerAdapterTr;
 
 import java.util.List;
 
-public class TrainingActivity extends AppCompatActivity {
+public class TrainingActivity extends AppCompatActivity{// implements PageMap.OnFragmentSendDataListener {
 
     TabLayout tabLayout;
     ViewPager2 viewPager;
+    ViewPagerAdapterTr viewPagerAdapterTr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +34,7 @@ public class TrainingActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.view_pager);
 
 
-        ViewPagerAdapterTr viewPagerAdapterTr = new ViewPagerAdapterTr(this);
+        viewPagerAdapterTr = new ViewPagerAdapterTr(this);
 
         viewPager.setAdapter(viewPagerAdapterTr);
 
@@ -88,4 +92,14 @@ public class TrainingActivity extends AppCompatActivity {
         Toast.makeText(this, "false", Toast.LENGTH_LONG).show();
         return true;
     }
+
+//    @Override
+//    public void onSendData(CurrentTraining currentTraining) {
+//        try {
+//            PageStat fragment = (PageStat) getSupportFragmentManager()
+//                    .findFragmentById(R.id.trainingStatFragment);
+//            fragment.setCurrentTraining(currentTraining);
+//        }catch (Exception ignored){}
+//
+//    }
 }

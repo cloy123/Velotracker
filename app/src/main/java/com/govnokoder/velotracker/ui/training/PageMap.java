@@ -1,6 +1,7 @@
 package com.govnokoder.velotracker.ui.training;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.govnokoder.velotracker.BL.CurrentTraining;
@@ -29,6 +31,7 @@ import com.govnokoder.velotracker.MainActivity;
 import com.govnokoder.velotracker.R;
 import com.govnokoder.velotracker.TrainingService;
 import com.govnokoder.velotracker.messages.MessageEvent;
+import com.govnokoder.velotracker.messages.SharedViewModel;
 import com.mapbox.android.core.location.LocationEngine;
 import com.mapbox.android.core.location.LocationEngineCallback;
 import com.mapbox.android.core.location.LocationEngineProvider;
@@ -84,10 +87,6 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
 
     private MyChronometer myChronometer;
 
-    private CountDownTimer countDownTimer;
-
-    private long lastPause;
-
     private boolean isInTrackingMode;
 
     private LocationComponent locationComponent;
@@ -97,8 +96,6 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
     private CurrentTraining currentTraining = new CurrentTraining();
 
     private boolean isFinish = false;
-
-    //private Location originLocation;
 
     public static PageMap newInstance(int page){
         PageMap fragment = new PageMap();
@@ -124,25 +121,17 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
         mapView = (MapView) result.findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
-
         myChronometer = result.findViewById(R.id.chronometer);
-
-        //myChronometer.Start();
-
         CurrentSpeedTextView = (TextView) result.findViewById(R.id.CurrentSpeedText);
         WayLengthTextView = (TextView) result.findViewById(R.id.WayLengthText);
-
         PauseButton = (Button) result.findViewById(R.id.PauseButton);
         PauseButton.setOnClickListener(this::onClickPauseButton);
         ResumeButton = (Button) result.findViewById(R.id.ResumeButton);
         ResumeButton.setOnClickListener(this::onClickResumeButton);
         StopButton = (Button) result.findViewById(R.id.StopButton);
         StopButton.setOnClickListener(this::onClickStopButton);
-
         currentTraining.Date.setCurrentDate();
-
         currentTraining.isRunning = true;
-
         LocationButton = result.findViewById(R.id.locationButton);
         return result;
     }
@@ -185,7 +174,6 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
     @Override
     public void onMapReady(@NonNull final MapboxMap mapboxMap) {
         this.mapboxMap = mapboxMap;
-
         mapboxMap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
             @Override
             public void onStyleLoaded(@NonNull Style style) {
@@ -206,29 +194,21 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
         if (PermissionsManager.areLocationPermissionsGranted(getContext())) {
             // Get an instance of the component
             locationComponent = mapboxMap.getLocationComponent();
-
             // Set the LocationComponent activation options
             LocationComponentActivationOptions locationComponentActivationOptions =
                     LocationComponentActivationOptions.builder(getContext(), loadedMapStyle)
                             .useDefaultLocationEngine(false)
                             .build();
-
             // Activate with the LocationComponentActivationOptions object
             locationComponent.activateLocationComponent(locationComponentActivationOptions);
-
             // Enable to make component visible
             locationComponent.setLocationComponentEnabled(true);
-
             // Set the component's camera mode
             locationComponent.setCameraMode(CameraMode.TRACKING);
-
             // Set the component's render mode
             locationComponent.setRenderMode(RenderMode.COMPASS);
-
             locationComponent.zoomWhileTracking(16f);
-
             locationComponent.addOnCameraTrackingChangedListener(this);
-
             LocationButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -246,12 +226,10 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
     @SuppressLint("MissingPermission")
     private void initLocationEngine() {
         locationEngine = LocationEngineProvider.getBestLocationEngine(getContext());
-
         LocationEngineRequest request = new LocationEngineRequest.Builder(DEFAULT_INTERVAL_IN_MILLISECONDS)
                 .setDisplacement(1)//TODO возможно можно будет сделать точнее
                 .setPriority(LocationEngineRequest.PRIORITY_HIGH_ACCURACY)
                 .setMaxWaitTime(DEFAULT_MAX_WAIT_TIME).build();
-
         locationEngine.requestLocationUpdates(request, callback, Looper.getMainLooper());
         locationEngine.getLastLocation(callback);
     }
@@ -286,20 +264,32 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
                 myChronometer.setTime(currentTraining.Time);
                 if(currentTraining.isRunning){
                     myChronometer.Start();
-                }else {
-                    onClickPauseButton(PauseButton);
                 }
             }
         }catch (Exception ignored){
             myChronometer.Start();
+            if(currentTraining != null && !currentTraining.isRunning){
+                myChronometer.Pause();
+            }
         }
         myChronometer.setOnTickListenerInterface(new MyChronometer.OnTickListenerInterface() {
             @Override
             public void OnTick(Time time) {
-                EventBus.getDefault().postSticky(currentTraining);
+                currentTraining.Time = time;
+                SharedViewModel model = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+                model.sendMessage(currentTraining);
+                if(!currentTraining.isRunning && PauseButton.getVisibility() == Button.VISIBLE){
+                    onClickPauseButton(PauseButton);
+                    time.Seconds -=1;
+                    myChronometer.setTime(time);
+                    myChronometer.Pause();
+                }
+                CurrentSpeedTextView.setText(String.valueOf(Training.round(currentTraining.CurrentSpeed, 1)));
+                WayLengthTextView.setText(String.valueOf(Training.round(currentTraining.WayLength, 2)));
             }
         });
         //TODO тут забрать у сервиса экземпляр currentActivity
+
     }
 
     @Override
@@ -312,7 +302,6 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
     public void onEvent(MessageEvent event) {
         currentTraining = event.currentTraining;
         myChronometer.setTime(currentTraining.Time);
-        //myChronometer.Start();
         EventBus.getDefault().unregister(this);
     }
 
@@ -355,7 +344,6 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
 
     @Override
     public void onDestroy() {
-        // Prevent leaks
         myChronometer.Stop();
         if (locationEngine != null) {
             locationEngine.removeLocationUpdates(callback);
@@ -364,7 +352,6 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
         super.onDestroy();
     }
 
-
     @Override
     public void onCameraTrackingDismissed() {
         isInTrackingMode = false;
@@ -372,8 +359,7 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
     }
 
     @Override
-    public void onCameraTrackingChanged(int currentMode) {
-    }
+    public void onCameraTrackingChanged(int currentMode) { }
 
     private static class LocationListeningCallback
             implements LocationEngineCallback<LocationEngineResult> {
@@ -403,59 +389,54 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
 
                     //TODO доделать нормально
                     if(location.hasSpeed()){
-
                         double speed = location.getSpeed() * 3.6;
                         double distance = 0;
                         if(fragment.currentTraining.originLocation != null) {
                             distance = fragment.currentTraining.originLocation.distanceTo(location)/1000;
                         }
-                        int height = (int)location.getAltitude();
-
-
-
-
+                        long height = (long)location.getAltitude();
 
                         if(fragment.currentTraining.isRunning) {
                             //скорость
-                            if(speed > fragment.currentTraining.MaxSpeed) {
-                                fragment.currentTraining.MaxSpeed = speed;
-                            }
-                            fragment.currentTraining.currentSpeed = speed;
+                            fragment.currentTraining.MaxSpeed = Double.max(speed, fragment.currentTraining.MaxHeight);
+                            fragment.currentTraining.CurrentSpeed = speed;
+                            fragment.currentTraining.SpeedList.add(speed);
+                            fragment.currentTraining.SumSpeed += speed;
+                            fragment.currentTraining.AverageSpeed = fragment.currentTraining.SumSpeed / fragment.currentTraining.SpeedList.size();
+
                             //длина пути
                             fragment.currentTraining.WayLength += distance;
                             //путь
                             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                            fragment.currentTraining.currentLine.add(latLng);
+                            fragment.currentTraining.CurrentLine.add(latLng);
                             //Высота
-                            fragment.currentTraining.heights.add(height);
-
-
-
-                            fragment.WayLengthTextView.setText(Double.toString(Training.round(fragment.currentTraining.WayLength, 2)));
+                            fragment.currentTraining.Heights.add(height);
+                            fragment.currentTraining.MinHeight = Long.min(height, fragment.currentTraining.MinHeight);
+                            fragment.currentTraining.MaxHeight = Long.max(height, fragment.currentTraining.MaxHeight);
+                            fragment.currentTraining.SumHeight += height;
+                            fragment.currentTraining.AverageHeight = fragment.currentTraining.SumHeight / fragment.currentTraining.Heights.size();
                         }
-                        fragment.CurrentSpeedTextView.setText(Double.toString(Training.round(speed, 1)));
-
                         //отрисовка путей
                         if (fragment.lineManager != null) {
                             fragment.lineManager.deleteAll();
                             for (List<LatLng> line: fragment.currentTraining.Lines) {
                                 fragment.lineManager.create(new LineOptions().withLatLngs(line));
                             }
-                            fragment.lineManager.create(new LineOptions().withLatLngs(fragment.currentTraining.currentLine));
+                            fragment.lineManager.create(new LineOptions().withLatLngs(fragment.currentTraining.CurrentLine));
                         }
                     }else {
                         //скорость
-                        fragment.currentTraining.currentSpeed = 0;
-                        fragment.CurrentSpeedTextView.setText("0");
+                        if(fragment.currentTraining.isRunning){
+                            fragment.currentTraining.SpeedList.add(0.0);
+                            fragment.currentTraining.AverageSpeed = fragment.currentTraining.SumSpeed / fragment.currentTraining.SpeedList.size();
+                        }
+                        fragment.currentTraining.CurrentSpeed = 0;
                     }
                     fragment.currentTraining.originLocation = location;
                     //местоположение
                     fragment.mapboxMap.getLocationComponent().forceLocationUpdate(location);
                 }
             }
-
-
-
         }
 
         /**
