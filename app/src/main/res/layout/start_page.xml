@@ -173,7 +173,7 @@
                         android:layout_marginLeft="10dp"
                         android:background="#bbb" />
                     <TextView
-                        android:id="@+id/TextDate"
+                        android:id="@+id/lastTrainingDateTextV"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
@@ -214,7 +214,7 @@
                         android:layout_marginRight="10dp"
                         android:background="#bbb" />
                     <TextView
-                        android:id="@+id/TextTime"
+                        android:id="@+id/lastTimeTextV"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:maxLines="1"
@@ -270,7 +270,7 @@
                         android:layout_marginLeft="10dp"
                         android:background="#bbb" />
                     <TextView
-                        android:id="@+id/TextDistance"
+                        android:id="@+id/lastDistanceTextV"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
@@ -312,7 +312,7 @@
                         android:layout_marginRight="10dp"
                         android:background="#bbb" />
                     <TextView
-                        android:id="@+id/TextAvSpeed"
+                        android:id="@+id/lastAverageSpeedTextV"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"

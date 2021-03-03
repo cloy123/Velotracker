@@ -58,46 +58,7 @@ public class TrainingService extends Service implements LocListenerInterface {
 
     @Override
     public void onLocationChanged(Location location) {
-
-        if (currentTraining != null) {
-            if (location != null) {
-                if(location.hasSpeed()){
-
-                    double speed = location.getSpeed() * 3.6;
-                    double distance = 0;
-                    if(currentTraining.originLocation != null) {
-                        distance = currentTraining.originLocation.distanceTo(location)/1000;
-                    }
-                    long height = (long) location.getAltitude();
-
-
-                    if(currentTraining.isRunning) {
-                        //скорость
-                        if(speed > currentTraining.MaxSpeed) {
-                            currentTraining.MaxSpeed = speed;
-                        }
-                        currentTraining.CurrentSpeed = speed;
-                        //длина пути
-                        currentTraining.WayLength += distance;
-                        //путь
-                        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                        currentTraining.CurrentLine.add(latLng);
-
-                        //startForeground(Double.toString(location.getLongitude()));
-                        //Высота
-                        currentTraining.Heights.add(height);
-                        currentTraining.MinHeight = Long.min(height, currentTraining.MinHeight);
-                        currentTraining.MaxHeight = Long.max(height, currentTraining.MaxHeight);
-                        currentTraining.SumHeight += height;
-                        currentTraining.AverageHeight = currentTraining.SumHeight / currentTraining.Heights.size();
-                    }
-                }else {
-                    //скорость
-                    currentTraining.CurrentSpeed = 0;
-                }
-                currentTraining.originLocation = location;
-            }
-        }
+        if (currentTraining != null) { currentTraining.setValuesFromLocation(location);}
     }
 
     @Nullable

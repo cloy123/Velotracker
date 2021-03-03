@@ -7,17 +7,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import com.govnokoder.velotracker.BL.Controller.TrainingController;
+import com.govnokoder.velotracker.BL.Model.Training;
 import com.govnokoder.velotracker.R;
+
+import java.util.List;
 
 public class PageStart extends Fragment {
 
     private int pageNumber;
     private Button StartButton;
     private LinearLayout linearStat, linearLastTraining;
+    private TextView totalDistanceText, lastTrainingDateText, lastTrainingTimeText, lastTrainingDistanceText, lastTrainingAverageSpeedText;
 
 
     public interface onSomeEventListener {
@@ -49,6 +55,23 @@ public class PageStart extends Fragment {
     }
 
     public PageStart() {
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        TrainingController trainingController = new TrainingController(getContext());
+        List<Training> trainings = trainingController.LoadTrainingsData(getContext());
+        Training lastTraining = trainings.get(trainings.size() - 1);
+        double totalDest = 0;
+        for (Training training : trainings) {
+            totalDest += training.WayLength;
+            totalDistanceText.setText(Double.toString(totalDest));
+        }
+        lastTrainingTimeText.setText(lastTraining.AllTime.toString());
+        lastTrainingAverageSpeedText.setText(Double.toString(Training.round(lastTraining.AverageSpeed, 1)));
+        lastTrainingDistanceText.setText(Double.toString(Training.round(lastTraining.WayLength, 2)));
+        lastTrainingDateText.setText(lastTraining.Date.toString());
     }
 
     @Override
@@ -89,6 +112,11 @@ public class PageStart extends Fragment {
             }
         });
 
+        totalDistanceText = result.findViewById(R.id.totalDistanceTextV);
+        lastTrainingDateText = result.findViewById(R.id.lastTrainingDateTextV);
+        lastTrainingDistanceText = result.findViewById(R.id.lastDistanceTextV);
+        lastTrainingAverageSpeedText = result.findViewById(R.id.lastAverageSpeedTextV);
+        lastTrainingTimeText = result.findViewById(R.id.lastTimeTextV);
 
         return result;
     }

@@ -382,60 +382,21 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
             // The LocationEngineCallback interface's method which fires when the device's location has changed.
             //при изменениии местоположения
             PageMap fragment = fragmentWeakReference.get();
-
             if (fragment != null && fragment.currentTraining != null) {
                 Location location = result.getLastLocation();
-                if (fragment.mapboxMap != null && location != null) {
-
-                    //TODO доделать нормально
-                    if(location.hasSpeed()){
-                        double speed = location.getSpeed() * 3.6;
-                        double distance = 0;
-                        if(fragment.currentTraining.originLocation != null) {
-                            distance = fragment.currentTraining.originLocation.distanceTo(location)/1000;
+                if (fragment.mapboxMap != null) {
+                    //отрисовка путей
+                    if (location != null && fragment.lineManager != null) {
+                        fragment.lineManager.deleteAll();
+                        for (List<LatLng> line: fragment.currentTraining.Lines) {
+                            fragment.lineManager.create(new LineOptions().withLatLngs(line));
                         }
-                        long height = (long)location.getAltitude();
-
-                        if(fragment.currentTraining.isRunning) {
-                            //скорость
-                            fragment.currentTraining.MaxSpeed = Double.max(speed, fragment.currentTraining.MaxHeight);
-                            fragment.currentTraining.CurrentSpeed = speed;
-                            fragment.currentTraining.SpeedList.add(speed);
-                            fragment.currentTraining.SumSpeed += speed;
-                            fragment.currentTraining.AverageSpeed = fragment.currentTraining.SumSpeed / fragment.currentTraining.SpeedList.size();
-
-                            //длина пути
-                            fragment.currentTraining.WayLength += distance;
-                            //путь
-                            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                            fragment.currentTraining.CurrentLine.add(latLng);
-                            //Высота
-                            fragment.currentTraining.Heights.add(height);
-                            fragment.currentTraining.MinHeight = Long.min(height, fragment.currentTraining.MinHeight);
-                            fragment.currentTraining.MaxHeight = Long.max(height, fragment.currentTraining.MaxHeight);
-                            fragment.currentTraining.SumHeight += height;
-                            fragment.currentTraining.AverageHeight = fragment.currentTraining.SumHeight / fragment.currentTraining.Heights.size();
-                        }
-                        //отрисовка путей
-                        if (fragment.lineManager != null) {
-                            fragment.lineManager.deleteAll();
-                            for (List<LatLng> line: fragment.currentTraining.Lines) {
-                                fragment.lineManager.create(new LineOptions().withLatLngs(line));
-                            }
-                            fragment.lineManager.create(new LineOptions().withLatLngs(fragment.currentTraining.CurrentLine));
-                        }
-                    }else {
-                        //скорость
-                        if(fragment.currentTraining.isRunning){
-                            fragment.currentTraining.SpeedList.add(0.0);
-                            fragment.currentTraining.AverageSpeed = fragment.currentTraining.SumSpeed / fragment.currentTraining.SpeedList.size();
-                        }
-                        fragment.currentTraining.CurrentSpeed = 0;
+                        fragment.lineManager.create(new LineOptions().withLatLngs(fragment.currentTraining.CurrentLine));
                     }
-                    fragment.currentTraining.originLocation = location;
-                    //местоположение
-                    fragment.mapboxMap.getLocationComponent().forceLocationUpdate(location);
+                    fragment.currentTraining.setValuesFromLocation(location);
                 }
+                //местоположение
+                fragment.mapboxMap.getLocationComponent().forceLocationUpdate(location);
             }
         }
 

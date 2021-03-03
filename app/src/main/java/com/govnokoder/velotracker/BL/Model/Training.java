@@ -57,7 +57,6 @@ public class Training {
         startLongitude = latLng.getLongitude();
     }
 
-
     public Training(Date date, Time time, double wayLength,
                     double maxSpeed, double averageSpeed,
                     List<List<LatLng>> lines, LatLng startPoint,

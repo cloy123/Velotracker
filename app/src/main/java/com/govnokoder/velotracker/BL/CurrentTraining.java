@@ -75,4 +75,40 @@ public class CurrentTraining{
 
     public CurrentTraining() {
     }
+
+    public void setValuesFromLocation(Location location){
+        if (location != null) {
+            if (location.hasSpeed()) {
+                double speed = location.getSpeed() * 3.6;
+                double distance = 0;
+                if (originLocation != null) {
+                    distance = originLocation.distanceTo(location) / 1000;
+                }
+                long height = (long) location.getAltitude();
+                if (isRunning) {
+                    //скорость
+                    if (speed > MaxSpeed) {
+                        MaxSpeed = speed;
+                    }
+                    CurrentSpeed = speed;
+                    //длина пути
+                    WayLength += distance;
+                    //путь
+                    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                    CurrentLine.add(latLng);
+                    //Высота
+                    Heights.add(height);
+                    MinHeight = Long.min(height, MinHeight);
+                    MaxHeight = Long.max(height, MaxHeight);
+                    SumHeight += height;
+                    AverageHeight = SumHeight / Heights.size();
+                }
+            } else {
+                //скорость
+                CurrentSpeed = 0;
+            }
+            originLocation = location;
+        }
+    }
+
 }

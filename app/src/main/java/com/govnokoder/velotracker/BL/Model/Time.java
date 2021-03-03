@@ -68,6 +68,13 @@ public class Time {
         if(Seconds < 10){
             SecondsStr = "0" + Seconds;
         }
+        if(Hours < 10){
+            HoursStr = "0" + Hours;
+        }
+
+        if(Hours == 0){
+            return Minutes + ":" + Seconds;
+        }
 
         return Hours + ":" + Minutes + ":" + Seconds;
     }
