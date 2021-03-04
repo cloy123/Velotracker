@@ -6,15 +6,15 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_start"
-            android:title="Старт" />
+            android:title="@string/start" />
         <item
             android:id="@+id/nav_history"
-            android:title="История" />
+            android:title="@string/history" />
         <item
             android:id="@+id/nav_statistics"
-            android:title="Статистика" />
+            android:title="@string/statistic" />
         <item
             android:id="@+id/nav_settings"
-            android:title="Настройки" />
+            android:title="@string/settings" />
     </group>
 </menu>

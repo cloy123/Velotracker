@@ -162,7 +162,7 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:maxLines="1"
-                        android:text="дата"
+                        android:text="@string/date"
                         android:textAlignment="center"
                         android:textColor="@color/black"
                         android:textSize="22sp" />
@@ -201,7 +201,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
-                        android:text="длительность"
+                        android:text="@string/time"
                         android:textColor="@color/black"
                         android:maxLines="1"
                         android:gravity="center"
@@ -262,7 +262,7 @@
                         android:textColor="@color/black"
                         android:gravity="center"
                         android:textSize="22sp"
-                        android:text="расстояние"/>
+                        android:text="@string/distance"/>
 
                     <com.google.android.material.internal.BaselineLayout
                         android:layout_width="match_parent"
@@ -304,7 +304,7 @@
                         android:maxLines="1"
                         android:textColor="@color/black"
                         android:textSize="22sp"
-                        android:text="ср.скорость"/>
+                        android:text="@string/average_speed"/>
 
                     <com.google.android.material.internal.BaselineLayout
                         android:layout_width="match_parent"

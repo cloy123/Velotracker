@@ -28,28 +28,10 @@ public class MyChronometer extends androidx.appcompat.widget.AppCompatTextView{
             if(!isPause){
                 time.addSecond();
             }
-            stringTime = "";
-            if(time.Hours != 0){
-                if(time.Hours < 10){
-                    stringTime += "0" + time.Hours + ":";
-                }else {
-                    stringTime += time.Hours + ":";
-                }
-            }
-            if(time.Minutes < 10){
-                stringTime += "0" + time.Minutes + ":";
-            }else {
-                stringTime += time.Minutes + ":";
-            }
-            if (time.Seconds < 10) {
-                stringTime += "0" + time.Seconds;
-            }else {
-                stringTime += time.Seconds;
-            }
+            stringTime = time.toString();
             onTickListenerInterface.OnTick(time);
             setText(stringTime);
         }
-
         @Override
         public void onFinish() {
                 countDownTimer.start();
@@ -101,7 +83,6 @@ public class MyChronometer extends androidx.appcompat.widget.AppCompatTextView{
     public interface OnTickListenerInterface{
         public void OnTick(Time time);
     }
-
 }
 
 

@@ -21,8 +21,7 @@ public class PageStatistics extends Fragment {
         return fragment;
     }
 
-    public PageStatistics() {
-    }
+    public PageStatistics() { }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

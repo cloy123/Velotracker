@@ -32,48 +32,44 @@
             android:background="#bbb" />
 
 
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:orientation="horizontal">
-
-
-        <LinearLayout
-            android:layout_height="match_parent"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
+            <LinearLayout
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:maxLines="1"
-                android:textAllCaps="true"
-                android:textColor="#FFFFFF"
-                android:textSize="15sp"
-                android:text="@string/Time"/>
-
-            <com.google.android.material.internal.BaselineLayout
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="20dp"
-                android:background="#bbb" />
-
-            <TextView
-                android:id="@+id/TimeText"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:layout_gravity="center"
-                android:textAllCaps="true"
-                android:textColor="#FFFFFF"
-                android:textSize="30sp"
-                android:maxLines="1" />
-        </LinearLayout>
-
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:textAllCaps="true"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp"
+                    android:text="@string/time"/>
+                <com.google.android.material.internal.BaselineLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="20dp"
+                    android:background="#bbb" />
+                <TextView
+                    android:id="@+id/timeText"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:textAllCaps="true"
+                    android:theme="@style/Theme.Velotracker.StatTextViewsValue"
+                    android:textColor="#FFFFFF"
+                    android:textSize="30sp"
+                    android:maxLines="1" />
+            </LinearLayout>
             <com.google.android.material.internal.BaselineLayout
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
@@ -81,40 +77,42 @@
                 android:layout_marginBottom="5dp"
                 android:background="#bbb" />
 
-        <LinearLayout
-            android:layout_height="match_parent"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
+            <LinearLayout
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:maxLines="1"
-                android:textAllCaps="true"
-                android:textColor="#FFFFFF"
-                android:textSize="15sp"
-                android:text="Растояние(км)"/>
-            <com.google.android.material.internal.BaselineLayout
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginLeft="10dp"
-                android:background="#bbb" />
-            <TextView
-                android:id="@+id/WayLengthText"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:layout_gravity="center"
-                android:textAllCaps="true"
-                android:textColor="#FFFFFF"
-                android:textSize="30sp"
-                android:maxLines="1" />
-        </LinearLayout>
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:textAllCaps="true"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp"
+                    android:text="@string/distance"/>
+
+                <com.google.android.material.internal.BaselineLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:background="#bbb" />
+
+                <TextView
+                    android:id="@+id/distanceText"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:textAllCaps="true"
+                    android:textColor="#FFFFFF"
+                    android:textSize="30sp"
+                    android:theme="@style/Theme.Velotracker.StatTextViewsValue"
+                    android:maxLines="1" />
+            </LinearLayout>
         </LinearLayout>
 
         <com.google.android.material.internal.BaselineLayout
@@ -124,101 +122,316 @@
             android:layout_marginLeft="0dp"
             android:background="#bbb" />
 
-
-
-
-
-
-
-
-
-
-
-
-
-
         <LinearLayout
-            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:layout_width="match_parent">
+            android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:maxLines="1"
-                android:text="Средняя скорость"
-                android:textAlignment="center"
-                android:textAllCaps="true"
-                android:textColor="#FFFFFF"
-                android:textSize="15sp"
-                tools:ignore="RtlCompat" />
 
-            <TextView
+            <LinearLayout
+                android:layout_height="match_parent"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:maxLines="1"
-                android:text="Макс. скорость"
-                android:textAlignment="center"
-                android:textAllCaps="true"
-                android:textColor="#FFFFFF"
-                android:textSize="15sp"
-                tools:ignore="RtlCompat" />
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:textAllCaps="true"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp"
+                    android:text="@string/temp"/>
+
+                <com.google.android.material.internal.BaselineLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="20dp"
+                    android:background="#bbb" />
+
+                <TextView
+                    android:id="@+id/tempText"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:textAllCaps="true"
+                    android:textColor="#FFFFFF"
+                    android:textSize="30sp"
+                    android:theme="@style/Theme.Velotracker.StatTextViewsValue"
+                    android:maxLines="1" />
+            </LinearLayout>
+
+            <com.google.android.material.internal.BaselineLayout
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="#bbb" />
+
+            <LinearLayout
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:textAllCaps="true"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp"
+                    android:text="@string/average_speed"/>
+                <com.google.android.material.internal.BaselineLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:background="#bbb" />
+                <TextView
+                    android:id="@+id/averageSpeedText"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:textAllCaps="true"
+                    android:textColor="#FFFFFF"
+                    android:textSize="30sp"
+                    android:theme="@style/Theme.Velotracker.StatTextViewsValue"
+                    android:maxLines="1" />
+            </LinearLayout>
+
         </LinearLayout>
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_height="100dp"
-            android:layout_width="match_parent">
-            <TextView
-                android:id="@+id/AverageSpeedText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_gravity="center_vertical"
-                android:textAlignment="center"
-                android:textAllCaps="true"
-                android:textColor="#FFFFFF"
-                android:textSize="30sp"
-                android:maxLines="1"
-                tools:ignore="RtlCompat" />
-
-
-
-
-            <TextView
-                android:id="@+id/MaxSpeedText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_gravity="center_vertical"
-                android:textAlignment="center"
-                android:textAllCaps="true"
-                android:textColor="#FFFFFF"
-                android:textSize="30sp"
-                android:maxLines="1"
-                tools:ignore="RtlCompat"/>
-
-        </LinearLayout>
+        <com.google.android.material.internal.BaselineLayout
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginLeft="0dp"
+            android:background="#bbb" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="100dp">
+            android:layout_height="100dp"
+            android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/Delete"
-                android:layout_width="match_parent"
+
+            <LinearLayout
                 android:layout_height="match_parent"
+                android:layout_width="0dp"
                 android:layout_weight="1"
-                android:textAllCaps="true"
-                android:text="Удалить"
-                android:layout_marginHorizontal="60dp"
-                />
+                android:orientation="vertical">
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:textAllCaps="true"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp"
+                    android:text="@string/max_speed"/>
+
+                <com.google.android.material.internal.BaselineLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="20dp"
+                    android:background="#bbb" />
+
+                <TextView
+                    android:id="@+id/maxSpeedText"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:textAllCaps="true"
+                    android:textColor="#FFFFFF"
+                    android:theme="@style/Theme.Velotracker.StatTextViewsValue"
+                    android:textSize="30sp"
+                    android:maxLines="1" />
+            </LinearLayout>
+            <com.google.android.material.internal.BaselineLayout
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="#bbb" />
+
+            <LinearLayout
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:textAllCaps="true"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp"
+                    android:text="@string/average_height"/>
+                <com.google.android.material.internal.BaselineLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:background="#bbb" />
+                <TextView
+                    android:id="@+id/averageHeightText"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:textAllCaps="true"
+                    android:textColor="#FFFFFF"
+                    android:textSize="30sp"
+                    android:theme="@style/Theme.Velotracker.StatTextViewsValue"
+                    android:maxLines="1" />
+            </LinearLayout>
         </LinearLayout>
+
+        <com.google.android.material.internal.BaselineLayout
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginLeft="0dp"
+            android:background="#bbb" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:orientation="horizontal">
+
+
+            <LinearLayout
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:textAllCaps="true"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp"
+                    android:text="@string/max_height"/>
+
+                <com.google.android.material.internal.BaselineLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="20dp"
+                    android:background="#bbb" />
+
+                <TextView
+                    android:id="@+id/maxHeightText"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:textAllCaps="true"
+                    android:textColor="#FFFFFF"
+                    android:textSize="30sp"
+                    android:theme="@style/Theme.Velotracker.StatTextViewsValue"
+                    android:maxLines="1" />
+            </LinearLayout>
+            <com.google.android.material.internal.BaselineLayout
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="#bbb" />
+
+            <LinearLayout
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:textAllCaps="true"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp"
+                    android:text="@string/min_height"/>
+                <com.google.android.material.internal.BaselineLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:background="#bbb" />
+                <TextView
+                    android:id="@+id/minHeightText"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:textAllCaps="true"
+                    android:textColor="#FFFFFF"
+                    android:textSize="30sp"
+                    android:theme="@style/Theme.Velotracker.StatTextViewsValue"
+                    android:maxLines="1" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <com.google.android.material.internal.BaselineLayout
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginLeft="0dp"
+            android:background="#bbb" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="5dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/deleteButton"
+                android:layout_height="50dp"
+                android:layout_width="match_parent"
+                android:layout_marginRight="70dp"
+                android:layout_marginLeft="70dp"
+                android:layout_marginBottom="2dp"
+                android:layout_marginTop="2dp"
+                android:background="@drawable/ovalbutton"
+                android:text="@string/deleteButton"
+                android:textColor="#F5F5F5"
+                android:textSize="15sp"
+                android:maxLines="1"
+                android:paddingHorizontal="20dp"/>
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="5dp"/>
+
+        <com.google.android.material.internal.BaselineLayout
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginLeft="0dp"
+            android:background="#bbb" />
 
     </LinearLayout>
 </ScrollView>

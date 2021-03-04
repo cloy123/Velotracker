@@ -11,9 +11,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 
 import com.govnokoder.velotracker.BL.Controller.TrainingController;
 import com.govnokoder.velotracker.BL.Model.Training;
+import com.govnokoder.velotracker.ui.training.MapViewInScroll;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.camera.CameraUpdate;
@@ -31,21 +33,19 @@ import java.util.List;
 public class LookTraining extends AppCompatActivity
         implements OnMapReadyCallback {
 
-    private TextView WayLength;
-    private TextView MaxSpeed;
-    private TextView AverageSpeed;
-    private TextView Time;
+    private TextView averageSpeedText, timeText, maxSpeedText, distanceText,
+    averageHeightText, tempText, maxHeightText, minHeightText;
     private int Index;
     List<Training> trainings;
     Training CurrentTraining;
 
-    private  MapView mapView;
+    private MapViewInScroll mapView;
     private MapboxMap mapboxMap;
 
     private LineManager lineManager;
     private LineOptions lineOptions;
 
-    private Button Delete;
+    private AppCompatButton DeleteButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,15 +53,19 @@ public class LookTraining extends AppCompatActivity
         Mapbox.getInstance(this, getString(R.string.access_token));
         setContentView(R.layout.activity_look_training);
 
-        mapView = (MapView) findViewById(R.id.mapView);
+        mapView = findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
 
         mapView.getMapAsync(this);
 
-        WayLength = (TextView) findViewById(R.id.WayLengthText);
-        MaxSpeed = (TextView) findViewById(R.id.MaxSpeedText);
-        AverageSpeed = (TextView) findViewById(R.id.AverageSpeedText);
-        Time = (TextView) findViewById(R.id.TimeText);
+        distanceText = (TextView) findViewById(R.id.distanceText);
+        maxSpeedText = (TextView) findViewById(R.id.maxSpeedText);
+        averageSpeedText = (TextView) findViewById(R.id.averageSpeedText);
+        timeText = (TextView) findViewById(R.id.timeText);
+        averageHeightText = findViewById(R.id.averageHeightText);
+        tempText = findViewById(R.id.tempText);
+        maxHeightText = findViewById(R.id.maxHeightText);
+        minHeightText = findViewById(R.id.minHeightText);
 
         Bundle bundle = getIntent().getExtras();
         Index = (int)bundle.get("INDEX");
@@ -69,39 +73,33 @@ public class LookTraining extends AppCompatActivity
         trainings = trainingController.LoadTrainingsData(getApplicationContext());
         CurrentTraining = trainings.get(Index);
 
-        WayLength.setText(Double.toString(CurrentTraining.WayLength));
-        MaxSpeed.setText(Double.toString(CurrentTraining.MaxSpeed));
-        AverageSpeed.setText(Double.toString(CurrentTraining.AverageSpeed));
-
-        Time.setText(CurrentTraining.AllTime.toString());
-
-
+        distanceText.setText(Double.toString(Training.round(CurrentTraining.WayLength, 2)));
+        maxSpeedText.setText(Double.toString(Training.round(CurrentTraining.MaxSpeed, 1)));
+        averageSpeedText.setText(Double.toString(Training.round(CurrentTraining.AverageSpeed, 1)));
+        timeText.setText(CurrentTraining.AllTime.toString());
+        //averageHeightText.setText((int) CurrentTraining.AverageHeight);
+        tempText.setText(CurrentTraining.getTemp("k").toString());
+        //maxHeightText.setText((int) CurrentTraining.MaxHeight);
+        //minHeightText.setText((int) CurrentTraining.MinHeight);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(CurrentTraining.Date.toString());
 
-
-
-
-        Delete = (Button) findViewById(R.id.Delete);
-        Delete.setOnClickListener(new View.OnClickListener() {
+        DeleteButton = findViewById(R.id.deleteButton);
+        DeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //TODO добавить нормальное удаление и  отображение пути
-
             }
         });
-
-
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        switch (id)
-        {
+        switch (id) {
             case android.R.id.home:
                 this.finish();
                 return true;
@@ -116,37 +114,26 @@ public class LookTraining extends AppCompatActivity
 
     public void onMapReady(@NonNull final MapboxMap mapboxMap) {
         this.mapboxMap = mapboxMap;
-
-
         mapboxMap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
             @Override
             public void onStyleLoaded(@NonNull Style style) {
                 // Map is set up and the style has loaded. Now you can add data or make other map adjustments
-
-
                 LatLng latLng = CurrentTraining.getStartPoint();
                 CameraPosition position = new CameraPosition.Builder()
                         .target(latLng)
                         .zoom(15)
                         .tilt(20)
                         .build();
-                //mapboxMap.setCameraPosition(position);
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(position);
                 mapboxMap.moveCamera(cameraUpdate);
-
 
                 lineManager = new LineManager(mapView, mapboxMap, mapboxMap.getStyle());
                 lineOptions = new LineOptions();
                 for (List<LatLng> line: CurrentTraining.Lines) {
                     lineManager.create(new LineOptions().withLatLngs(line));
                 }
-
-
-
             }
         });
-
-
     }
 
     @Override
@@ -191,8 +178,4 @@ public class LookTraining extends AppCompatActivity
         super.onDestroy();
         mapView.onDestroy();
     }
-
-
-
-
 }

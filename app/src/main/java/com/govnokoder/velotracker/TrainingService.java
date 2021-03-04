@@ -35,15 +35,10 @@ import org.greenrobot.eventbus.ThreadMode;
 public class TrainingService extends Service implements LocListenerInterface {
     private static final int ONGOING_NOTIFICATION_ID = 333;
     private Icon myIcon = null;
-
-    //Location
     private long DEFAULT_INTERVAL_IN_MILLISECONDS = 500L;
-
     CurrentTraining currentTraining;
-
     private MyLocListener myLocListener;
     private LocationManager locationManager;
-
     private CountDownTimer countDownTimer;
 
     private void init() {
@@ -73,6 +68,7 @@ public class TrainingService extends Service implements LocListenerInterface {
         EventBus.getDefault().register(this);
         currentTraining = EventBus.getDefault().getStickyEvent(MessageEvent.class).currentTraining;
         if(currentTraining != null){
+            startForeground(currentTraining.Time.toString());
             EventBus.getDefault().removeAllStickyEvents();
             EventBus.getDefault().unregister(this);
         }
@@ -83,6 +79,8 @@ public class TrainingService extends Service implements LocListenerInterface {
                 if(currentTraining != null){
                     if(currentTraining.isRunning){
                         currentTraining.Time.addSecond();
+                    }else {
+                        startForeground(getApplicationContext().getString(R.string.pause_button));
                     }
                     startForeground(currentTraining.Time.toString());
                 }
@@ -99,8 +97,6 @@ public class TrainingService extends Service implements LocListenerInterface {
         }
     }
 
-
-
     @Override
     public void onDestroy() {
         countDownTimer.cancel();
@@ -111,7 +107,6 @@ public class TrainingService extends Service implements LocListenerInterface {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        startForeground("start");
         init();
         return START_STICKY;
     }
@@ -120,35 +115,20 @@ public class TrainingService extends Service implements LocListenerInterface {
     public void onEvent(MessageEvent event) {
         currentTraining = event.currentTraining;
         EventBus.getDefault().unregister(this);
-        startForeground("Сервис работает");
     }
-
 
     public void startForeground(String string) {
         String CHANNEL_DEFAULT_IMPORTANCE = createChannel(this);
-
         Intent notificationIntent = new Intent(this, TrainingActivity.class);
-
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 1010, notificationIntent, 0);
-
-        //Intent intent = new Intent(this, MainActivity.class);
-        //PendingIntent pendingIntent1 = PendingIntent.getActivity(this, ONGOING_NOTIFICATION_ID, intent, 0);
-
-        //Notification.Action action1 = new Notification.Action.Builder(myIcon, "Stop", pendingIntent).build();
-
-
-//        Notification.Action action =  new Notification.Action.Builder(R.drawable.tracking_off,
-//                "stop",
-//                PendingIntent.getService(this, ONGOING_NOTIFICATION_ID, new Intent(this, TrainingActivity.class),0)).build();
         Notification notification =
                 new Notification.Builder(this, CHANNEL_DEFAULT_IMPORTANCE)//CHANNEL_DEFAULT_IMPORTANCE
-                        .setContentTitle("Идёт запись Training")
+                        .setContentTitle(getApplicationContext().getString(R.string.open))
                         .setContentText(string)
                         .setSmallIcon(myIcon)
                         .setContentIntent(pendingIntent)
                         .setTicker(getText(R.string.ticker_text))
                         .build();
-// Notification ID cannot be 0.
         startForeground(ONGOING_NOTIFICATION_ID, notification);
     }
 

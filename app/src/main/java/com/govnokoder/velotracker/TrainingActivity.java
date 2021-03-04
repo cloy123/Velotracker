@@ -30,17 +30,11 @@ public class TrainingActivity extends AppCompatActivity{// implements PageMap.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_training);
 
-
         viewPager = findViewById(R.id.view_pager);
-
-
         viewPagerAdapterTr = new ViewPagerAdapterTr(this);
-
         viewPager.setAdapter(viewPagerAdapterTr);
 
-
         tabLayout = findViewById(R.id.tabs);
-
         TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(tabLayout, viewPager, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
             public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
@@ -53,53 +47,6 @@ public class TrainingActivity extends AppCompatActivity{// implements PageMap.On
                 }
             }
         });
-
         tabLayoutMediator.attach();
     }
-
-//    @Override
-//    public void onBackPressed() {
-//        super.onBackPressed();
-////        Intent intent = new Intent(getApplicationContext() ,MainActivity.class);
-////        startActivity(intent);
-////        finish();
-////        getApplication().onCreate();
-////        //getApplication().
-////        if(!isActivityRunning(MainActivity.class)){
-////            //Intent intent = new Intent(getApplicationContext() ,MainActivity.class);
-////
-////
-////            //startActivity(intent);
-////        }
-//    }
-
-    protected Boolean isActivityRunning(Class activityClass)
-    {
-        ActivityManager activityManager = (ActivityManager) getBaseContext().getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.AppTask> tasks = activityManager.getAppTasks();
-
-        for (ActivityManager.AppTask task : tasks) {
-            try {
-                if (task.getTaskInfo().baseActivity.toString() == null){//baseActivity.getClassName()))
-                    Toast.makeText(this, "true", Toast.LENGTH_LONG).show();
-                    return false;
-                }
-            }catch (Exception e){
-                return false;
-            }
-
-        }
-        Toast.makeText(this, "false", Toast.LENGTH_LONG).show();
-        return true;
-    }
-
-//    @Override
-//    public void onSendData(CurrentTraining currentTraining) {
-//        try {
-//            PageStat fragment = (PageStat) getSupportFragmentManager()
-//                    .findFragmentById(R.id.trainingStatFragment);
-//            fragment.setCurrentTraining(currentTraining);
-//        }catch (Exception ignored){}
-//
-//    }
 }

@@ -22,9 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CurrentTraining{
-
-    private static final String TRAINING_FILE_NAME = "CurrentTraining.json";
-
     public Date Date = new Date(0,0,0);
     public Time Time = new Time(0,0,0);
 
@@ -73,8 +70,7 @@ public class CurrentTraining{
     }
 
 
-    public CurrentTraining() {
-    }
+    public CurrentTraining() { }
 
     public void setValuesFromLocation(Location location){
         if (location != null) {
@@ -91,6 +87,10 @@ public class CurrentTraining{
                         MaxSpeed = speed;
                     }
                     CurrentSpeed = speed;
+                    SpeedList.add(speed);
+                    SumSpeed += speed;
+                    AverageSpeed = SumSpeed / SpeedList.size();
+
                     //длина пути
                     WayLength += distance;
                     //путь
@@ -110,5 +110,4 @@ public class CurrentTraining{
             originLocation = location;
         }
     }
-
 }

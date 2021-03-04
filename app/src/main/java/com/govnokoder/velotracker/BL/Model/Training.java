@@ -41,8 +41,7 @@ public class Training {
         return null;
     }
 
-    public double convertToMiles(double value)
-    {
+    public double convertToMiles(double value) {
         return value / 1.609344;
     }
 
@@ -51,8 +50,7 @@ public class Training {
         return new LatLng(startLatitude, startLongitude);
     }
 
-    public void  setStartPoint(LatLng latLng)
-    {
+    public void  setStartPoint(LatLng latLng) {
         startLatitude = latLng.getLatitude() ;
         startLongitude = latLng.getLongitude();
     }
@@ -60,7 +58,7 @@ public class Training {
     public Training(Date date, Time time, double wayLength,
                     double maxSpeed, double averageSpeed,
                     List<List<LatLng>> lines, LatLng startPoint,
-                    double maxHeight, double minHeight, double averageHeight) {
+                    long maxHeight, long minHeight, long averageHeight) {
         Date = date;
         AllTime = time;
         WayLength = wayLength;
@@ -69,21 +67,19 @@ public class Training {
         Lines = lines;
         startLatitude = startPoint.getLatitude();
         startLongitude = startPoint.getLongitude();
+        MaxHeight = maxHeight;
+        MinHeight = minHeight;
+        AverageHeight = averageHeight;
     }
 
-    public Training() {
-    };
-
-
+    public Training() { }
 
     public static double round(double value, int places) {
-        if (places < 0) throw new IllegalArgumentException();
-
+        if (places < 0) { throw new IllegalArgumentException(); }
         BigDecimal bd = new BigDecimal(Double.toString(value));
         bd = bd.setScale(places, RoundingMode.HALF_UP);
         return bd.doubleValue();
     }
-
 }
 
 

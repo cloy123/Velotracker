@@ -29,7 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:text="Время:"
+                android:text="@string/time"
                 android:maxLines="1"
                 android:theme="@style/Theme.Velotracker.StatTextViews" />
             <com.google.android.material.internal.BaselineLayout
@@ -78,7 +78,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:maxLines="1"
-                android:text="Расстояние"
+                android:text="@string/distance"
                 android:theme="@style/Theme.Velotracker.StatTextViews" />
 
             <com.google.android.material.internal.BaselineLayout
@@ -112,7 +112,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
             <TextView
-                android:text="Скорость"
+                android:text="@string/speed"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:maxLines="1"
@@ -175,7 +175,7 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
                 <TextView
-                    android:text="Макс.Скорость"
+                    android:text="@string/max_speed"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:maxLines="1"
@@ -212,7 +212,7 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
                 <TextView
-                    android:text="Ср.Скорость:"
+                    android:text="@string/average_speed"
                     android:layout_width="match_parent"
                     android:maxLines="1"
                     android:layout_height="0dp"
@@ -259,7 +259,7 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
                 <TextView
-                    android:text="Высота"
+                    android:text="@string/height"
                     android:layout_width="match_parent"
                     android:maxLines="1"
                     android:layout_height="0dp"
@@ -296,7 +296,7 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
                 <TextView
-                    android:text="Ср.Высота:"
+                    android:text="@string/average_height"
                     android:layout_width="match_parent"
                     android:maxLines="1"
                     android:layout_height="0dp"
@@ -349,7 +349,7 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
                 <TextView
-                    android:text="Макс.Высота"
+                    android:text="@string/max_height"
                     android:layout_width="match_parent"
                     android:maxLines="1"
                     android:layout_height="0dp"
@@ -384,7 +384,7 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
                 <TextView
-                    android:text="Мин.Высота"
+                    android:text="@string/min_height"
                     android:layout_width="match_parent"
                     android:maxLines="1"
                     android:layout_height="0dp"

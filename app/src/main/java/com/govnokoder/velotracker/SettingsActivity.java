@@ -19,8 +19,6 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-
-
         DeleteAll = (Button) findViewById(R.id.DeleteAll);
         DeleteAll.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -33,14 +31,13 @@ public class SettingsActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(R.string.Settings);
+        actionBar.setTitle(R.string.settings);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        switch (id)
-        {
+        switch (id) {
             case android.R.id.home:
                 this.finish();
                 //TODO выход из настроек

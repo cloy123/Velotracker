@@ -25,10 +25,8 @@ public class Date{
         Day = 0;
     }
 
-    public void setCurrentDate()
-    {
+    public void setCurrentDate() {
         Calendar calendar = Calendar.getInstance();
-
         Year = calendar.get(Calendar.YEAR);
         Month = calendar.get(Calendar.MONTH)+1;
         Day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -37,31 +35,14 @@ public class Date{
     @NonNull
     @Override
     public String toString() {
-
         DayStr = Integer.toString(Day);
         MonthStr = Integer.toString(Month);
         YearStr = Integer.toString(Year);
-
-        if(Day < 10) {
-            DayStr = "0" + Day;
-        }
-
-        if(Month < 10) {
-            MonthStr = "0" + Month;
-        }
-
-        if(Year < 10) {
-            YearStr = "000"+Year;
-        }
-
-        if(Year < 100) {
-            YearStr = "00"+Year;
-        }
-
-        if(Year < 1000) {
-            YearStr = "0"+Year;
-        }
-
+        if(Day < 10) { DayStr = "0" + Day; }
+        if(Month < 10) { MonthStr = "0" + Month; }
+        if(Year < 10) { YearStr = "000"+Year; }
+        if(Year < 100) { YearStr = "00"+Year; }
+        if(Year < 1000) { YearStr = "0"+Year; }
         return DayStr + "/" + MonthStr + "/" + YearStr;
     }
 }

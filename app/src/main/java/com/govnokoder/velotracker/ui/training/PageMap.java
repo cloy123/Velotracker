@@ -239,8 +239,7 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
-        if(locationEngine != null)
-        {
+        if(locationEngine != null) {
             LocationEngineRequest request = new LocationEngineRequest.Builder(DEFAULT_INTERVAL_IN_MILLISECONDS)
                     .setPriority(LocationEngineRequest.PRIORITY_HIGH_ACCURACY)
                     .setMaxWaitTime(DEFAULT_MAX_WAIT_TIME).build();
@@ -288,8 +287,6 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
                 WayLengthTextView.setText(String.valueOf(Training.round(currentTraining.WayLength, 2)));
             }
         });
-        //TODO тут забрать у сервиса экземпляр currentActivity
-
     }
 
     @Override
@@ -315,15 +312,13 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
             getActivity().startForegroundService(intent);
             EventBus.getDefault().postSticky(new MessageEvent(currentTraining));
             getActivity().finish();
-        }
-        else {
+        } else {
             currentTraining = new CurrentTraining();
             myChronometer.Stop();
             EventBus.getDefault().removeAllStickyEvents();
             Intent intent = new Intent(getActivity().getApplicationContext(), MainActivity.class);
             startActivity(intent);
         }
-        //TODO тут передать сервису экземпляр currentActivity
         if (locationEngine != null) {
             locationEngine.removeLocationUpdates(callback);
         }

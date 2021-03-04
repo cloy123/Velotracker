@@ -54,24 +54,25 @@ public class PageStart extends Fragment {
         return fragment;
     }
 
-    public PageStart() {
-    }
+    public PageStart() { }
 
     @Override
     public void onResume() {
         super.onResume();
         TrainingController trainingController = new TrainingController(getContext());
         List<Training> trainings = trainingController.LoadTrainingsData(getContext());
-        Training lastTraining = trainings.get(trainings.size() - 1);
-        double totalDest = 0;
-        for (Training training : trainings) {
-            totalDest += training.WayLength;
-            totalDistanceText.setText(Double.toString(totalDest));
+        if(trainings != null){
+            Training lastTraining = trainings.get(trainings.size() - 1);
+            double totalDest = 0;
+            for (Training training : trainings) {
+                totalDest += training.WayLength;
+                totalDistanceText.setText(Double.toString(Training.round(totalDest, 2)));
+            }
+            lastTrainingTimeText.setText(lastTraining.AllTime.toString());
+            lastTrainingAverageSpeedText.setText(Double.toString(Training.round(lastTraining.AverageSpeed, 1)));
+            lastTrainingDistanceText.setText(Double.toString(Training.round(lastTraining.WayLength, 2)));
+            lastTrainingDateText.setText(lastTraining.Date.toString());
         }
-        lastTrainingTimeText.setText(lastTraining.AllTime.toString());
-        lastTrainingAverageSpeedText.setText(Double.toString(Training.round(lastTraining.AverageSpeed, 1)));
-        lastTrainingDistanceText.setText(Double.toString(Training.round(lastTraining.WayLength, 2)));
-        lastTrainingDateText.setText(lastTraining.Date.toString());
     }
 
     @Override
@@ -88,13 +89,9 @@ public class PageStart extends Fragment {
         linearLastTraining.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO переход в историю и открытие ласт записи
                 someEventListener.openLastTraining();
-                Toast.makeText(getContext(), "click!!!", Toast.LENGTH_LONG).show();
             }
         });
-
-
         StartButton = result.findViewById(R.id.startButton);
         StartButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,7 +99,6 @@ public class PageStart extends Fragment {
                     someEventListener.getPermission();
             }
         });
-
 
         linearStat = result.findViewById(R.id.linearStat);
         linearStat.setOnClickListener(new View.OnClickListener() {
@@ -117,7 +113,6 @@ public class PageStart extends Fragment {
         lastTrainingDistanceText = result.findViewById(R.id.lastDistanceTextV);
         lastTrainingAverageSpeedText = result.findViewById(R.id.lastAverageSpeedTextV);
         lastTrainingTimeText = result.findViewById(R.id.lastTimeTextV);
-
         return result;
     }
 }

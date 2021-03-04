@@ -13,6 +13,7 @@ import android.provider.Settings;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
@@ -28,6 +29,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.govnokoder.velotracker.BL.Controller.TrainingController;
 import com.govnokoder.velotracker.ui.main.PageStart;
 import com.govnokoder.velotracker.ui.main.ViewPagerAdapter;
 
@@ -49,7 +51,6 @@ public class MainActivity extends AppCompatActivity implements PageStart.onSomeE
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         pager = (ViewPager2)findViewById(R.id.view_pager);
         FragmentStateAdapter pageAdapter = new ViewPagerAdapter(this);
         pager.setAdapter(pageAdapter);
@@ -57,11 +58,9 @@ public class MainActivity extends AppCompatActivity implements PageStart.onSomeE
         tabLayout = findViewById(R.id.tabs);
 
         TabLayoutMediator tabLayoutMediator= new TabLayoutMediator(tabLayout, pager, new TabLayoutMediator.TabConfigurationStrategy(){
-
             @Override
             public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                switch (position)
-                {
+                switch (position) {
                     case 0:
                         tab.setText("Старт");
                         break;
@@ -77,8 +76,6 @@ public class MainActivity extends AppCompatActivity implements PageStart.onSomeE
         tabLayoutMediator.attach();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
 
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
@@ -102,7 +99,6 @@ public class MainActivity extends AppCompatActivity implements PageStart.onSomeE
                         break;
                 }
                 drawerLayout.closeDrawers();
-
                 return false;
             }
         });
@@ -114,17 +110,6 @@ public class MainActivity extends AppCompatActivity implements PageStart.onSomeE
                 drawerLayout.open();
             }
         });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-//        try {
-//            if(EventBus.getDefault().getStickyEvent(MessageEvent.class).currentTraining != null){
-//                Intent intent = new Intent(getApplicationContext(), TrainingActivity2.class);
-//                startActivity(intent);
-//            }
-//        }catch (Exception ignored){}
     }
 
     @Override
@@ -140,23 +125,19 @@ public class MainActivity extends AppCompatActivity implements PageStart.onSomeE
             // we will give warning to user that they haven't granted permissions.
             showDialogOpenSett("Для работы приложения требуется разрешение на местоположение устройства!", "per");
         }
-
         if (currentPer == Manifest.permission.READ_PHONE_STATE && !allowed && !shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE)){
             // we will give warning to user that they haven't granted permissions.
             showDialogOpenSett("Для работы приложения требуется разрешение на состояние устройства!", "per");
         }
-
         if (currentPer == Manifest.permission.ACCESS_COARSE_LOCATION && !allowed && !shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)){
             // we will give warning to user that they haven't granted permissions.
             showDialogOpenSett("Для работы приложения требуется разрешение на приблизительное местоположение устройства!", "per");
         }
-
         if (currentPer == Manifest.permission.ACCESS_BACKGROUND_LOCATION && !allowed && !shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_BACKGROUND_LOCATION)){
             // we will give warning to user that they haven't granted permissions.
             showDialogOpenSett("Для работы приложения требуется разрешение на местоположение устройства!", "per");
         }
     }
-
 
     @Override
     public void getPermission() {
@@ -200,7 +181,13 @@ public class MainActivity extends AppCompatActivity implements PageStart.onSomeE
 
     @Override
     public void openLastTraining() {
-        tabLayout.selectTab(tabLayout.getTabAt(1));
+        int position = new TrainingController(this).LoadTrainingsData(this).size() - 1;
+        if(position >= 0) {
+            tabLayout.selectTab(tabLayout.getTabAt(1));
+            Intent intent = new Intent(this, LookTraining.class);
+            intent.putExtra("INDEX", position);
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -210,7 +197,6 @@ public class MainActivity extends AppCompatActivity implements PageStart.onSomeE
 
     private void showDialogOpenSett(String text, String target){
         AlertDialog builder = new AlertDialog.Builder(this).create();
-        //TODO title
         ConstraintLayout cl  = (ConstraintLayout)getLayoutInflater().inflate(R.layout.dialog_open_settings, null);
         TextView textView = (TextView) cl.getViewById(R.id.textView);
         textView.setText(text);
@@ -219,14 +205,11 @@ public class MainActivity extends AppCompatActivity implements PageStart.onSomeE
             public void onClick(View v) {
                 if(target == "per"){
                     startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + getPackageName())));
-                }
-                else if(target == "gps"){
+                } else if(target == "gps"){
                     startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                }
-                else if(target == "api30"){
+                } else if(target == "api30"){
                     startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + getPackageName())));
-                }
-                else {return;}
+                } else {return;}
                 builder.dismiss();
             }
         });

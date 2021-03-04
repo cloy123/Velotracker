@@ -23,7 +23,6 @@ import java.util.List;
 public class PageHistory extends Fragment {
 
     private int pageNumber;
-
     private ListView listView;
 
     public static PageHistory newInstance(int page) {
@@ -34,8 +33,7 @@ public class PageHistory extends Fragment {
         return fragment;
     }
 
-    public PageHistory() {
-    }
+    public PageHistory() { }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,22 +47,13 @@ public class PageHistory extends Fragment {
         listView = (ListView) result.findViewById(R.id.listView);
         TrainingController trainingController = new TrainingController(getContext());
         List<Training> trainings = trainingController.LoadTrainingsData(getContext());
-//        String[] listDate = new String[trainings.size()];
         List<String> listDate = new ArrayList<>();
 
-
-        if(trainings != null)
-        {
+        if(trainings != null) {
             for (Training training: trainings) {
                 listDate.add(training.Date.toString());
             }
         }
-
-//
-//        for(int i = 0; i < trainings.size(); i++ ) {
-//            listDate[i] = trainings.get(i).Date.toString();
-//
-//        }
 
         ArrayAdapter<String> adapter = new ArrayAdapter(getContext(),
                 android.R.layout.simple_list_item_1, listDate);
@@ -79,7 +68,6 @@ public class PageHistory extends Fragment {
                 startActivity(intent);
             }
         });
-
         return result;
     }
 }

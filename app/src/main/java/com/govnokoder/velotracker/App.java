@@ -8,9 +8,4 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
     }
-
-
-    //    public void startMain(){
-//        Intent intent = new Intent(this ,MainActivity.class);
-//    }
 }

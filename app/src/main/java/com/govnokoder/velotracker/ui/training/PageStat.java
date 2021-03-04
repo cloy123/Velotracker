@@ -29,12 +29,6 @@ public class PageStat extends Fragment {
     private TextView timeText, wayLengthText, speedText, averageSpeedText, maxSpeedText, heightText, averageHeightText,
                         minHeightText, maxHeightText;
 
-    //private CurrentTraining currentTraining;
-
-    public void setCurrentTraining(CurrentTraining currentTraining) {
-        timeText.setText(currentTraining.Time.toString());
-    }
-
     public static PageStat newInstance(int page){
         PageStat fragment = new PageStat();
         Bundle args=new Bundle();

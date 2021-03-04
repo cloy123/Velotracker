@@ -38,16 +38,13 @@ public class TrainingController {
     }
 
     public void DeleteTraining(int index){
-
+        //Todo удаление конкретной записи по позиции в списке
     }
 
     public void DeleteAll(Context context) {
         trainings.clear();
         Save(context);
     }
-
-
-
 
     public void setNewTrainingData(Context context, Date date, Time time, double wayLength,
                                    double maxSpeed, double averageSpeed, List<List<LatLng>> lines,
@@ -131,11 +128,8 @@ public class TrainingController {
         return false;
     }
 
-
-
     private static class DataItems {
         private List<Training> trainings;
-
         List<Training> getTrainings() {
             return trainings;
         }
@@ -143,64 +137,6 @@ public class TrainingController {
             this.trainings = trainings;
         }
     }
-
-//    String currentPhotoPath;
-//    private File createImageFile() throws IOException {
-//        // Create an image file name
-//        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new java.util.Date());
-//        String imageFileName = "JPEG_" + timeStamp + "_";
-//        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-//        File image = File.createTempFile(
-//                imageFileName,  /* prefix */
-//                ".jpg",         /* suffix */
-//                storageDir      /* directory */
-//        );
-//        // Save a file: path for use with ACTION_VIEW intents
-//        currentPhotoPath = image.getAbsolutePath();
-//        return image;
-//    }
-
-
-
-//    private static void CreateProgramFiles()
-//    {
-//        try {
-//            File dir = new File(TESS_PATH);
-//            dir.mkdirs();
-//        }
-//        catch (Exception e)
-//        {
-//            Log.e("", e.getMessage());
-//        }
-//
-//        try {
-//            String fileList[] = getAssets().list(TESSDATA);
-//
-//            for(String fileName: fileList)
-//            {
-//                String pathToDateFile = DATA_PATH + TESSDATA + "/" + fileName;
-//                if (!(new File(pathToDateFile).exists()))
-//                {
-//                    InputStream in = getAssets().open(TESSDATA + "/" + fileName);
-//                    OutputStream out = new FileOutputStream(pathToDateFile);
-//                    byte[] buf = new byte[1024];
-//                    int len = in.read(buf);
-//                    while (len > 0)
-//                    {
-//                        out.write(buf, 0, len);
-//                        len = in.read(buf);
-//                    }
-//                    in.close();
-//                    out.close();
-//                }
-//            }
-//        }
-//        catch (Exception e)
-//        {
-//            Log.e("", "Unable to copy files to tessdata " + e.toString());
-//        }
-//    }
-
 }
 
 
