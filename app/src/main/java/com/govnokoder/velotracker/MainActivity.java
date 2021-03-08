@@ -200,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements PageStart.onSomeE
         ConstraintLayout cl  = (ConstraintLayout)getLayoutInflater().inflate(R.layout.dialog_open_settings, null);
         TextView textView = (TextView) cl.getViewById(R.id.textView);
         textView.setText(text);
-        cl.getViewById(R.id.OpenSettB).setOnClickListener(new View.OnClickListener() {
+        cl.getViewById(R.id.openSettB).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(target == "per"){

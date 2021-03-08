@@ -1,12 +1,19 @@
 package com.govnokoder.velotracker.ui.training;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.GnssNavigationMessage;
+import android.location.GnssStatus;
 import android.location.Location;
+import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.SystemClock;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +26,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
@@ -59,19 +67,25 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
+import java.util.concurrent.Executor;
 
 import android.os.CountDownTimer;
 
 import static com.govnokoder.velotracker.R.drawable.tracking_on;
 
 
-public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTrackingChangedListener {
+public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTrackingChangedListener{
     private int pageNumber;
 
     private MapView mapView;
     private MapboxMap mapboxMap;
 
+
+    private LocationManager locationManager;
     private LocationEngine locationEngine;
+    private GnssNavigationMessage.Callback gnssCallback;
+    private GnssNavigationMessage gnssNavigationMessage;
+    private int gpsStatus = -1;
     private long DEFAULT_INTERVAL_IN_MILLISECONDS = 500L;
     private long DEFAULT_MAX_WAIT_TIME = DEFAULT_INTERVAL_IN_MILLISECONDS * 5;
 
@@ -163,12 +177,28 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
     }
 
     private void onClickStopButton(View v){
-        //TODO проверка на то сколько прошло времени
-        Time time = myChronometer.getTime();
-        myChronometer.Stop();
-        currentTraining.StopAndSave(getContext(), time);
-        isFinish = true;
-        getActivity().finish();
+        AlertDialog builder = new AlertDialog.Builder(getContext()).create();
+        ConstraintLayout cl  = (ConstraintLayout)getLayoutInflater().inflate(R.layout.dialog_save_and_exit, null);
+        cl.getViewById(R.id.saveAndExitB).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Time time = myChronometer.getTime();
+                myChronometer.Stop();
+                currentTraining.StopAndSave(getContext(), time);
+                isFinish = true;
+                getActivity().finish();
+            }
+        });
+        cl.getViewById(R.id.exitWithoutSavingB).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myChronometer.Stop();
+                isFinish = true;
+                getActivity().finish();
+            }
+        });
+        builder.setView(cl);
+        builder.show();
     }
 
     @Override
@@ -220,6 +250,7 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
                 }
             });
             initLocationEngine();
+            locationManager = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
         }
     }
 
@@ -284,7 +315,7 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
                     myChronometer.Pause();
                 }
                 CurrentSpeedTextView.setText(String.valueOf(Training.round(currentTraining.CurrentSpeed, 1)));
-                WayLengthTextView.setText(String.valueOf(Training.round(currentTraining.WayLength, 2)));
+                WayLengthTextView.setText(String.valueOf(Training.round(currentTraining.Distance, 2)));
             }
         });
     }
@@ -378,6 +409,7 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
             //при изменениии местоположения
             PageMap fragment = fragmentWeakReference.get();
             if (fragment != null && fragment.currentTraining != null) {
+
                 Location location = result.getLastLocation();
                 if (fragment.mapboxMap != null) {
                     //отрисовка путей
@@ -389,9 +421,12 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
                         fragment.lineManager.create(new LineOptions().withLatLngs(fragment.currentTraining.CurrentLine));
                     }
                     fragment.currentTraining.setValuesFromLocation(location);
+
                 }
-                //местоположение
-                fragment.mapboxMap.getLocationComponent().forceLocationUpdate(location);
+                if(location.hasAccuracy()){
+                    //местоположение
+                    fragment.mapboxMap.getLocationComponent().forceLocationUpdate(location);
+                }
             }
         }
 

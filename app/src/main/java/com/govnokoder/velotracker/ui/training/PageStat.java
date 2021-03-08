@@ -75,9 +75,9 @@ public class PageStat extends Fragment {
             public void onChanged(CurrentTraining currentTraining) {
                 if(currentTraining != null){
                     timeText.setText(currentTraining.Time.toString());
-                    wayLengthText.setText(String.valueOf(Training.round(currentTraining.WayLength, 2)));
+                    wayLengthText.setText(String.valueOf(Training.round(currentTraining.Distance, 2)));
                     speedText.setText(String.valueOf(Training.round(currentTraining.CurrentSpeed, 1)));
-                    averageSpeedText.setText(String.valueOf(Training.round(currentTraining.AverageSpeed, 1)));
+                    averageSpeedText.setText(String.valueOf((Training.round(currentTraining.AverageSpeed, 1))));
                     maxSpeedText.setText(String.valueOf(Training.round(currentTraining.MaxSpeed, 1)));
                     if(currentTraining.Heights.size() > 0){
                         heightText.setText(String.valueOf(currentTraining.Heights.get(currentTraining.Heights.size()-1)));

@@ -9,8 +9,8 @@ import java.util.List;
 
 public class Training {
     public Date Date = new Date(0,0,0);
-    public Time AllTime = new Time(0,0,0);
-    public double WayLength = 0;
+    public Time Time = new Time(0,0,0);
+    public double Distance = 0;
     public double MaxSpeed = 0;
     public double AverageSpeed = 0;
     public List<List<LatLng>> Lines = new ArrayList<>();
@@ -18,27 +18,25 @@ public class Training {
     private double startLatitude;
     private double startLongitude;
 
-    public long MaxHeight;
-    public long MinHeight;
-    public long AverageHeight;
+    public long MaxHeight = 0;
+    public long MinHeight = 0;
+    public long AverageHeight = 0;
     public List<Long> Heights = new ArrayList<>();
 
     public Time getTemp(String unit){
-        if(WayLength > 0 && AllTime != null && AllTime.getAllSeconds() > 0) {
-            int allSeconds;
-            int tempSeconds;
+        if(Distance > 0 && Time != null && Time.getAllSeconds() > 0) {
+            long allSeconds = Time.getAllSeconds();;
+            long tempSeconds;
             switch (unit) {
                 case "m":
-                    allSeconds = AllTime.getAllSeconds();
-                    tempSeconds = (int) (allSeconds / convertToMiles(WayLength));
+                    tempSeconds = (long) (allSeconds / convertToMiles(Distance));
                     return Time.getTimeFromSeconds(tempSeconds);
                 case "k":
-                    allSeconds = AllTime.getAllSeconds();
-                    tempSeconds = (int) (allSeconds / WayLength);
+                    tempSeconds = (long) (allSeconds / Distance);
                     return Time.getTimeFromSeconds(tempSeconds);
             }
         }
-        return null;
+        return new Time(0,0,0);
     }
 
     public double convertToMiles(double value) {
@@ -55,13 +53,13 @@ public class Training {
         startLongitude = latLng.getLongitude();
     }
 
-    public Training(Date date, Time time, double wayLength,
+    public Training(Date date, Time time, double distance,
                     double maxSpeed, double averageSpeed,
                     List<List<LatLng>> lines, LatLng startPoint,
                     long maxHeight, long minHeight, long averageHeight) {
         Date = date;
-        AllTime = time;
-        WayLength = wayLength;
+        Time = time;
+        Distance = distance;
         MaxSpeed = maxSpeed;
         AverageSpeed = averageSpeed;
         Lines = lines;

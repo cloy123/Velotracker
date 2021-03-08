@@ -49,5 +49,14 @@
 
     <string name="open">Открыть</string>
     <string name="deleteButton">Удалить</string>
+    <string name="save_and_exit_question">Сохранить и выйти?</string>
+    <string name="save_and_exit">Сохранить и выйти</string>
+    <string name="exit_without_saving">Выйти без сохранения</string>
+    <string name="cancel">Отмена</string>
+    
+    <string name="km">km</string>
+    <string name="m">m</string>
+    <string name="kph">kph</string>
+    <string name="mph">mph</string>
 
 </resources>

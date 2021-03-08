@@ -94,7 +94,7 @@
                 android:layout_height="0dp"
                 android:maxLines="1"
                 android:layout_weight="2"
-                android:text="10.1 км"
+                android:text="0"
                 android:theme="@style/Theme.Velotracker.StatTextViewsValue"/>
 
         </LinearLayout>
@@ -131,7 +131,7 @@
                 android:maxLines="1"
                 android:layout_height="0dp"
                 android:layout_weight="2"
-                android:text="10km/h"
+                android:text="0"
                 android:theme="@style/Theme.Velotracker.StatTextViewsValue"
                 />
         </LinearLayout>
@@ -194,7 +194,7 @@
                     android:layout_height="0dp"
                     android:maxLines="1"
                     android:layout_weight="2"
-                    android:text="10km/h"
+                    android:text="0"
                     android:theme="@style/Theme.Velotracker.StatTextViewsValue"
                     />
             </LinearLayout>
@@ -231,7 +231,7 @@
                     android:maxLines="1"
                     android:layout_height="0dp"
                     android:layout_weight="2"
-                    android:text="10km/h"
+                    android:text="0"
                     android:theme="@style/Theme.Velotracker.StatTextViewsValue"
                     />
             </LinearLayout>
@@ -278,7 +278,7 @@
                     android:maxLines="1"
                     android:layout_height="0dp"
                     android:layout_weight="2"
-                    android:text="10"
+                    android:text="0"
                     android:theme="@style/Theme.Velotracker.StatTextViewsValue"
                     />
             </LinearLayout>
@@ -315,7 +315,7 @@
                     android:maxLines="1"
                     android:layout_height="0dp"
                     android:layout_weight="2"
-                    android:text="10"
+                    android:text="0"
                     android:theme="@style/Theme.Velotracker.StatTextViewsValue"
                     />
             </LinearLayout>
@@ -368,7 +368,7 @@
                     android:maxLines="1"
                     android:layout_height="0dp"
                     android:layout_weight="2"
-                    android:text="10"
+                    android:text="0"
                     android:theme="@style/Theme.Velotracker.StatTextViewsValue"
                     />
             </LinearLayout>
@@ -403,7 +403,7 @@
                     android:layout_height="0dp"
                     android:maxLines="1"
                     android:layout_weight="2"
-                    android:text="10"
+                    android:text="0"
                     android:theme="@style/Theme.Velotracker.StatTextViewsValue"
                     />
             </LinearLayout>

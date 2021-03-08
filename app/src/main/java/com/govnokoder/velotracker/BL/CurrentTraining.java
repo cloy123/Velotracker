@@ -25,7 +25,7 @@ public class CurrentTraining{
     public Date Date = new Date(0,0,0);
     public Time Time = new Time(0,0,0);
 
-    public double WayLength = 0;//в *.***км
+    public double Distance = 0;//в *.***км
 
     public List<Double> SpeedList = new ArrayList<>();
     public double MaxSpeed = 0;
@@ -61,12 +61,27 @@ public class CurrentTraining{
 
     public void StopAndSave(Context context, Time time) {
         TrainingController trainingController = new TrainingController(context);
-        AverageSpeed = ((WayLength*1000) / (time.Hours*3600 + time.Minutes*60 + time.Seconds))*3.6;
+        if(Heights.size() == 0){
+            MaxHeight = 0;
+            MinHeight = 0;
+            AverageHeight = 0;
+        }
+        AverageSpeed = ((Distance*1000) / (time.Hours*3600 + time.Minutes*60 + time.Seconds))*3.6;
         if(Lines.size() == 0) {
             return;
         }
-        LatLng startPoint = new LatLng(Lines.get(0).get(0).getLatitude(), Lines.get(0).get(0).getLongitude());
-        trainingController.setNewTrainingData(context, Date, time, WayLength, MaxSpeed, AverageSpeed, Lines, startPoint, Heights, AverageHeight, MaxHeight, MinHeight);
+        LatLng startPoint;
+        try{
+            startPoint = new LatLng(Lines.get(0).get(0).getLatitude(), Lines.get(0).get(0).getLongitude());
+        }catch (Exception e){
+            if(originLocation != null){
+                startPoint = new LatLng(originLocation.getLatitude(), originLocation.getLongitude());
+            }else {
+                startPoint = null;
+            }
+
+        }
+        trainingController.setNewTrainingData(context, Date, time, Distance, MaxSpeed, AverageSpeed, Lines, startPoint, Heights, AverageHeight, MaxHeight, MinHeight);
     }
 
 
@@ -74,40 +89,48 @@ public class CurrentTraining{
 
     public void setValuesFromLocation(Location location){
         if (location != null) {
-            if (location.hasSpeed()) {
-                double speed = location.getSpeed() * 3.6;
-                double distance = 0;
-                if (originLocation != null) {
-                    distance = originLocation.distanceTo(location) / 1000;
-                }
-                long height = (long) location.getAltitude();
-                if (isRunning) {
-                    //скорость
-                    if (speed > MaxSpeed) {
-                        MaxSpeed = speed;
-                    }
-                    CurrentSpeed = speed;
-                    SpeedList.add(speed);
-                    SumSpeed += speed;
-                    AverageSpeed = SumSpeed / SpeedList.size();
 
-                    //длина пути
-                    WayLength += distance;
-                    //путь
-                    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                    CurrentLine.add(latLng);
-                    //Высота
+            double speed = 0.0;
+            //скорость
+            if(location.hasSpeed()){
+                speed = location.getSpeed() * 3.6;
+            }
+            CurrentSpeed = speed;
+            if (isRunning) {
+                if (speed > MaxSpeed) {
+                    MaxSpeed = speed;
+                }
+                SpeedList.add(speed);
+                SumSpeed += speed;
+                AverageSpeed = SumSpeed/SpeedList.size();
+            }
+
+            if(location.hasVerticalAccuracy() && location.hasAltitude()) {
+                //Высота
+                long height = (long) location.getAltitude();
+                if(location.hasAltitude()){
                     Heights.add(height);
                     MinHeight = Long.min(height, MinHeight);
                     MaxHeight = Long.max(height, MaxHeight);
                     SumHeight += height;
                     AverageHeight = SumHeight / Heights.size();
                 }
-            } else {
-                //скорость
-                CurrentSpeed = 0;
             }
-            originLocation = location;
+
+            if(location.hasAccuracy()) {
+                if(isRunning){
+                    double distance = 0;
+                    if (originLocation != null) {
+                        distance = originLocation.distanceTo(location) / 1000;
+                    }
+                    //длина пути
+                    Distance += distance;
+                    //путь
+                    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                    CurrentLine.add(latLng);
+                }
+                originLocation = location;
+            }
         }
     }
 }

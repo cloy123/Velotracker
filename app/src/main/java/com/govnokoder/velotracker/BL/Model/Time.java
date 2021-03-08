@@ -37,14 +37,16 @@ public class Time {
         }
     }
 
-    public int getAllSeconds() {
+    public long getAllSeconds() {
         return Seconds + (Minutes*60) + (Hours*3600);
     }
 
-    public static Time getTimeFromSeconds(int seconds) {
-        int horses = seconds / 3600;
-        int minutes = (seconds - horses*3600)/60;
-        int sec = seconds - minutes*60;
+    public static Time getTimeFromSeconds(long seconds) {
+        int horses = (int)(seconds / 3600);
+        seconds -= horses*3600;
+        int minutes = (int)(seconds/60);
+        seconds -= minutes*60;
+        int sec = (int)seconds;
         return new Time(horses, minutes, sec);
     }
 

@@ -30,9 +30,6 @@
             android:layout_marginRight="0dp"
             android:layout_marginLeft="0dp"
             android:background="#bbb" />
-
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="100dp"
@@ -399,12 +396,9 @@
             android:layout_marginLeft="0dp"
             android:background="#bbb" />
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="5dp"/>
-
         <LinearLayout
             android:layout_width="match_parent"
+            android:layout_marginVertical="5dp"
             android:layout_height="50dp">
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/deleteButton"
@@ -412,9 +406,7 @@
                 android:layout_width="match_parent"
                 android:layout_marginRight="70dp"
                 android:layout_marginLeft="70dp"
-                android:layout_marginBottom="2dp"
-                android:layout_marginTop="2dp"
-                android:background="@drawable/ovalbutton"
+                android:background="@drawable/oval_button"
                 android:text="@string/deleteButton"
                 android:textColor="#F5F5F5"
                 android:textSize="15sp"
@@ -422,9 +414,6 @@
                 android:paddingHorizontal="20dp"/>
         </LinearLayout>
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="5dp"/>
 
         <com.google.android.material.internal.BaselineLayout
             android:layout_width="match_parent"

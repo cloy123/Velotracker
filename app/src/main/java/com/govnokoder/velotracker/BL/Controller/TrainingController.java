@@ -46,13 +46,13 @@ public class TrainingController {
         Save(context);
     }
 
-    public void setNewTrainingData(Context context, Date date, Time time, double wayLength,
+    public void setNewTrainingData(Context context, Date date, Time time, double distance,
                                    double maxSpeed, double averageSpeed, List<List<LatLng>> lines,
                                    LatLng startPoint, List<Long> heights, long averageHeight, long maxHeight, long minHeight){
         currentTraining = new Training();
         currentTraining.Date = date;
-        currentTraining.AllTime = time;
-        currentTraining.WayLength = wayLength;
+        currentTraining.Time = time;
+        currentTraining.Distance = distance;
         currentTraining.MaxSpeed = maxSpeed;
         currentTraining.AverageSpeed = averageSpeed;
         currentTraining.Lines = lines;

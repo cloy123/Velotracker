@@ -63,14 +63,14 @@ public class PageStart extends Fragment {
         List<Training> trainings = trainingController.LoadTrainingsData(getContext());
         if(trainings != null){
             Training lastTraining = trainings.get(trainings.size() - 1);
-            double totalDest = 0;
+            double totalDist = 0;
             for (Training training : trainings) {
-                totalDest += training.WayLength;
-                totalDistanceText.setText(Double.toString(Training.round(totalDest, 2)));
+                totalDist += training.Distance;
+                totalDistanceText.setText(Double.toString(Training.round(totalDist, 2)));
             }
-            lastTrainingTimeText.setText(lastTraining.AllTime.toString());
+            lastTrainingTimeText.setText(lastTraining.Time.toString());
             lastTrainingAverageSpeedText.setText(Double.toString(Training.round(lastTraining.AverageSpeed, 1)));
-            lastTrainingDistanceText.setText(Double.toString(Training.round(lastTraining.WayLength, 2)));
+            lastTrainingDistanceText.setText(Double.toString(Training.round(lastTraining.Distance, 2)));
             lastTrainingDateText.setText(lastTraining.Date.toString());
         }
     }

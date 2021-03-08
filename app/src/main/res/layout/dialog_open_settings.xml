@@ -24,11 +24,11 @@
 
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/OpenSettB"
+        android:id="@+id/openSettB"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_marginTop="40dp"
-        android:background="@drawable/ovalbutton"
+        android:background="@drawable/oval_button"
         android:text="@string/open_settings_dialog"
         android:textColor="#F5F5F5"
         android:textSize="15sp"

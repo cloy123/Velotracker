@@ -73,14 +73,14 @@ public class LookTraining extends AppCompatActivity
         trainings = trainingController.LoadTrainingsData(getApplicationContext());
         CurrentTraining = trainings.get(Index);
 
-        distanceText.setText(Double.toString(Training.round(CurrentTraining.WayLength, 2)));
+        distanceText.setText(Double.toString(Training.round(CurrentTraining.Distance, 2)));
         maxSpeedText.setText(Double.toString(Training.round(CurrentTraining.MaxSpeed, 1)));
         averageSpeedText.setText(Double.toString(Training.round(CurrentTraining.AverageSpeed, 1)));
-        timeText.setText(CurrentTraining.AllTime.toString());
-        //averageHeightText.setText((int) CurrentTraining.AverageHeight);
+        timeText.setText(CurrentTraining.Time.toString());
+        averageHeightText.setText(Long.toString(CurrentTraining.AverageHeight));
         tempText.setText(CurrentTraining.getTemp("k").toString());
-        //maxHeightText.setText((int) CurrentTraining.MaxHeight);
-        //minHeightText.setText((int) CurrentTraining.MinHeight);
+        maxHeightText.setText(Long.toString(CurrentTraining.MaxHeight));
+        minHeightText.setText(Long.toString(CurrentTraining.MinHeight));
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
@@ -91,7 +91,7 @@ public class LookTraining extends AppCompatActivity
         DeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO добавить нормальное удаление и  отображение пути
+                //TODO добавить нормальное удаление
             }
         });
     }
@@ -107,30 +107,29 @@ public class LookTraining extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-
-    private void setCameraPositionLoc(LatLng latLng) {
-        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17.0));
-    }
-
     public void onMapReady(@NonNull final MapboxMap mapboxMap) {
         this.mapboxMap = mapboxMap;
         mapboxMap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
             @Override
             public void onStyleLoaded(@NonNull Style style) {
                 // Map is set up and the style has loaded. Now you can add data or make other map adjustments
-                LatLng latLng = CurrentTraining.getStartPoint();
-                CameraPosition position = new CameraPosition.Builder()
-                        .target(latLng)
-                        .zoom(15)
-                        .tilt(20)
-                        .build();
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(position);
-                mapboxMap.moveCamera(cameraUpdate);
+                if(CurrentTraining.getStartPoint() != null ){
+                    LatLng latLng = CurrentTraining.getStartPoint();
+                    CameraPosition position = new CameraPosition.Builder()
+                            .target(latLng)
+                            .zoom(15)
+                            .tilt(20)
+                            .build();
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(position);
+                    mapboxMap.moveCamera(cameraUpdate);
+                }
 
-                lineManager = new LineManager(mapView, mapboxMap, mapboxMap.getStyle());
-                lineOptions = new LineOptions();
-                for (List<LatLng> line: CurrentTraining.Lines) {
-                    lineManager.create(new LineOptions().withLatLngs(line));
+                if(CurrentTraining.Lines != null && CurrentTraining.Lines.size() > 0){
+                    lineManager = new LineManager(mapView, mapboxMap, mapboxMap.getStyle());
+                    lineOptions = new LineOptions();
+                    for (List<LatLng> line: CurrentTraining.Lines) {
+                        lineManager.create(new LineOptions().withLatLngs(line));
+                    }
                 }
             }
         });

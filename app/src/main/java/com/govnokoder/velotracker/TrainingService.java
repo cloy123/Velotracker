@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Icon;
 import android.location.Location;
 import android.location.LocationManager;
+import android.media.AudioAttributes;
 import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.os.SystemClock;
@@ -23,6 +24,7 @@ import androidx.core.app.ActivityCompat;
 import com.govnokoder.velotracker.BL.CurrentTraining;
 import com.govnokoder.velotracker.BL.Model.Time;
 import com.govnokoder.velotracker.BL.LocListenerInterface;
+import com.govnokoder.velotracker.BL.Model.Training;
 import com.govnokoder.velotracker.BL.MyLocListener;
 import com.govnokoder.velotracker.messages.MessageEvent;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -34,6 +36,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 public class TrainingService extends Service implements LocListenerInterface {
     private static final int ONGOING_NOTIFICATION_ID = 333;
+
     private Icon myIcon = null;
     private long DEFAULT_INTERVAL_IN_MILLISECONDS = 500L;
     CurrentTraining currentTraining;
@@ -68,21 +71,29 @@ public class TrainingService extends Service implements LocListenerInterface {
         EventBus.getDefault().register(this);
         currentTraining = EventBus.getDefault().getStickyEvent(MessageEvent.class).currentTraining;
         if(currentTraining != null){
-            startForeground(currentTraining.Time.toString());
             EventBus.getDefault().removeAllStickyEvents();
             EventBus.getDefault().unregister(this);
         }
-        myIcon = Icon.createWithResource(this, R.mipmap.ic_launcher);
+        myIcon = Icon.createWithResource(this, R.drawable.notification_icon);
         countDownTimer = new CountDownTimer(Long.MAX_VALUE, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 if(currentTraining != null){
                     if(currentTraining.isRunning){
                         currentTraining.Time.addSecond();
+                        startForeground(getApplicationContext().getString(R.string.app_name),
+                                currentTraining.Time.toString() + " | " +
+                                        Training.round(currentTraining.CurrentSpeed, 1) + " " +
+                                        getApplicationContext().getString(R.string.kph) + " | " +
+                                        Training.round(currentTraining.Distance,2) + " " +
+                                        getApplicationContext().getString(R.string.km));
                     }else {
-                        startForeground(getApplicationContext().getString(R.string.pause_button));
+                        startForeground(getApplicationContext().getString(R.string.pause_button),currentTraining.Time.toString() + " | " +
+                                Training.round(currentTraining.CurrentSpeed, 1) +  " " +
+                                getApplicationContext().getString(R.string.kph) + " | " +
+                                Training.round(currentTraining.Distance,2) + " " +
+                                getApplicationContext().getString(R.string.km));
                     }
-                    startForeground(currentTraining.Time.toString());
                 }
             }
             @Override
@@ -92,7 +103,7 @@ public class TrainingService extends Service implements LocListenerInterface {
                 }
             }
         };
-        if(currentTraining != null && currentTraining.isRunning){
+        if(currentTraining != null){
             countDownTimer.start();
         }
     }
@@ -117,14 +128,14 @@ public class TrainingService extends Service implements LocListenerInterface {
         EventBus.getDefault().unregister(this);
     }
 
-    public void startForeground(String string) {
+    public void startForeground(String title, String text) {
         String CHANNEL_DEFAULT_IMPORTANCE = createChannel(this);
         Intent notificationIntent = new Intent(this, TrainingActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 1010, notificationIntent, 0);
         Notification notification =
                 new Notification.Builder(this, CHANNEL_DEFAULT_IMPORTANCE)//CHANNEL_DEFAULT_IMPORTANCE
-                        .setContentTitle(getApplicationContext().getString(R.string.open))
-                        .setContentText(string)
+                        .setContentTitle(title)
+                        .setContentText(text)
                         .setSmallIcon(myIcon)
                         .setContentIntent(pendingIntent)
                         .setTicker(getText(R.string.ticker_text))
@@ -136,8 +147,12 @@ public class TrainingService extends Service implements LocListenerInterface {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         String id = context.getString(R.string.notification_channel_id);
         String name = context.getString(R.string.notification_channel_name);
-        int importance = NotificationManager.IMPORTANCE_DEFAULT;//.IMPORTANCE_DEFAULT IMPORTANCE_HIGH
-        notificationManager.createNotificationChannel(new NotificationChannel(id, name, importance));
+        int importance = NotificationManager.IMPORTANCE_LOW;//.IMPORTANCE_DEFAULT IMPORTANCE_HIGH
+        NotificationChannel notificationChannel = new NotificationChannel(id, name, importance);
+        notificationChannel.enableVibration(false);
+        notificationChannel.enableLights(false);
+       // notificationChannel.setSound(null, AudioAttributes.);
+        notificationManager.createNotificationChannel(notificationChannel);
         return id;
     }
 }
