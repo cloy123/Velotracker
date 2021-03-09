@@ -147,7 +147,7 @@ public class TrainingService extends Service implements LocListenerInterface {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         String id = context.getString(R.string.notification_channel_id);
         String name = context.getString(R.string.notification_channel_name);
-        int importance = NotificationManager.IMPORTANCE_LOW;//.IMPORTANCE_DEFAULT IMPORTANCE_HIGH
+        int importance = NotificationManager.IMPORTANCE_DEFAULT                                                                                                                                                                                                                                                         ;//.IMPORTANCE_DEFAULT IMPORTANCE_HIGH
         NotificationChannel notificationChannel = new NotificationChannel(id, name, importance);
         notificationChannel.enableVibration(false);
         notificationChannel.enableLights(false);

@@ -83,9 +83,6 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
 
     private LocationManager locationManager;
     private LocationEngine locationEngine;
-    private GnssNavigationMessage.Callback gnssCallback;
-    private GnssNavigationMessage gnssNavigationMessage;
-    private int gpsStatus = -1;
     private long DEFAULT_INTERVAL_IN_MILLISECONDS = 500L;
     private long DEFAULT_MAX_WAIT_TIME = DEFAULT_INTERVAL_IN_MILLISECONDS * 5;
 
@@ -423,10 +420,10 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
                     fragment.currentTraining.setValuesFromLocation(location);
 
                 }
-                if(location.hasAccuracy()){
+                //if(location.hasAccuracy()){
                     //местоположение
-                    fragment.mapboxMap.getLocationComponent().forceLocationUpdate(location);
-                }
+                    fragment.mapboxMap.getLocationComponent().forceLocationUpdate(fragment.currentTraining.originLocation);
+               //}
             }
         }
 
