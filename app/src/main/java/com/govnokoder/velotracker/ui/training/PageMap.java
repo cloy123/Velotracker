@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.GnssNavigationMessage;
 import android.location.GnssStatus;
 import android.location.Location;
@@ -58,8 +59,10 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
+import com.mapbox.mapboxsdk.plugins.annotation.Line;
 import com.mapbox.mapboxsdk.plugins.annotation.LineManager;
 import com.mapbox.mapboxsdk.plugins.annotation.LineOptions;
+import com.mapbox.mapboxsdk.utils.ColorUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -194,6 +197,12 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
                 getActivity().finish();
             }
         });
+        cl.getViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                builder.dismiss();
+            }
+        });
         builder.setView(cl);
         builder.show();
     }
@@ -201,7 +210,7 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
     @Override
     public void onMapReady(@NonNull final MapboxMap mapboxMap) {
         this.mapboxMap = mapboxMap;
-        mapboxMap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
+        mapboxMap.setStyle(Style.OUTDOORS, new Style.OnStyleLoaded() {//MAPBOX_STREETS
             @Override
             public void onStyleLoaded(@NonNull Style style) {
                 // Map is set up and the style has loaded. Now you can add data or make other map adjustments
@@ -413,7 +422,11 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
                     if (location != null && fragment.lineManager != null) {
                         fragment.lineManager.deleteAll();
                         for (List<LatLng> line: fragment.currentTraining.Lines) {
-                            fragment.lineManager.create(new LineOptions().withLatLngs(line));
+                            LineOptions lineOptions = new LineOptions();
+                            lineOptions.withLatLngs(line);
+                            lineOptions.withLineColor(ColorUtils.colorToRgbaString(Color.argb(255, 255, 0, 0)));
+                            lineOptions.withLineWidth((float)5);
+                            fragment.lineManager.create(lineOptions);
                         }
                         fragment.lineManager.create(new LineOptions().withLatLngs(fragment.currentTraining.CurrentLine));
                     }

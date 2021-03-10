@@ -73,14 +73,14 @@ public class LookTraining extends AppCompatActivity
         trainings = trainingController.LoadTrainingsData(getApplicationContext());
         CurrentTraining = trainings.get(Index);
 
-        distanceText.setText(Double.toString(Training.round(CurrentTraining.Distance, 2)));
-        maxSpeedText.setText(Double.toString(Training.round(CurrentTraining.MaxSpeed, 1)));
-        averageSpeedText.setText(Double.toString(Training.round(CurrentTraining.AverageSpeed, 1)));
+        distanceText.setText(Double.toString(Training.round(CurrentTraining.Distance, 2)) + " " + getString(R.string.km));
+        maxSpeedText.setText(Double.toString(Training.round(CurrentTraining.MaxSpeed, 1)) + " " + getString(R.string.kph));
+        averageSpeedText.setText(Double.toString(Training.round(CurrentTraining.AverageSpeed, 1)) + " " + getString(R.string.kph));
         timeText.setText(CurrentTraining.Time.toString());
-        averageHeightText.setText(Long.toString(CurrentTraining.AverageHeight));
-        tempText.setText(CurrentTraining.getTemp("k").toString());
-        maxHeightText.setText(Long.toString(CurrentTraining.MaxHeight));
-        minHeightText.setText(Long.toString(CurrentTraining.MinHeight));
+        averageHeightText.setText(Long.toString(CurrentTraining.AverageHeight) + " " + getString(R.string.m));
+        tempText.setText(CurrentTraining.getTemp("k").toString() + " /" + getString(R.string.km));
+        maxHeightText.setText(Long.toString(CurrentTraining.MaxHeight) + " " + getString(R.string.m));
+        minHeightText.setText(Long.toString(CurrentTraining.MinHeight) + " " + getString(R.string.m));
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);

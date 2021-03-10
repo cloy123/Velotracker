@@ -18,17 +18,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Velotracker">
-
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:theme="@style/Theme.AppCompat.Settings" />
         <activity
             android:name=".TrainingActivity"
-            android:label="@string/title_activity_training2"
-            android:theme="@style/Theme.Velotracker.NoActionBar"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".SettingsActivity" />
-
+            android:label="@string/title_activity_training"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Velotracker.NoActionBar" />
         <activity android:name=".LookTraining" />
-
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -44,7 +43,7 @@
             android:name=".TrainingService"
             android:enabled="true"
             android:exported="true"
-            android:process=""/>
+            android:process="" />
     </application>
 
 </manifest>

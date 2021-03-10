@@ -66,11 +66,11 @@ public class PageStart extends Fragment {
             double totalDist = 0;
             for (Training training : trainings) {
                 totalDist += training.Distance;
-                totalDistanceText.setText(Double.toString(Training.round(totalDist, 2)));
+                totalDistanceText.setText(Double.toString(Training.round(totalDist, 2)) + getString(R.string.km));
             }
             lastTrainingTimeText.setText(lastTraining.Time.toString());
-            lastTrainingAverageSpeedText.setText(Double.toString(Training.round(lastTraining.AverageSpeed, 1)));
-            lastTrainingDistanceText.setText(Double.toString(Training.round(lastTraining.Distance, 2)));
+            lastTrainingAverageSpeedText.setText(Double.toString(Training.round(lastTraining.AverageSpeed, 1)) + getString(R.string.kph));
+            lastTrainingDistanceText.setText(Double.toString(Training.round(lastTraining.Distance, 2)) + getString(R.string.km));
             lastTrainingDateText.setText(lastTraining.Date.toString());
         }
     }

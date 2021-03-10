@@ -10,7 +10,6 @@
     <string name="my_location">My location</string>
     <string name="user_location_permission_explanation">EXPLANATION_HERE</string>
     <string name="user_location_permission_not_granted" />
-    <string name="title_activity_training">TrainingActivity</string>
     <!-- Strings used for fragments for navigation -->
 
     <string name="time">Время</string>
@@ -43,7 +42,7 @@
     <string name="notification_title">notification_title11</string>
     <string name="notification_message">notification_message11</string>
     <string name="ticker_text">ticker_text</string>
-    <string name="title_activity_training2">TrainingActivity2</string>
+    <string name="title_activity_training">TrainingActivity</string>
     <string name="open_settings_dialog">Открыть настройки</string>
     <string name="start">Старт</string>
 
@@ -53,10 +52,40 @@
     <string name="save_and_exit">Сохранить и выйти</string>
     <string name="exit_without_saving">Выйти без сохранения</string>
     <string name="cancel">Отмена</string>
-    
+
     <string name="km">km</string>
-    <string name="m">m</string>
-    <string name="kph">kph</string>
+    <string name="m">м</string>
+    <string name="kph">km/ч</string>
     <string name="mph">mph</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <string name="meters">Метры</string>
+    <string name="foot">Футы</string>
+
+    <string name="DARK_map_style">Тёмная</string>
+    <string name="SATELLITE_STREETS_map_style">Спутник</string>
+    <string name="OUTDOORS_map_style">На улице</string>
+    <string name="MAPBOX_STREETS_map_style">Обычная</string>
+    <string name="TRAFFIC_NIGHT_map_style">Трафик(Тёмная)</string>
+    <string name="TRAFFIC_DAY_map_style">Трафик(Тёмная)</string>
+
+
+    <!-- Preference Titles -->
+    <string name="units_header">Единицы измерения</string>
+    <string name="map_style_header">Карта</string>
+    <string name="record_header">Запись</string>
+    <string name="application_header">Приложение</string>
+
+    <!-- Messages Preferences -->
+    <string name="units_title">Единицы измерения</string>
+    <string name="map_style_title">Стиль карты</string>
+    <string name="line_width_title">Толщина линии</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
 
 </resources>
