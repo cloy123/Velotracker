@@ -20,6 +20,7 @@ import android.widget.Chronometer;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.TaskStackBuilder;
 
 import com.govnokoder.velotracker.BL.CurrentTraining;
 import com.govnokoder.velotracker.BL.Model.Time;
@@ -27,6 +28,7 @@ import com.govnokoder.velotracker.BL.LocListenerInterface;
 import com.govnokoder.velotracker.BL.Model.Training;
 import com.govnokoder.velotracker.BL.MyLocListener;
 import com.govnokoder.velotracker.messages.MessageEvent;
+import com.govnokoder.velotracker.services.TrainingServiceNotificationManager;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import org.greenrobot.eventbus.EventBus;
@@ -43,6 +45,8 @@ public class TrainingService extends Service implements LocListenerInterface {
     private MyLocListener myLocListener;
     private LocationManager locationManager;
     private CountDownTimer countDownTimer;
+    private TrainingServiceNotificationManager notificationManager;
+
 
     private void init() {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -74,6 +78,9 @@ public class TrainingService extends Service implements LocListenerInterface {
             EventBus.getDefault().removeAllStickyEvents();
             EventBus.getDefault().unregister(this);
         }
+
+        notificationManager = new TrainingServiceNotificationManager(this);
+        startNotification();
         myIcon = Icon.createWithResource(this, R.drawable.notification_icon);
         countDownTimer = new CountDownTimer(Long.MAX_VALUE, 1000) {
             @Override
@@ -81,18 +88,20 @@ public class TrainingService extends Service implements LocListenerInterface {
                 if(currentTraining != null){
                     if(currentTraining.isRunning){
                         currentTraining.Time.addSecond();
-                        startForeground(getApplicationContext().getString(R.string.app_name),
-                                currentTraining.Time.toString() + " | " +
-                                        Training.round(currentTraining.CurrentSpeed, 1) + " " +
-                                        getApplicationContext().getString(R.string.kph) + " | " +
-                                        Training.round(currentTraining.Distance,2) + " " +
-                                        getApplicationContext().getString(R.string.km));
+                        notificationManager.updateNotificationText(
+                            getApplicationContext().getString(R.string.app_name),
+                            currentTraining.Time.toString() + " | " +
+                            Training.round(currentTraining.CurrentSpeed, 1) + " " +
+                            getApplicationContext().getString(R.string.kph) + " | " +
+                            Training.round(currentTraining.Distance,2) + " " +
+                            getApplicationContext().getString(R.string.km));
                     }else {
-                        startForeground(getApplicationContext().getString(R.string.pause_button),currentTraining.Time.toString() + " | " +
-                                Training.round(currentTraining.CurrentSpeed, 1) +  " " +
-                                getApplicationContext().getString(R.string.kph) + " | " +
-                                Training.round(currentTraining.Distance,2) + " " +
-                                getApplicationContext().getString(R.string.km));
+                        notificationManager.updateNotificationText(
+                            getApplicationContext().getString(R.string.pause_button),currentTraining.Time.toString() + " | " +
+                            Training.round(currentTraining.CurrentSpeed, 1) +  " " +
+                            getApplicationContext().getString(R.string.kph) + " | " +
+                            Training.round(currentTraining.Distance,2) + " " +
+                            getApplicationContext().getString(R.string.km));
                     }
                 }
             }
@@ -111,6 +120,7 @@ public class TrainingService extends Service implements LocListenerInterface {
     @Override
     public void onDestroy() {
         countDownTimer.cancel();
+        notificationManager.cancelNotification();
         EventBus.getDefault().postSticky(new MessageEvent(currentTraining));
         locationManager.removeUpdates(myLocListener);
         super.onDestroy();
@@ -142,6 +152,14 @@ public class TrainingService extends Service implements LocListenerInterface {
                         .build();
         startForeground(ONGOING_NOTIFICATION_ID, notification);
     }
+
+    public void startNotification(){
+        Intent notificationIntent = new Intent(this, TrainingActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 1010, notificationIntent, 0);
+            notificationManager.updatePendingIntent(pendingIntent);
+            startForeground(TrainingServiceNotificationManager.NOTIFICATION_ID, notificationManager.getNotification());
+    }
+
 
     private String createChannel(Service context){
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);

@@ -43,6 +43,7 @@
             android:name=".TrainingService"
             android:enabled="true"
             android:exported="true"
+            android:foregroundServiceType="location"
             android:process="" />
     </application>
 
