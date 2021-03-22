@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -83,6 +84,8 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
     private MapView mapView;
     private MapboxMap mapboxMap;
 
+    private ProgressBar progressBar;
+
 
     private LocationManager locationManager;
     private LocationEngine locationEngine;
@@ -104,6 +107,8 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
     private boolean isInTrackingMode;
 
     private LocationComponent locationComponent;
+
+    private int secondBeforeStart = 3;
 
     public static final String TAG = "TrainingActivity";
 
@@ -147,6 +152,7 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
         currentTraining.Date.setCurrentDate();
         currentTraining.isRunning = true;
         LocationButton = result.findViewById(R.id.locationButton);
+        progressBar = result.findViewById(R.id.progressBar);
         return result;
     }
 
@@ -290,6 +296,9 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
     public void onResume() {
         super.onResume();
         mapView.onResume();
+        secondBeforeStart = 3;
+        progressBar.setVisibility(View.VISIBLE);
+
         Intent intent = new Intent(getContext(), TrainingService.class);
         getActivity().stopService(intent);
         try {
@@ -320,8 +329,11 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
                     myChronometer.setTime(time);
                     myChronometer.Pause();
                 }
-                CurrentSpeedTextView.setText(String.valueOf(Training.round(currentTraining.CurrentSpeed, 1)));
-                WayLengthTextView.setText(String.valueOf(Training.round(currentTraining.Distance, 2)));
+                CurrentSpeedTextView.setText(String.valueOf(Training.round(currentTraining.CurrentSpeed, 1)) + " " + getString(R.string.kph));
+                WayLengthTextView.setText(String.valueOf(Training.round(currentTraining.Distance, 2)) + " " + getString(R.string.km));
+                if(secondBeforeStart > 0){
+                    secondBeforeStart-=1;
+                }
             }
         });
     }
@@ -430,13 +442,15 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
                         }
                         fragment.lineManager.create(new LineOptions().withLatLngs(fragment.currentTraining.CurrentLine));
                     }
-                    fragment.currentTraining.setValuesFromLocation(location);
-
+                    if(fragment.secondBeforeStart == 0){
+                        fragment.currentTraining.setValuesFromLocation(location);
+                    }
                 }
-                //if(location.hasAccuracy()){
-                    //местоположение
-                    fragment.mapboxMap.getLocationComponent().forceLocationUpdate(fragment.currentTraining.originLocation);
-               //}
+                    if(fragment.secondBeforeStart > 0 && fragment.currentTraining.originLocation == null){
+                        fragment.mapboxMap.getLocationComponent().forceLocationUpdate(location);
+                    } else{
+                        fragment.mapboxMap.getLocationComponent().forceLocationUpdate(fragment.currentTraining.originLocation);
+                    }
             }
         }
 

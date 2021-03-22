@@ -75,15 +75,15 @@ public class PageStat extends Fragment {
             public void onChanged(CurrentTraining currentTraining) {
                 if(currentTraining != null){
                     timeText.setText(currentTraining.Time.toString());
-                    wayLengthText.setText(String.valueOf(Training.round(currentTraining.Distance, 2)));
-                    speedText.setText(String.valueOf(Training.round(currentTraining.CurrentSpeed, 1)));
-                    averageSpeedText.setText(String.valueOf((Training.round(currentTraining.AverageSpeed, 1))));
-                    maxSpeedText.setText(String.valueOf(Training.round(currentTraining.MaxSpeed, 1)));
+                    wayLengthText.setText(String.valueOf(Training.round(currentTraining.Distance, 2)) + " " + getString(R.string.km));
+                    speedText.setText(String.valueOf(Training.round(currentTraining.CurrentSpeed, 1)) + " " + getString(R.string.kph));
+                    averageSpeedText.setText(String.valueOf((Training.round(currentTraining.AverageSpeed, 1))) + " " + getString(R.string.kph));
+                    maxSpeedText.setText(String.valueOf(Training.round(currentTraining.MaxSpeed, 1)) + " " + getString(R.string.kph));
                     if(currentTraining.Heights.size() > 0){
-                        heightText.setText(String.valueOf(currentTraining.Heights.get(currentTraining.Heights.size()-1)));
-                        maxHeightText.setText(String.valueOf(currentTraining.MaxHeight));
-                        minHeightText.setText(String.valueOf(currentTraining.MinHeight));
-                        averageHeightText.setText(String.valueOf(currentTraining.AverageHeight));
+                        heightText.setText(String.valueOf(currentTraining.Heights.get(currentTraining.Heights.size()-1)) + " " + getString(R.string.m));
+                        maxHeightText.setText(String.valueOf(currentTraining.MaxHeight) + " " + getString(R.string.m));
+                        minHeightText.setText(String.valueOf(currentTraining.MinHeight) + " " + getString(R.string.m));
+                        averageHeightText.setText(String.valueOf(currentTraining.AverageHeight) + " " + getString(R.string.m));
                     }
                 }
             }

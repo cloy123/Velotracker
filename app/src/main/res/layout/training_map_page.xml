@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,292 +7,312 @@
     android:background="@color/black"
     android:orientation="vertical">
 
-    <com.google.android.material.internal.BaselineLayout
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginLeft="0dp"
-        android:background="#bbb" />
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@style/Widget.AppCompat.ProgressBar"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:indeterminate="true"
+        android:indeterminateOnly="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/linearLayout" />
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="6.5"
-        android:orientation="horizontal">
-        <com.govnokoder.velotracker.ui.training.MapViewInScroll
-            android:id="@+id/mapView"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <com.google.android.material.internal.BaselineLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            app:mapbox_cameraTargetLat="16"
-            app:mapbox_cameraTargetLng="108"
-            app:mapbox_cameraZoom="11">
-
-            <ImageButton
-                android:id="@+id/locationButton"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_gravity="bottom|end"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="20dp"
-                android:background="@drawable/rounded_button"
-                android:scaleType="fitStart"
-                android:src="@drawable/tracking_on"
-                android:theme="@style/Theme.Velotracker.Buttons"
-                />
-
-        </com.govnokoder.velotracker.ui.training.MapViewInScroll>
-
-    </LinearLayout>
-
-    <com.google.android.material.internal.BaselineLayout
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-
-        android:layout_marginRight="0dp"
-        android:layout_marginLeft="0dp"
-        android:background="#bbb" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
-        android:orientation="horizontal">
+            android:layout_height="2dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            android:background="#bbb" />
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="6.5"
+            android:orientation="horizontal">
 
-            <TextView
+            <com.govnokoder.velotracker.ui.training.MapViewInScroll
+                android:id="@+id/mapView"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_gravity="center_vertical"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:maxLines="1"
-                android:text="@string/time"
-                android:textAlignment="center"
-                android:textAllCaps="true"
-                android:textColor="#FFFFFF"
-                android:textSize="15sp"
-                android:gravity="center"
-                tools:ignore="RtlCompat" />
+                app:mapbox_cameraTargetLat="16"
+                app:mapbox_cameraTargetLng="108"
+                app:mapbox_cameraZoom="11">
 
-            <com.google.android.material.internal.BaselineLayout
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="20dp"
-                android:background="#bbb" />
+                <ImageButton
+                    android:id="@+id/locationButton"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="bottom|end"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/rounded_button"
+                    android:scaleType="fitStart"
+                    android:src="@drawable/tracking_on"
+                    android:theme="@style/Theme.Velotracker.Buttons" />
 
-
-            <com.govnokoder.velotracker.BL.MyChronometer
-
-                android:text="00:00"
-                android:id="@+id/chronometer"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:maxLines="1"
-                android:textAlignment="center"
-                android:textAllCaps="true"
-                android:textColor="#FFFFFF"
-                android:textSize="30sp"
-                android:gravity="center"
-
-                tools:ignore="RtlCompat" />
-
+            </com.govnokoder.velotracker.ui.training.MapViewInScroll>
 
         </LinearLayout>
 
         <com.google.android.material.internal.BaselineLayout
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
             android:background="#bbb" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="@string/time"
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp"
+                    tools:ignore="RtlCompat" />
+
+                <com.google.android.material.internal.BaselineLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="10dp"
+                    android:background="#bbb" />
+
+
+                <com.govnokoder.velotracker.BL.MyChronometer
+
+                    android:id="@+id/chronometer"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="00:00"
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:textColor="#FFFFFF"
+                    android:textSize="30sp"
+
+                    tools:ignore="RtlCompat" />
+
+
+            </LinearLayout>
+
+            <com.google.android.material.internal.BaselineLayout
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="#bbb" />
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="@string/distance"
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp"
+                    tools:ignore="RtlCompat" />
+
+                <com.google.android.material.internal.BaselineLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="20dp"
+                    android:background="#bbb" />
+
+                <TextView
+                    android:id="@+id/WayLengthText"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="0.00"
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:textColor="#FFFFFF"
+                    android:textSize="30sp"
+                    tools:ignore="RtlCompat" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <com.google.android.material.internal.BaselineLayout
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            android:background="#bbb" />
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:maxLines="1"
-                android:text="@string/distance"
-                android:gravity="center"
+                android:text="@string/speed"
                 android:textAlignment="center"
                 android:textAllCaps="true"
                 android:textColor="#FFFFFF"
                 android:textSize="15sp"
                 tools:ignore="RtlCompat" />
 
-            <com.google.android.material.internal.BaselineLayout
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginLeft="10dp"
-                android:background="#bbb" />
+        </LinearLayout>
+
+        <com.google.android.material.internal.BaselineLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="#bbb" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/WayLengthText"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:id="@+id/CurrentSpeedText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:maxLines="1"
-                android:text="0.00"
+                android:text="0.0"
                 android:textAlignment="center"
                 android:textAllCaps="true"
-                android:gravity="center"
                 android:textColor="#FFFFFF"
                 android:textSize="30sp"
                 tools:ignore="RtlCompat" />
-
         </LinearLayout>
 
-    </LinearLayout>
-
-
-    <com.google.android.material.internal.BaselineLayout
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-
-        android:layout_marginRight="0dp"
-        android:layout_marginLeft="0dp"
-        android:background="#bbb" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:maxLines="1"
-            android:text="@string/speed"
-            android:textAlignment="center"
-            android:textAllCaps="true"
-            android:textColor="#FFFFFF"
-            android:textSize="15sp"
-            tools:ignore="RtlCompat" />
-
-    </LinearLayout>
-
-    <com.google.android.material.internal.BaselineLayout
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-
-        android:layout_marginRight="20dp"
-        android:layout_marginLeft="20dp"
-        android:background="#bbb" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/CurrentSpeedText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:maxLines="1"
-            android:text="0.0"
-            android:textAlignment="center"
-            android:textAllCaps="true"
-            android:textColor="#FFFFFF"
-            android:textSize="30sp"
-            tools:ignore="RtlCompat" />
-    </LinearLayout>
-
-    <com.google.android.material.internal.BaselineLayout
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-
-        android:layout_marginRight="0dp"
-        android:layout_marginLeft="0dp"
-        android:background="#bbb" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
+        <com.google.android.material.internal.BaselineLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_weight="1">
+            android:layout_height="2dp"
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/PauseButton"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/oval_button"
-                android:textColor="#F5F5F5"
-                android:layout_marginRight="50dp"
-                android:layout_marginLeft="50dp"
-                android:text="@string/pause_button"
-                android:layout_marginVertical="5dp"
-                android:textSize="15sp" />
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            android:background="#bbb" />
 
-            <LinearLayout
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginVertical="5dp"
-                android:orientation="horizontal">
+                android:layout_height="60dp"
+                android:layout_weight="1">
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/ResumeButton"
-                    android:layout_width="0dp"
+                    android:id="@+id/PauseButton"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="1"
-                    android:enabled="false"
+                    android:layout_marginVertical="5dp"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginRight="50dp"
                     android:background="@drawable/oval_button"
+                    android:text="@string/pause_button"
                     android:textColor="#F5F5F5"
-                    android:maxLines="1"
-                    android:text="@string/resume_button"
-                    android:textSize="15sp"
-                    android:visibility="invisible" />
+                    android:textSize="15sp" />
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/StopButton"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/oval_button"
-                    android:textColor="#F5F5F5"
-                    android:enabled="false"
-                    android:maxLines="1"
-                    android:text="@string/stop_button"
-                    android:textSize="15sp"
-                    android:visibility="invisible" />
+                    android:layout_marginVertical="5dp"
+                    android:orientation="horizontal">
 
-            </LinearLayout>
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/ResumeButton"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/oval_button"
+                        android:enabled="false"
+                        android:maxLines="1"
+                        android:text="@string/resume_button"
+                        android:textColor="#F5F5F5"
+                        android:textSize="15sp"
+                        android:visibility="invisible" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/StopButton"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/oval_button"
+                        android:enabled="false"
+                        android:maxLines="1"
+                        android:text="@string/stop_button"
+                        android:textColor="#F5F5F5"
+                        android:textSize="15sp"
+                        android:visibility="invisible" />
+
+                </LinearLayout>
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        </LinearLayout>
+
+        <com.google.android.material.internal.BaselineLayout
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            android:background="#bbb" />
     </LinearLayout>
-
-    <com.google.android.material.internal.BaselineLayout
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginLeft="0dp"
-        android:background="#bbb" />
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
