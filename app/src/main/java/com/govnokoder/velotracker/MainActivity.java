@@ -3,6 +3,7 @@ package com.govnokoder.velotracker;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
@@ -149,12 +150,19 @@ public class MainActivity extends AppCompatActivity implements PageStart.onSomeE
         boolean accessCoarseLocation = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
         boolean backgroundLocation = true;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
             backgroundLocation = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED;
         }
+        else {
+            backgroundLocation = true;
+        }
+
         if (!accessFineLocation) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_PERMISSION_ACCESS_FINE_LOCATION);
-            return;
+            if(Build.VERSION.SDK_INT < Build.VERSION_CODES.R){
+                //ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE);
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_PERMISSION_ACCESS_FINE_LOCATION);
+                return;
+            }
         }
         if (!sdkVer && !readPhoneState) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_PERMISSION_READ_PHONE_STATE);
@@ -164,13 +172,30 @@ public class MainActivity extends AppCompatActivity implements PageStart.onSomeE
             showDialogOpenSett("Для работы приложения требуется доступ к данным о местоположении устройства!", "gps");
             return;
         }
-        if (!accessCoarseLocation) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_PERMISSION_ACCESS_COARSE_LOCATION);
-            return;
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            if (backgroundLocation) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, REQUEST_PERMISSION_ACCESS_BACKGROUND_LOCATION);
+//        if (!accessCoarseLocation) {
+//            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_PERMISSION_ACCESS_COARSE_LOCATION);
+//            return;
+//        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (!backgroundLocation) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("TODO доделаю потом этот текст");
+                builder.setMessage("TODO доделаю потом этот текст");
+                builder.setPositiveButton("да", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // этот запрос приведет пользователя на страницу настроек приложения
+                                requestPermissions(new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, REQUEST_PERMISSION_ACCESS_BACKGROUND_LOCATION);
+                            }
+                        });
+                builder.setNegativeButton("нет", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.create().show();
+                    //    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, REQUEST_PERMISSION_ACCESS_BACKGROUND_LOCATION);
                 return;
             }
         }

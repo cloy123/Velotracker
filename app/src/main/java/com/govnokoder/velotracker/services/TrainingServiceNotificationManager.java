@@ -37,11 +37,6 @@ public class TrainingServiceNotificationManager {
                 .setSmallIcon(R.drawable.notification_icon);
     }
 
-    public void updateContent(String content) {
-        notificationBuilder.setSubText(content);
-        updateNotification();
-    }
-
     public void updateNotificationText(String title, String text){
         notificationBuilder.setContentTitle(title);
         notificationBuilder.setContentText(text);
