@@ -5,16 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000">
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="@string/dialog_battery_optimization_text"
         style="@style/Theme.Velotracker.Dialogs_TextViews"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
         tools:layout_editor_absoluteX="0dp" />
-<!--    android:textAlignment="center"-->
+    <!--    android:textAlignment="center"-->
 
 
     <androidx.appcompat.widget.AppCompatButton
@@ -25,12 +27,26 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
-        style="@style/Theme.Velotracker.Dialogs_Buttons" />
+        style="@style/Theme.Velotracker.Dialogs_Buttons"
+        />
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="20dp"
+        android:buttonTint="#FFFFFF"
+        android:text="@string/dialog_battery_optimization_checkbox_text"
+        android:textColor="#F5F5F5"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/openSettB" />
 
     <Space
         android:layout_width="match_parent"
         android:layout_height="20dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/openSettB" />
+        app:layout_constraintTop_toBottomOf="@+id/checkbox" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

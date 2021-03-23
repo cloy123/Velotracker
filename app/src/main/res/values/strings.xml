@@ -88,4 +88,18 @@
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
 
+    <!--Dialog Battery optimization-->
+    <string name="dialog_battery_optimization_text">В настойках оптимизации аккумулятора выберите «Все приложения», а затем найдите Velotracker в списке и отключите оптимизацию аккумулятора.</string>
+
+    <string name="dialog_battery_optimization_settings_checkbox">dialog_battery_optimization_checkbox</string>
+    <string name="dialog_battery_optimization_settings_checkbox_key">checked</string>
+
+
+    <!--Dialog open settings -->
+    <string name="dialog_open_sett_access_fine_location_text">Для работы приложения требуется разрешение на местоположение устройства!</string>
+    <string name="dialog_open_sett_read_phone_state_text">Для работы приложения требуется разрешение на состояние устройства!</string>
+    <string name="dialog_open_sett_gps_text">Для работы приложения требуется доступ к данным о местоположении устройства!</string>
+    <string name="dialog_battery_optimization_checkbox_text">Не показывать это предупреждение</string>
+
+
 </resources>

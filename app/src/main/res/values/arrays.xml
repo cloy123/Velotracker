@@ -44,6 +44,11 @@
         <item>6</item>
     </string-array>
 
+    <string-array name="dialog_battery_optimization_checkbox_values">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
 
 
 </resources>

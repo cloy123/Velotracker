@@ -27,7 +27,7 @@ public class PageStart extends Fragment {
 
 
     public interface onSomeEventListener {
-        public void getPermission();
+        public void startTraining();
         public void openLastTraining();
         public void openStatistic();
     }
@@ -96,7 +96,7 @@ public class PageStart extends Fragment {
         StartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    someEventListener.getPermission();
+                    someEventListener.startTraining();
             }
         });
 
