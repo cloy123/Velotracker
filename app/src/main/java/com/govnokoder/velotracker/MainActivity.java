@@ -1,8 +1,8 @@
 package com.govnokoder.velotracker;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Instrumentation;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,24 +16,12 @@ import android.provider.Settings;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.GoogleApi;
-import com.google.android.gms.common.api.GoogleApiActivity;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResolvableApiException;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResponse;
-import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -41,8 +29,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.Preference;
-import androidx.preference.PreferenceManager;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -61,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements PageStart.onSomeE
     ViewPager2 pager;
     private final int REQUEST_PERMISSION_ACCESS_FINE_LOCATION = 111;
     private final int REQUEST_PERMISSION_READ_PHONE_STATE = 333;
+
+    boolean gpsEnabled;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,96 +129,28 @@ public class MainActivity extends AppCompatActivity implements PageStart.onSomeE
 
         //Toast.makeText(getApplicationContext(), , Toast.LENGTH_LONG).show();
         if (currentPer.equals(Manifest.permission.ACCESS_FINE_LOCATION) && !shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)){
-            showDialogOpenSett(getString(R.string.dialog_open_sett_access_fine_location_text), TargetDialogOpenSett.Per);
+            dialogOpenPermissionsSettings(getString(R.string.dialog_open_sett_access_fine_location_text));
         }
         if (currentPer.equals(Manifest.permission.READ_PHONE_STATE) && !shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE)){
-            showDialogOpenSett(getString(R.string.dialog_open_sett_read_phone_state_text), TargetDialogOpenSett.Per);
+            dialogOpenPermissionsSettings(getString(R.string.dialog_open_sett_read_phone_state_text));
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == AppConstants.GPS_REQUEST) {
+                //isGPS = true; // flag maintain before get location
+            }
         }
     }
 
 
-    @Override
-    public void startTraining() {
-        //тут переопределяю метод из интерфейса который в фрагменте
-        LocationManager locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
-        boolean gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        boolean accessFineLocation = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-        boolean readPhoneState = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED;
 
-        if(!accessFineLocation){
-            Toast.makeText(getApplicationContext(), "4354354354343435345", Toast.LENGTH_LONG).show();
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_PERMISSION_ACCESS_FINE_LOCATION);
-            return;
-        }
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
-            if (!readPhoneState) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_PERMISSION_READ_PHONE_STATE);
-                return;
-            }
-            //TODO попросить разрешение
-        }
-
-        if (!gpsEnabled) {
-            LocationRequest request = LocationRequest.create();
-            LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
-            Task<LocationSettingsResponse> result = LocationServices.getSettingsClient(this).checkLocationSettings(builder.build());
-
-//            result.addOnCompleteListener(new OnCompleteListener<LocationSettingsResponse>() {
-//                @Override
-//                public void onComplete(@NonNull Task<LocationSettingsResponse> task) {
-//                    try {
-//                        task.getResult(ApiException.class);
-//                    }catch (ApiException e){
-//
-//                    }
-//                }
-//            });
-
-
-            //TODO переделать
-            showDialogOpenSett(getString(R.string.dialog_open_sett_gps_text), TargetDialogOpenSett.Gps);
-            return;
-        }
-
-        //если таких настроек не существует, они создаются
-        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.dialog_battery_optimization_settings_checkbox), MODE_PRIVATE);
-
-        if(sharedPreferences.contains(getString(R.string.dialog_battery_optimization_settings_checkbox_key))){
-            if(sharedPreferences.getBoolean(getString(R.string.dialog_battery_optimization_settings_checkbox_key), false)) {
-                //не надо вызывать алерт
-                Intent intent = new Intent(getApplicationContext(), TrainingActivity.class);
-                startActivity(intent);
-                return;
-            }
-        }else {
-            //добавляю настройку и вызываю алерт
-            sharedPreferences.edit().putBoolean(getString(R.string.dialog_battery_optimization_settings_checkbox_key), false).apply();
-        }
-
-
-        AlertDialog builder = new AlertDialog.Builder(this).create();
-        ConstraintLayout cl  = (ConstraintLayout)getLayoutInflater().inflate(R.layout.dialog_battery_optimization, null);
-        cl.getViewById(R.id.openSettB).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS));
-                builder.dismiss();
-            }
-        });
-        AppCompatCheckBox compatCheckBox = (AppCompatCheckBox) cl.getViewById(R.id.checkbox);
-        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                if(compatCheckBox.isChecked()){
-                    sharedPreferences.edit().putBoolean(getString(R.string.dialog_battery_optimization_settings_checkbox_key), true).apply();
-                }
-                Intent intent = new Intent(getApplicationContext(), TrainingActivity.class);
-                startActivity(intent);
-            }
-        });
-        builder.setView(cl);
-        builder.show();
+    private void startActivityTraining(){
+        Intent intent = new Intent(getApplicationContext(), TrainingActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -249,24 +169,149 @@ public class MainActivity extends AppCompatActivity implements PageStart.onSomeE
         tabLayout.selectTab(tabLayout.getTabAt(2));
     }
 
-    private static enum  TargetDialogOpenSett{Per, Gps, Api30}
-    private void showDialogOpenSett(String text, TargetDialogOpenSett target){
-        AlertDialog builder = new AlertDialog.Builder(this).create();
+
+
+
+    private void dialogOpenPermissionsSettings(String text){
+        AlertDialog dialog = new AlertDialog.Builder(this).create();
         ConstraintLayout cl  = (ConstraintLayout)getLayoutInflater().inflate(R.layout.dialog_open_settings, null);
         TextView textView = (TextView) cl.getViewById(R.id.textView);
         textView.setText(text);
         cl.getViewById(R.id.openSettB).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(target == TargetDialogOpenSett.Per){
-                    startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + getPackageName())));
-                } else if(target == TargetDialogOpenSett.Gps){
-                    startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                } else {return;}
-                builder.dismiss();
+                startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + getPackageName())));
+                dialog.dismiss();
             }
         });
-        builder.setView(cl);
-        builder.show();
+        dialog.setView(cl);
+        dialog.show();
     }
+
+    private void dialogBatteryOptimizationSettings(){
+        //если таких настроек не существует, они создаются
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.settings_checkboxes), MODE_PRIVATE);
+        if(sharedPreferences.contains(getString(R.string.dialog_battery_optimization_settings_checkbox_key))){
+            if(sharedPreferences.getBoolean(getString(R.string.dialog_battery_optimization_settings_checkbox_key), false)) {
+                //если стоит больше не показывать
+                dialogOpenLocationPermissionsApi30();
+            }
+        }
+        //добавляю настройку и потом вызываю алерт
+        sharedPreferences.edit().putBoolean(getString(R.string.dialog_battery_optimization_settings_checkbox_key), false).apply();
+
+        AlertDialog dialog = new AlertDialog.Builder(this).create();
+        ConstraintLayout cl  = (ConstraintLayout)getLayoutInflater().inflate(R.layout.dialog_open_settings_with_checkbox, null);
+        TextView textView = (TextView) cl.getViewById(R.id.textView);
+        textView.setText(getString(R.string.dialog_battery_optimization_text));
+        cl.getViewById(R.id.openSettB).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS));
+                dialog.dismiss();
+            }
+        });
+        AppCompatCheckBox compatCheckBox = (AppCompatCheckBox) cl.getViewById(R.id.checkbox);
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                if(compatCheckBox.isChecked()){
+                    SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.settings_checkboxes), MODE_PRIVATE);
+                    sharedPreferences.edit().putBoolean(getString(R.string.dialog_battery_optimization_settings_checkbox_key), true).apply();
+                }
+                dialogOpenLocationPermissionsApi30();
+            }
+        });
+        dialog.setView(cl);
+        dialog.show();
+    }
+
+    @Override
+    public void startTraining() {
+        //тут переопределяю метод из интерфейса который в фрагменте
+        boolean accessFineLocation = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+        boolean readPhoneState = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED;
+        LocationManager locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+        gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+        if(!accessFineLocation){
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_PERMISSION_ACCESS_FINE_LOCATION);
+            return;
+        }
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+            if (!readPhoneState) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_PERMISSION_READ_PHONE_STATE);
+                return;
+            }
+
+            //TODO попросить разрешение
+        }
+
+        if(!gpsEnabled) {
+            GpsUtils gpsUtils = new GpsUtils(this);
+            gpsUtils.turnGPSOn(new GpsUtils.onGpsListener() {
+                @Override
+                public void gpsStatus(boolean isGPSEnable) {
+                    if(isGPSEnable){
+                        startTraining();
+                    }
+                }
+            });
+        }
+
+        if(!gpsEnabled){
+            return;
+        }
+        dialogBatteryOptimizationSettings();
+    }
+
+    private void dialogOpenLocationPermissionsApi30(){
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.R)
+        {
+            startActivityTraining();
+        }
+        final boolean[] isInSettings = {false};
+        //если таких настроек не существует, они создаются
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.settings_checkboxes), MODE_PRIVATE);
+        if(sharedPreferences.contains(getString(R.string.dialog_battery_optimization_settings_checkbox_key))){
+            if(sharedPreferences.getBoolean(getString(R.string.dialog_battery_optimization_settings_checkbox_key), false)) {
+                //если стоит больше не показывать
+                startActivityTraining();
+            }
+        }
+        //добавляю настройку и потом вызываю алерт
+        sharedPreferences.edit().putBoolean(getString(R.string.dialog_android_api30_location_permission_key), false).apply();
+
+        AlertDialog dialog = new AlertDialog.Builder(this).create();
+        ConstraintLayout cl  = (ConstraintLayout)getLayoutInflater().inflate(R.layout.dialog_open_settings_with_checkbox, null);
+        TextView textView = (TextView) cl.getViewById(R.id.textView);
+        textView.setText(getString(R.string.dialog_open_location_permissions_api30_text));
+        cl.getViewById(R.id.openSettB).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isInSettings[0] = true;
+                startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + getPackageName())));
+                dialog.dismiss();
+            }
+        });
+        AppCompatCheckBox compatCheckBox = (AppCompatCheckBox) cl.getViewById(R.id.checkbox);
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                if(compatCheckBox.isChecked()){
+                    SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.settings_checkboxes), MODE_PRIVATE);
+                    sharedPreferences.edit().putBoolean(getString(R.string.dialog_android_api30_location_permission_key), true).apply();
+                }
+                if(!isInSettings[0]) {
+                    startActivityTraining();
+                }
+            }
+        });
+        dialog.setView(cl);
+        dialog.show();
+    }
+
+
+
 }

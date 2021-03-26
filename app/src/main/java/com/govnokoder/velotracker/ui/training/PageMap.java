@@ -33,6 +33,11 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.govnokoder.velotracker.BL.CurrentTraining;
 import com.govnokoder.velotracker.BL.Model.Time;
 import com.govnokoder.velotracker.BL.Model.Training;
@@ -84,13 +89,11 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
     private MapView mapView;
     private MapboxMap mapboxMap;
 
-    private ProgressBar progressBar;
+    //private ProgressBar progressBar;
 
-
-    private LocationManager locationManager;
     private LocationEngine locationEngine;
     private long DEFAULT_INTERVAL_IN_MILLISECONDS = 500L;
-    private long DEFAULT_MAX_WAIT_TIME = DEFAULT_INTERVAL_IN_MILLISECONDS * 5;
+    private long DEFAULT_MAX_WAIT_TIME = DEFAULT_INTERVAL_IN_MILLISECONDS * 2;
 
     private TextView CurrentSpeedTextView, WayLengthTextView;
 
@@ -152,7 +155,7 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
         currentTraining.Date.setCurrentDate();
         currentTraining.isRunning = true;
         LocationButton = result.findViewById(R.id.locationButton);
-        progressBar = result.findViewById(R.id.progressBar);
+        //progressBar = result.findViewById(R.id.progressBar);
         return result;
     }
 
@@ -262,7 +265,6 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
                 }
             });
             initLocationEngine();
-            locationManager = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
         }
     }
 
@@ -297,7 +299,7 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
         super.onResume();
         mapView.onResume();
         secondBeforeStart = 3;
-        progressBar.setVisibility(View.VISIBLE);
+        //progressBar.setVisibility(View.VISIBLE);
 
         Intent intent = new Intent(getContext(), TrainingService.class);
         getActivity().stopService(intent);
