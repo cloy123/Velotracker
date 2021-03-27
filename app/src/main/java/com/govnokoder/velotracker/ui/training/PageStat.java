@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,15 +12,12 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.govnokoder.velotracker.BL.CurrentTraining;
+import com.govnokoder.velotracker.BL.ParcelableTraining;
 import com.govnokoder.velotracker.BL.Model.Training;
 import com.govnokoder.velotracker.R;
-import com.govnokoder.velotracker.messages.MessageEvent;
 import com.govnokoder.velotracker.messages.SharedViewModel;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 public class PageStat extends Fragment {
     private int pageNumber;
@@ -70,21 +66,19 @@ public class PageStat extends Fragment {
     public void onResume() {
         super.onResume();
         SharedViewModel model = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
-        model.message.observe(getViewLifecycleOwner(), new Observer<CurrentTraining>() {
+        model.message.observe(getViewLifecycleOwner(), new Observer<ParcelableTraining>() {
             @Override
-            public void onChanged(CurrentTraining currentTraining) {
-                if(currentTraining != null){
-                    timeText.setText(currentTraining.Time.toString());
-                    wayLengthText.setText(String.valueOf(Training.round(currentTraining.Distance, 2)) + " " + getString(R.string.km));
-                    speedText.setText(String.valueOf(Training.round(currentTraining.CurrentSpeed, 1)) + " " + getString(R.string.kph));
-                    averageSpeedText.setText(String.valueOf((Training.round(currentTraining.AverageSpeed, 1))) + " " + getString(R.string.kph));
-                    maxSpeedText.setText(String.valueOf(Training.round(currentTraining.MaxSpeed, 1)) + " " + getString(R.string.kph));
-                    if(currentTraining.Heights.size() > 0){
-                        heightText.setText(String.valueOf(currentTraining.Heights.get(currentTraining.Heights.size()-1)) + " " + getString(R.string.m));
-                        maxHeightText.setText(String.valueOf(currentTraining.MaxHeight) + " " + getString(R.string.m));
-                        minHeightText.setText(String.valueOf(currentTraining.MinHeight) + " " + getString(R.string.m));
-                        averageHeightText.setText(String.valueOf(currentTraining.AverageHeight) + " " + getString(R.string.m));
-                    }
+            public void onChanged(ParcelableTraining parcelableTraining) {
+                if(parcelableTraining != null){
+                    timeText.setText(parcelableTraining.time.toString());
+                    wayLengthText.setText(String.valueOf(Training.round(parcelableTraining.distance, 2)) + " " + getString(R.string.km));
+                    speedText.setText(String.valueOf(Training.round(parcelableTraining.originLocation.getSpeed() * 3.6, 1)) + " " + getString(R.string.kph));
+                    averageSpeedText.setText(String.valueOf((Training.round(parcelableTraining.averageSpeed, 1))) + " " + getString(R.string.kph));
+                    maxSpeedText.setText(String.valueOf(Training.round(parcelableTraining.maxSpeed, 1)) + " " + getString(R.string.kph));
+                    heightText.setText(String.valueOf(parcelableTraining.height + " " + getString(R.string.m)));
+                    maxHeightText.setText(String.valueOf(parcelableTraining.maxHeight) + " " + getString(R.string.m));
+                    minHeightText.setText(String.valueOf(parcelableTraining.minHeight) + " " + getString(R.string.m));
+                    averageHeightText.setText(String.valueOf(parcelableTraining.averageHeight) + " " + getString(R.string.m));
                 }
             }
         });

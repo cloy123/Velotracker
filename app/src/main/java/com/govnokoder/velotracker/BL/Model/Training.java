@@ -1,5 +1,6 @@
 package com.govnokoder.velotracker.BL.Model;
 
+import com.govnokoder.velotracker.BL.LineList;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import java.math.BigDecimal;
@@ -13,7 +14,7 @@ public class Training {
     public double Distance = 0;
     public double MaxSpeed = 0;
     public double AverageSpeed = 0;
-    public List<List<LatLng>> Lines = new ArrayList<>();
+    public List<LineList> Lines = new ArrayList<>();
 
     private double startLatitude;
     private double startLongitude;
@@ -55,7 +56,7 @@ public class Training {
 
     public Training(Date date, Time time, double distance,
                     double maxSpeed, double averageSpeed,
-                    List<List<LatLng>> lines, LatLng startPoint,
+                    List<LineList> lines, LatLng startPoint,
                     long maxHeight, long minHeight, long averageHeight) {
         Date = date;
         Time = time;

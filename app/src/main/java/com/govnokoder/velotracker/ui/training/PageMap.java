@@ -1,28 +1,16 @@
 package com.govnokoder.velotracker.ui.training;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.location.GnssNavigationMessage;
-import android.location.GnssStatus;
 import android.location.Location;
-import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Looper;
-import android.os.SystemClock;
-import android.provider.Settings;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Chronometer;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,28 +18,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.viewpager2.widget.ViewPager2;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.govnokoder.velotracker.BL.CurrentTraining;
-import com.govnokoder.velotracker.BL.Model.Time;
+import com.govnokoder.velotracker.AppConstants;
+import com.govnokoder.velotracker.BL.LineList;
+import com.govnokoder.velotracker.BL.ParcelableTraining;
 import com.govnokoder.velotracker.BL.Model.Training;
-import com.govnokoder.velotracker.BL.MyChronometer;
 import com.govnokoder.velotracker.MainActivity;
 import com.govnokoder.velotracker.R;
-import com.govnokoder.velotracker.TrainingService;
-import com.govnokoder.velotracker.messages.MessageEvent;
 import com.govnokoder.velotracker.messages.SharedViewModel;
 import com.mapbox.android.core.location.LocationEngine;
-import com.mapbox.android.core.location.LocationEngineCallback;
-import com.mapbox.android.core.location.LocationEngineProvider;
-import com.mapbox.android.core.location.LocationEngineRequest;
-import com.mapbox.android.core.location.LocationEngineResult;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
@@ -65,20 +42,9 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
-import com.mapbox.mapboxsdk.plugins.annotation.Line;
 import com.mapbox.mapboxsdk.plugins.annotation.LineManager;
 import com.mapbox.mapboxsdk.plugins.annotation.LineOptions;
 import com.mapbox.mapboxsdk.utils.ColorUtils;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import java.lang.ref.WeakReference;
-import java.util.List;
-import java.util.concurrent.Executor;
-
-import android.os.CountDownTimer;
 
 import static com.govnokoder.velotracker.R.drawable.tracking_on;
 
@@ -89,15 +55,7 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
     private MapView mapView;
     private MapboxMap mapboxMap;
 
-    //private ProgressBar progressBar;
-
-    private LocationEngine locationEngine;
-    private long DEFAULT_INTERVAL_IN_MILLISECONDS = 500L;
-    private long DEFAULT_MAX_WAIT_TIME = DEFAULT_INTERVAL_IN_MILLISECONDS * 2;
-
-    private TextView CurrentSpeedTextView, WayLengthTextView;
-
-    private LocationListeningCallback callback = new LocationListeningCallback(this);
+    private TextView CurrentSpeedTextView, WayLengthTextView, TimeTextView;
 
     public Button PauseButton, ResumeButton, StopButton;
 
@@ -105,19 +63,33 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
 
     private LineManager lineManager;
 
-    private MyChronometer myChronometer;
-
     private boolean isInTrackingMode;
 
     private LocationComponent locationComponent;
 
-    private int secondBeforeStart = 3;
-
     public static final String TAG = "TrainingActivity";
 
-    private CurrentTraining currentTraining = new CurrentTraining();
-
     private boolean isFinish = false;
+
+    private ParcelableTraining mParcelableTraining;
+
+    public interface onSomeEventListener {
+        public void onPauseTraining();
+        public void onStopTraining(boolean isSave);
+        public void onResumeTraining();
+    }
+    onSomeEventListener someEventListener;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            someEventListener = (onSomeEventListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement onSomeEventListener");
+        }
+    }
+
 
     public static PageMap newInstance(int page){
         PageMap fragment = new PageMap();
@@ -143,7 +115,7 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
         mapView = (MapView) result.findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
-        myChronometer = result.findViewById(R.id.chronometer);
+        TimeTextView = result.findViewById(R.id.TimeText);
         CurrentSpeedTextView = (TextView) result.findViewById(R.id.CurrentSpeedText);
         WayLengthTextView = (TextView) result.findViewById(R.id.WayLengthText);
         PauseButton = (Button) result.findViewById(R.id.PauseButton);
@@ -152,68 +124,71 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
         ResumeButton.setOnClickListener(this::onClickResumeButton);
         StopButton = (Button) result.findViewById(R.id.StopButton);
         StopButton.setOnClickListener(this::onClickStopButton);
-        currentTraining.Date.setCurrentDate();
-        currentTraining.isRunning = true;
         LocationButton = result.findViewById(R.id.locationButton);
-        //progressBar = result.findViewById(R.id.progressBar);
         return result;
     }
 
     private void onClickPauseButton(View v){
-        PauseButton.setVisibility(View.INVISIBLE);
-        PauseButton.setEnabled(false);
-        ResumeButton.setEnabled(true);
-        ResumeButton.setVisibility(View.VISIBLE);
-        StopButton.setEnabled(true);
-        StopButton.setVisibility(View.VISIBLE);
-        if(currentTraining != null && currentTraining.isRunning){
-            myChronometer.Pause();
-            currentTraining.Pause();
+        if(mParcelableTraining != null){
+            someEventListener.onPauseTraining();
+            setButtonsState(false);
         }
     }
 
     private void onClickResumeButton(View v){
-        PauseButton.setVisibility(View.VISIBLE);
-        PauseButton.setEnabled(true);
-        ResumeButton.setVisibility(View.INVISIBLE);
-        ResumeButton.setEnabled(false);
-        StopButton.setVisibility(View.INVISIBLE);
-        StopButton.setEnabled(false);
-        if(currentTraining != null && !currentTraining.isRunning){
-            currentTraining.Resume();
-            myChronometer.Resume();
+        if(mParcelableTraining != null){
+            someEventListener.onResumeTraining();
+            setButtonsState(true);
         }
     }
 
     private void onClickStopButton(View v){
-        AlertDialog builder = new AlertDialog.Builder(getContext()).create();
+        AlertDialog dialog = new AlertDialog.Builder(getContext()).create();
         ConstraintLayout cl  = (ConstraintLayout)getLayoutInflater().inflate(R.layout.dialog_save_and_exit, null);
         cl.getViewById(R.id.saveAndExitB).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Time time = myChronometer.getTime();
-                myChronometer.Stop();
-                currentTraining.StopAndSave(getContext(), time);
                 isFinish = true;
+                someEventListener.onStopTraining(true);
+                dialog.dismiss();
                 getActivity().finish();
             }
         });
         cl.getViewById(R.id.exitWithoutSavingB).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                myChronometer.Stop();
                 isFinish = true;
+                someEventListener.onStopTraining(false);
+                dialog.dismiss();
                 getActivity().finish();
             }
         });
         cl.getViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                builder.dismiss();
+                dialog.dismiss();
             }
         });
-        builder.setView(cl);
-        builder.show();
+        dialog.setView(cl);
+        dialog.show();
+    }
+
+    private void setButtonsState(boolean isRunning){
+        if(isRunning){
+            PauseButton.setVisibility(View.VISIBLE);
+            PauseButton.setEnabled(true);
+            ResumeButton.setVisibility(View.INVISIBLE);
+            ResumeButton.setEnabled(false);
+            StopButton.setVisibility(View.INVISIBLE);
+            StopButton.setEnabled(false);
+        }else {
+            PauseButton.setVisibility(View.INVISIBLE);
+            PauseButton.setEnabled(false);
+            ResumeButton.setEnabled(true);
+            ResumeButton.setVisibility(View.VISIBLE);
+            StopButton.setEnabled(true);
+            StopButton.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -264,33 +239,52 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
                     }
                 }
             });
-            initLocationEngine();
         }
+
+        SharedViewModel model = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+        model.message.observe(getViewLifecycleOwner(), new Observer<ParcelableTraining>() {
+            @Override
+            public void onChanged(ParcelableTraining parcelableTraining) {
+                if(parcelableTraining != null && parcelableTraining.originLocation != null){
+                    if(mParcelableTraining == null){
+                        setButtonsState(parcelableTraining.isRunning);
+                    }
+                    mParcelableTraining = parcelableTraining;
+                    //TODO тут получаю данные для карты и тд
+                    if(mapboxMap.getLocationComponent() != null && mapboxMap.getLocationComponent().isLocationComponentActivated()){
+                        mapboxMap.getLocationComponent().forceLocationUpdate(parcelableTraining.originLocation);
+                    }
+                    TimeTextView.setText(parcelableTraining.time.toString());
+                    CurrentSpeedTextView.setText(String.valueOf(Training.round(parcelableTraining.originLocation.getSpeed() * 3.6, 1)) + " " + getString(R.string.kph));
+                    WayLengthTextView.setText(String.valueOf(Training.round(parcelableTraining.distance, 2)) + " " + getString(R.string.km));
+                    //отрисовка путей
+                    if (lineManager != null){
+                        if(parcelableTraining.getLines().size() > 0) {
+                            lineManager.deleteAll();
+                            for (LineList line: parcelableTraining.getLines()) {
+                                drawLine(line);
+                            }
+                        }
+                        if(parcelableTraining.currentLine.size() > 0){
+                            drawLine(parcelableTraining.currentLine);
+                        }
+                    }
+                }
+            }
+        });
     }
 
-    @SuppressLint("MissingPermission")
-    private void initLocationEngine() {
-        locationEngine = LocationEngineProvider.getBestLocationEngine(getContext());
-        LocationEngineRequest request = new LocationEngineRequest.Builder(DEFAULT_INTERVAL_IN_MILLISECONDS)
-                .setDisplacement(1)//TODO возможно можно будет сделать точнее
-                .setPriority(LocationEngineRequest.PRIORITY_HIGH_ACCURACY)
-                .setMaxWaitTime(DEFAULT_MAX_WAIT_TIME).build();
-        locationEngine.requestLocationUpdates(request, callback, Looper.getMainLooper());
-        locationEngine.getLastLocation(callback);
+    private void drawLine(LineList line){
+        LineOptions lineOptions = new LineOptions();
+        lineOptions.withLatLngs(line);
+        lineOptions.withLineColor(AppConstants.LINE_COLOR);
+        lineOptions.withLineWidth(AppConstants.LINE_WIDTH);
+        lineManager.create(lineOptions);
     }
 
     @Override
-    @SuppressLint("MissingPermission")
     public void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
-        if(locationEngine != null) {
-            LocationEngineRequest request = new LocationEngineRequest.Builder(DEFAULT_INTERVAL_IN_MILLISECONDS)
-                    .setPriority(LocationEngineRequest.PRIORITY_HIGH_ACCURACY)
-                    .setMaxWaitTime(DEFAULT_MAX_WAIT_TIME).build();
-            locationEngine.requestLocationUpdates(request, callback, Looper.getMainLooper());
-            locationEngine.getLastLocation(callback);
-        }
         mapView.onStart();
     }
 
@@ -298,46 +292,6 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
     public void onResume() {
         super.onResume();
         mapView.onResume();
-        secondBeforeStart = 3;
-        //progressBar.setVisibility(View.VISIBLE);
-
-        Intent intent = new Intent(getContext(), TrainingService.class);
-        getActivity().stopService(intent);
-        try {
-            currentTraining = EventBus.getDefault().getStickyEvent(MessageEvent.class).currentTraining;
-            if(currentTraining != null){
-                EventBus.getDefault().removeAllStickyEvents();
-                EventBus.getDefault().unregister(this);
-                myChronometer.setTime(currentTraining.Time);
-                if(currentTraining.isRunning){
-                    myChronometer.Start();
-                }
-            }
-        }catch (Exception ignored){
-            myChronometer.Start();
-            if(currentTraining != null && !currentTraining.isRunning){
-                myChronometer.Pause();
-            }
-        }
-        myChronometer.setOnTickListenerInterface(new MyChronometer.OnTickListenerInterface() {
-            @Override
-            public void OnTick(Time time) {
-                currentTraining.Time = time;
-                SharedViewModel model = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
-                model.sendMessage(currentTraining);
-                if(!currentTraining.isRunning && PauseButton.getVisibility() == Button.VISIBLE){
-                    onClickPauseButton(PauseButton);
-                    time.Seconds -=1;
-                    myChronometer.setTime(time);
-                    myChronometer.Pause();
-                }
-                CurrentSpeedTextView.setText(String.valueOf(Training.round(currentTraining.CurrentSpeed, 1)) + " " + getString(R.string.kph));
-                WayLengthTextView.setText(String.valueOf(Training.round(currentTraining.Distance, 2)) + " " + getString(R.string.km));
-                if(secondBeforeStart > 0){
-                    secondBeforeStart-=1;
-                }
-            }
-        });
     }
 
     @Override
@@ -346,32 +300,14 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
         mapView.onPause();
     }
 
-    @Subscribe(sticky = true, threadMode = ThreadMode.POSTING)
-    public void onEvent(MessageEvent event) {
-        currentTraining = event.currentTraining;
-        myChronometer.setTime(currentTraining.Time);
-        EventBus.getDefault().unregister(this);
-    }
-
     @Override
     public void onStop() {
         super.onStop();
         if(!isFinish){
-            currentTraining.Time = myChronometer.getTime();
-            myChronometer.Stop();
-            Intent intent = new Intent(getContext(), TrainingService.class);
-            getActivity().startForegroundService(intent);
-            EventBus.getDefault().postSticky(new MessageEvent(currentTraining));
             getActivity().finish();
         } else {
-            currentTraining = new CurrentTraining();
-            myChronometer.Stop();
-            EventBus.getDefault().removeAllStickyEvents();
             Intent intent = new Intent(getActivity().getApplicationContext(), MainActivity.class);
             startActivity(intent);
-        }
-        if (locationEngine != null) {
-            locationEngine.removeLocationUpdates(callback);
         }
         mapView.onStop();
     }
@@ -390,10 +326,6 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
 
     @Override
     public void onDestroy() {
-        myChronometer.Stop();
-        if (locationEngine != null) {
-            locationEngine.removeLocationUpdates(callback);
-        }
         mapView.onDestroy();
         super.onDestroy();
     }
@@ -407,71 +339,4 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
     @Override
     public void onCameraTrackingChanged(int currentMode) { }
 
-    private static class LocationListeningCallback
-            implements LocationEngineCallback<LocationEngineResult> {
-
-        private final WeakReference<PageMap> fragmentWeakReference;
-
-        LocationListeningCallback(PageMap fragment) {
-            this.fragmentWeakReference = new WeakReference<>(fragment);
-        }
-
-        /**
-         * The LocationEngineCallback interface's method which fires when the device's location has changed.
-         *
-         * @param result the LocationEngineResult object which has the last known location within it.
-         */
-
-        @SuppressLint("StringFormatInvalid")
-        @Override
-        public void onSuccess(LocationEngineResult result) {
-            // The LocationEngineCallback interface's method which fires when the device's location has changed.
-            //при изменениии местоположения
-            PageMap fragment = fragmentWeakReference.get();
-            if (fragment != null && fragment.currentTraining != null) {
-
-                Location location = result.getLastLocation();
-                if (fragment.mapboxMap != null) {
-                    //отрисовка путей
-                    if (location != null && fragment.lineManager != null) {
-                        fragment.lineManager.deleteAll();
-                        for (List<LatLng> line: fragment.currentTraining.Lines) {
-                            LineOptions lineOptions = new LineOptions();
-                            lineOptions.withLatLngs(line);
-                            lineOptions.withLineColor(ColorUtils.colorToRgbaString(Color.argb(255, 255, 0, 0)));
-                            lineOptions.withLineWidth((float)5);
-                            fragment.lineManager.create(lineOptions);
-                        }
-                        fragment.lineManager.create(new LineOptions().withLatLngs(fragment.currentTraining.CurrentLine));
-                    }
-                    if(fragment.secondBeforeStart == 0){
-                        fragment.currentTraining.setValuesFromLocation(location);
-                    }
-                }
-                    if(fragment.secondBeforeStart > 0 && fragment.currentTraining.originLocation == null){
-                        fragment.mapboxMap.getLocationComponent().forceLocationUpdate(location);
-                    } else{
-                        fragment.mapboxMap.getLocationComponent().forceLocationUpdate(fragment.currentTraining.originLocation);
-                    }
-            }
-        }
-
-        /**
-         * The LocationEngineCallback interface's method which fires when the device's location can not be captured
-         *
-         * @param exception the exception message
-         */
-
-        @Override
-        public void onFailure(@NonNull Exception exception) {
-            // The LocationEngineCallback interface's method which fires when the device's location can not be captured
-            //когда не может определить местоположение
-            Log.d("LocationChangeActivity", exception.getLocalizedMessage());
-            PageMap fragment = fragmentWeakReference.get();
-            if (fragment != null) {
-                Toast.makeText(fragment.getContext(), exception.getLocalizedMessage(),
-                        Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
 }

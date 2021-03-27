@@ -92,8 +92,6 @@
     <string name="dialog_battery_optimization_text">В настойках оптимизации аккумулятора выберите «Все приложения», а затем найдите Velotracker в списке и отключите оптимизацию аккумулятора.</string>
     <string name="settings_checkboxes">checkboxes</string>
     <string name="dialog_battery_optimization_settings_checkbox_key">isChecked</string>
-    <string name="dialog_android_api30_location_permission_key">isChecked</string>
-    <string name="dialog_open_location_permissions_api30_text">Для корректной работы приложения необходимо предоставить разрешение местоположения "Разрешить в любом случае"</string>
 
 
     <!--Dialog open settings -->

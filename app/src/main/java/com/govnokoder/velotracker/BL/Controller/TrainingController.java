@@ -5,6 +5,7 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.govnokoder.velotracker.BL.LineList;
 import com.govnokoder.velotracker.BL.Model.Date;
 import com.govnokoder.velotracker.BL.Model.Time;
 import com.govnokoder.velotracker.BL.Model.Training;
@@ -47,7 +48,7 @@ public class TrainingController {
     }
 
     public void setNewTrainingData(Context context, Date date, Time time, double distance,
-                                   double maxSpeed, double averageSpeed, List<List<LatLng>> lines,
+                                   double maxSpeed, double averageSpeed, List<LineList> lines,
                                    LatLng startPoint, List<Long> heights, long averageHeight, long maxHeight, long minHeight){
         currentTraining = new Training();
         currentTraining.Date = date;

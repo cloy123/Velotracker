@@ -33,8 +33,8 @@ public class CurrentTraining{
     public double SumSpeed = 0;
     public double AverageSpeed = 0;
 
-    public List<List<LatLng>> Lines = new ArrayList<>();
-    public List<LatLng> CurrentLine = new ArrayList<>();
+    public List<LineList> Lines = new ArrayList<>();
+    public LineList CurrentLine = new LineList();
 
     public List<Long> Heights = new ArrayList<>();
     public long MaxHeight = Long.MIN_VALUE;
@@ -48,25 +48,25 @@ public class CurrentTraining{
 
     public void Pause(){
         isRunning = false;
-        List<LatLng> q = new ArrayList<>();
+        LineList q = new LineList();
         for (LatLng latlng: CurrentLine) {
             q.add(new LatLng(latlng.getLatitude(), latlng.getLongitude()));
         }Lines.add(q);
-        CurrentLine = new ArrayList<>();
+        CurrentLine = new LineList();
     }
 
     public void Resume(){
         isRunning = true;
     }
 
-    public void StopAndSave(Context context, Time time) {
+    public void StopAndSave(Context context) {
         TrainingController trainingController = new TrainingController(context);
         if(Heights.size() == 0){
             MaxHeight = 0;
             MinHeight = 0;
             AverageHeight = 0;
         }
-        AverageSpeed = ((Distance*1000) / (time.Hours*3600 + time.Minutes*60 + time.Seconds))*3.6;
+        //AverageSpeed = ((Distance*1000) / (time.Hours*3600 + time.Minutes*60 + time.Seconds))*3.6;
         if(Lines.size() == 0) {
             return;
         }
@@ -81,7 +81,7 @@ public class CurrentTraining{
             }
 
         }
-        trainingController.setNewTrainingData(context, Date, time, Distance, MaxSpeed, AverageSpeed, Lines, startPoint, Heights, AverageHeight, MaxHeight, MinHeight);
+        trainingController.setNewTrainingData(context, Date, Time, Distance, MaxSpeed, AverageSpeed, Lines, startPoint, Heights, AverageHeight, MaxHeight, MinHeight);
     }
 
 
