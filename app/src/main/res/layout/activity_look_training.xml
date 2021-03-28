@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    style="@style/Theme.AppCompat"
     android:layout_height="match_parent"
     tools:context=".LookTraining"
     android:background="@color/black">
@@ -46,8 +47,7 @@
                     android:gravity="center"
                     android:maxLines="1"
                     android:textAllCaps="true"
-                    android:textColor="#FFFFFF"
-                    android:textSize="15sp"
+                    android:theme="@style/Theme.Velotracker.StatTextViews"
                     android:text="@string/time"/>
                 <com.google.android.material.internal.BaselineLayout
                     android:layout_width="match_parent"
@@ -87,8 +87,7 @@
                     android:gravity="center"
                     android:maxLines="1"
                     android:textAllCaps="true"
-                    android:textColor="#FFFFFF"
-                    android:textSize="15sp"
+                    android:theme="@style/Theme.Velotracker.StatTextViews"
                     android:text="@string/distance"/>
 
                 <com.google.android.material.internal.BaselineLayout
@@ -137,8 +136,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:maxLines="1"
-                    android:textAllCaps="true"
-                    android:textColor="#FFFFFF"
+                    android:theme="@style/Theme.Velotracker.StatTextViews"
                     android:textSize="15sp"
                     android:text="@string/temp"/>
 
@@ -183,8 +181,7 @@
                     android:gravity="center"
                     android:maxLines="1"
                     android:textAllCaps="true"
-                    android:textColor="#FFFFFF"
-                    android:textSize="15sp"
+                    android:theme="@style/Theme.Velotracker.StatTextViews"
                     android:text="@string/average_speed"/>
                 <com.google.android.material.internal.BaselineLayout
                     android:layout_width="match_parent"
@@ -233,8 +230,7 @@
                     android:gravity="center"
                     android:maxLines="1"
                     android:textAllCaps="true"
-                    android:textColor="#FFFFFF"
-                    android:textSize="15sp"
+                    android:theme="@style/Theme.Velotracker.StatTextViews"
                     android:text="@string/max_speed"/>
 
                 <com.google.android.material.internal.BaselineLayout
@@ -275,8 +271,7 @@
                     android:gravity="center"
                     android:maxLines="1"
                     android:textAllCaps="true"
-                    android:textColor="#FFFFFF"
-                    android:textSize="15sp"
+                    android:theme="@style/Theme.Velotracker.StatTextViews"
                     android:text="@string/average_height"/>
                 <com.google.android.material.internal.BaselineLayout
                     android:layout_width="match_parent"
@@ -324,8 +319,7 @@
                     android:gravity="center"
                     android:maxLines="1"
                     android:textAllCaps="true"
-                    android:textColor="#FFFFFF"
-                    android:textSize="15sp"
+                    android:theme="@style/Theme.Velotracker.StatTextViews"
                     android:text="@string/max_height"/>
 
                 <com.google.android.material.internal.BaselineLayout
@@ -366,8 +360,7 @@
                     android:gravity="center"
                     android:maxLines="1"
                     android:textAllCaps="true"
-                    android:textColor="#FFFFFF"
-                    android:textSize="15sp"
+                    android:theme="@style/Theme.Velotracker.StatTextViews"
                     android:text="@string/min_height"/>
                 <com.google.android.material.internal.BaselineLayout
                     android:layout_width="match_parent"

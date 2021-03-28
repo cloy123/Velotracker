@@ -4,9 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    style="@style/Theme.AppCompat"
     android:background="#000000">
     <TextView
         android:id="@+id/textView"
+        android:text="@string/dialog_remove_training_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/Theme.Velotracker.Dialogs_TextViews"
@@ -14,7 +16,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
         tools:layout_editor_absoluteX="0dp" />
-<!--    android:textAlignment="center"-->
 
     <com.google.android.material.internal.BaselineLayout
         android:id="@+id/line"
@@ -26,24 +27,38 @@
         app:layout_constraintTop_toBottomOf="@+id/textView"
         android:layout_marginHorizontal="10dp"
         android:layout_marginVertical="5dp"
+        style="@style/Theme.AppCompat"
         android:background="#bbb"
         />
 
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/openSettB"
-        android:text="@string/open_settings_dialog"
-        android:layout_width="wrap_content"
+        android:id="@+id/yesB"
+        android:text="@string/yes"
+        style="@style/Theme.Velotracker.Dialogs_Buttons"
+        android:layout_width="260dp"
+        android:layout_height="50dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        style="@style/Theme.Velotracker.Dialogs_Buttons" />
+        app:layout_constraintTop_toBottomOf="@+id/line" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/cancelB"
+        android:text="@string/cancel"
+        style="@style/Theme.Velotracker.Dialogs_Buttons"
+        android:layout_width="260dp"
+        android:layout_height="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/yesB" />
 
     <Space
         android:layout_width="match_parent"
         android:layout_height="20dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/openSettB" />
+        style="@style/Theme.AppCompat"
+        app:layout_constraintTop_toBottomOf="@+id/cancelB" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

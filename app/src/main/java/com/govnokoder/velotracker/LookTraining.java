@@ -10,10 +10,13 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import android.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.govnokoder.velotracker.BL.Controller.TrainingController;
+import com.govnokoder.velotracker.BL.LineList;
 import com.govnokoder.velotracker.BL.Model.Training;
 import com.govnokoder.velotracker.ui.training.MapViewInScroll;
 import com.mapbox.mapboxsdk.Mapbox;
@@ -35,7 +38,7 @@ public class LookTraining extends AppCompatActivity
 
     private TextView averageSpeedText, timeText, maxSpeedText, distanceText,
     averageHeightText, tempText, maxHeightText, minHeightText;
-    private int Index;
+    private int index;
     List<Training> trainings;
     Training CurrentTraining;
 
@@ -43,9 +46,10 @@ public class LookTraining extends AppCompatActivity
     private MapboxMap mapboxMap;
 
     private LineManager lineManager;
-    private LineOptions lineOptions;
 
     private AppCompatButton DeleteButton;
+
+    private TrainingController trainingController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,10 +72,10 @@ public class LookTraining extends AppCompatActivity
         minHeightText = findViewById(R.id.minHeightText);
 
         Bundle bundle = getIntent().getExtras();
-        Index = (int)bundle.get("INDEX");
-        TrainingController trainingController = new TrainingController(getApplicationContext());
-        trainings = trainingController.LoadTrainingsData(getApplicationContext());
-        CurrentTraining = trainings.get(Index);
+        index = (int)bundle.get("INDEX");
+        trainingController = new TrainingController(getApplicationContext());
+        trainings = trainingController.LoadTrainingsData();
+        CurrentTraining = trainings.get(index);
 
         distanceText.setText(Double.toString(Training.round(CurrentTraining.Distance, 2)) + " " + getString(R.string.km));
         maxSpeedText.setText(Double.toString(Training.round(CurrentTraining.MaxSpeed, 1)) + " " + getString(R.string.kph));
@@ -91,9 +95,30 @@ public class LookTraining extends AppCompatActivity
         DeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO добавить нормальное удаление
+                dialogRemoveTraining();
             }
         });
+    }
+
+    private void dialogRemoveTraining(){
+        AlertDialog dialog = new AlertDialog.Builder(this).create();
+        ConstraintLayout cl  = (ConstraintLayout)getLayoutInflater().inflate(R.layout.dialog_remove_training, null);
+        cl.getViewById(R.id.yesB).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                trainingController.RemoveTraining(index);
+                dialog.dismiss();
+                finish();
+            }
+        });
+        cl.getViewById(R.id.cancelB).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.setView(cl);
+        dialog.show();
     }
 
     @Override
@@ -109,7 +134,7 @@ public class LookTraining extends AppCompatActivity
 
     public void onMapReady(@NonNull final MapboxMap mapboxMap) {
         this.mapboxMap = mapboxMap;
-        mapboxMap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
+        mapboxMap.setStyle(AppConstants.MAP_STYLE, new Style.OnStyleLoaded() {
             @Override
             public void onStyleLoaded(@NonNull Style style) {
                 // Map is set up and the style has loaded. Now you can add data or make other map adjustments
@@ -118,7 +143,6 @@ public class LookTraining extends AppCompatActivity
                     CameraPosition position = new CameraPosition.Builder()
                             .target(latLng)
                             .zoom(15)
-                            .tilt(20)
                             .build();
                     CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(position);
                     mapboxMap.moveCamera(cameraUpdate);
@@ -126,13 +150,20 @@ public class LookTraining extends AppCompatActivity
 
                 if(CurrentTraining.Lines != null && CurrentTraining.Lines.size() > 0){
                     lineManager = new LineManager(mapView, mapboxMap, mapboxMap.getStyle());
-                    lineOptions = new LineOptions();
-                    for (List<LatLng> line: CurrentTraining.Lines) {
-                        lineManager.create(new LineOptions().withLatLngs(line));
+                    for (LineList line: CurrentTraining.Lines) {
+                        drawLine(line);
                     }
                 }
             }
         });
+    }
+
+    private void drawLine(LineList line){
+        LineOptions lineOptions = new LineOptions();
+        lineOptions.withLatLngs(line);
+        lineOptions.withLineColor(AppConstants.LINE_COLOR);
+        lineOptions.withLineWidth(AppConstants.LINE_WIDTH);
+        lineManager.create(lineOptions);
     }
 
     @Override

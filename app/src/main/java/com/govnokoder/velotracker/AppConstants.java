@@ -2,6 +2,7 @@ package com.govnokoder.velotracker;
 
 import android.graphics.Color;
 
+import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.utils.ColorUtils;
 
 public class AppConstants {
@@ -14,4 +15,6 @@ public class AppConstants {
     //TODO получать из настроек
     public static final String LINE_COLOR = ColorUtils.colorToRgbaString(Color.argb(255, 255, 0, 0));
     public static final float LINE_WIDTH = 5;
+
+    public static String MAP_STYLE = Style.OUTDOORS;
 }

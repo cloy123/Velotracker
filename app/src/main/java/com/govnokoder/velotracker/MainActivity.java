@@ -146,11 +146,12 @@ public class MainActivity extends AppCompatActivity implements PageStart.onSomeE
     private void startActivityTraining(){
         Intent intent = new Intent(getApplicationContext(), TrainingActivity.class);
         startActivity(intent);
+        finish();
     }
 
     @Override
     public void openLastTraining() {
-        int position = new TrainingController(this).LoadTrainingsData(this).size() - 1;
+        int position = new TrainingController(this).LoadTrainingsData().size() - 1;
         if(position >= 0) {
             tabLayout.selectTab(tabLayout.getTabAt(1));
             Intent intent = new Intent(this, LookTraining.class);

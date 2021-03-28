@@ -83,8 +83,7 @@
                     android:text="@string/time"
                     android:textAlignment="center"
                     android:textAllCaps="true"
-                    android:textColor="#FFFFFF"
-                    android:textSize="15sp"
+                    android:theme="@style/Theme.Velotracker.StatTextViews"
                     tools:ignore="RtlCompat" />
 
                 <com.google.android.material.internal.BaselineLayout
@@ -107,9 +106,7 @@
                     android:text="00:00"
                     android:textAlignment="center"
                     android:textAllCaps="true"
-                    android:textColor="#FFFFFF"
-                    android:textSize="30sp"
-
+                    android:theme="@style/Theme.Velotracker.StatTextViewsValue"
                     tools:ignore="RtlCompat" />
 
 
@@ -139,8 +136,7 @@
                     android:text="@string/distance"
                     android:textAlignment="center"
                     android:textAllCaps="true"
-                    android:textColor="#FFFFFF"
-                    android:textSize="15sp"
+                    android:theme="@style/Theme.Velotracker.StatTextViews"
                     tools:ignore="RtlCompat" />
 
                 <com.google.android.material.internal.BaselineLayout
@@ -161,8 +157,7 @@
                     android:text="0.00"
                     android:textAlignment="center"
                     android:textAllCaps="true"
-                    android:textColor="#FFFFFF"
-                    android:textSize="30sp"
+                    android:theme="@style/Theme.Velotracker.StatTextViewsValue"
                     tools:ignore="RtlCompat" />
 
             </LinearLayout>
@@ -193,8 +188,7 @@
                 android:text="@string/speed"
                 android:textAlignment="center"
                 android:textAllCaps="true"
-                android:textColor="#FFFFFF"
-                android:textSize="15sp"
+                android:theme="@style/Theme.Velotracker.StatTextViews"
                 tools:ignore="RtlCompat" />
 
         </LinearLayout>
@@ -223,8 +217,7 @@
                 android:text="0.0"
                 android:textAlignment="center"
                 android:textAllCaps="true"
-                android:textColor="#FFFFFF"
-                android:textSize="30sp"
+                android:theme="@style/Theme.Velotracker.StatTextViewsValue"
                 tools:ignore="RtlCompat" />
         </LinearLayout>
 

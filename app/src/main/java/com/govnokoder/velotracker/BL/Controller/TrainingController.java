@@ -29,25 +29,28 @@ public class TrainingController {
     private final String TRAINING_FILE_NAME = "data.json";
     private List<Training> trainings;
     private Training currentTraining;
+    private Context context;
 
     public TrainingController(Context context){
-        trainings = LoadTrainingsData(context);
+        this.context = context;
+        trainings = LoadTrainingsData();
         if(trainings == null)
         {
             trainings = new ArrayList<>();
         }
     }
 
-    public void DeleteTraining(int index){
-        //Todo удаление конкретной записи по позиции в списке
+    public void RemoveTraining(int index){
+        trainings.remove(index);
+        Save();
     }
 
-    public void DeleteAll(Context context) {
+    public void DeleteAll() {
         trainings.clear();
-        Save(context);
+        Save();
     }
 
-    public void setNewTrainingData(Context context, Date date, Time time, double distance,
+    public void setNewTrainingData(Date date, Time time, double distance,
                                    double maxSpeed, double averageSpeed, List<LineList> lines,
                                    LatLng startPoint, List<Long> heights, long averageHeight, long maxHeight, long minHeight){
         currentTraining = new Training();
@@ -66,10 +69,10 @@ public class TrainingController {
         currentTraining.Heights = heights;
 
         trainings.add(currentTraining);
-        Save(context);
+        Save();
     }
 
-    public List<Training>  LoadTrainingsData(Context context)
+    public List<Training>  LoadTrainingsData()
     {
         InputStreamReader streamReader = null;
         FileInputStream fileInputStream = null;
@@ -102,7 +105,7 @@ public class TrainingController {
         return null;
     }
 
-    private boolean Save(Context context)
+    private boolean Save()
     {
         Gson gson = new Gson();
         DataItems dataItems = new DataItems();

@@ -26,6 +26,7 @@ public class PageStart extends Fragment {
     private TextView totalDistanceText, lastTrainingDateText, lastTrainingTimeText, lastTrainingDistanceText, lastTrainingAverageSpeedText;
 
 
+
     public interface onSomeEventListener {
         public void startTraining();
         public void openLastTraining();
@@ -60,8 +61,8 @@ public class PageStart extends Fragment {
     public void onResume() {
         super.onResume();
         TrainingController trainingController = new TrainingController(getContext());
-        List<Training> trainings = trainingController.LoadTrainingsData(getContext());
-        if(trainings != null){
+        List<Training> trainings = trainingController.LoadTrainingsData();
+        if(trainings != null && trainings.size() > 0){
             Training lastTraining = trainings.get(trainings.size() - 1);
             double totalDist = 0;
             for (Training training : trainings) {
@@ -72,6 +73,13 @@ public class PageStart extends Fragment {
             lastTrainingAverageSpeedText.setText(Double.toString(Training.round(lastTraining.AverageSpeed, 1)) + getString(R.string.kph));
             lastTrainingDistanceText.setText(Double.toString(Training.round(lastTraining.Distance, 2)) + getString(R.string.km));
             lastTrainingDateText.setText(lastTraining.Date.toString());
+        }
+        else {
+            lastTrainingTimeText.setText("00:00");
+            lastTrainingAverageSpeedText.setText("0 " + getString(R.string.kph));
+            lastTrainingDistanceText.setText("0 " + getString(R.string.km));
+            lastTrainingDateText.setText("00/00/0000");
+            totalDistanceText.setText("0 " + getString(R.string.km));
         }
     }
 

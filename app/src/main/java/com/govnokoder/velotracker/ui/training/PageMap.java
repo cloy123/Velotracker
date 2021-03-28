@@ -194,7 +194,7 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
     @Override
     public void onMapReady(@NonNull final MapboxMap mapboxMap) {
         this.mapboxMap = mapboxMap;
-        mapboxMap.setStyle(Style.OUTDOORS, new Style.OnStyleLoaded() {//MAPBOX_STREETS
+        mapboxMap.setStyle(AppConstants.MAP_STYLE, new Style.OnStyleLoaded() {//MAPBOX_STREETS
             @Override
             public void onStyleLoaded(@NonNull Style style) {
                 // Map is set up and the style has loaded. Now you can add data or make other map adjustments
@@ -250,7 +250,6 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
                         setButtonsState(parcelableTraining.isRunning);
                     }
                     mParcelableTraining = parcelableTraining;
-                    //TODO тут получаю данные для карты и тд
                     if(mapboxMap.getLocationComponent() != null && mapboxMap.getLocationComponent().isLocationComponentActivated()){
                         mapboxMap.getLocationComponent().forceLocationUpdate(parcelableTraining.originLocation);
                     }

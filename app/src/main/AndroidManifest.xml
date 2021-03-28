@@ -18,19 +18,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Velotracker">
+
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
             android:theme="@style/Theme.AppCompat.Settings" />
+
         <activity
             android:name=".TrainingActivity"
             android:label="@string/title_activity_training"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Velotracker.NoActionBar" />
-        <activity android:name=".LookTraining" />
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Velotracker.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -38,6 +41,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".LookTraining"
+            android:label="@string/title_activity_look_training"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat"/>
 
         <service
             android:name=".services.LocationService"

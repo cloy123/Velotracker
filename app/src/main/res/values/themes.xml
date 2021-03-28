@@ -71,7 +71,7 @@
         <item name = "android:textColorSecondary"> @color/gray </item>
     </style>
 
-    <style name="Theme.Velotracker.Dialogs_TextViews">
+    <style name="Theme.Velotracker.Dialogs_TextViews" parent="Theme.AppCompat">
         <item name="android:layout_marginTop">20dp</item>
         <item name="android:layout_marginHorizontal">20dp</item>
         <item name="android:textColor">#F5F5F5</item>
@@ -79,7 +79,7 @@
         <item name="android:textAlignment">center</item>
     </style>
 
-    <style name="Theme.Velotracker.Dialogs_Buttons">
+    <style name="Theme.Velotracker.Dialogs_Buttons" parent="Theme.AppCompat">
         <item name="android:layout_height">50dp</item>
         <item name="android:layout_marginTop">20dp</item>
         <item name="android:background">@drawable/oval_button</item>

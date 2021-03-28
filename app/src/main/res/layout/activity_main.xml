@@ -25,11 +25,15 @@
             android:layout_height="0dp"
             android:layout_weight="10"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:background="@color/black"
+            app:tabIndicatorColor="#FFFFFF"
+            app:tabTextColor="@color/white" />
 <!--        app:tabMode="scrollable"-->
 <!--        android:theme="@style/MyTabLayoutTheme"-->
     </LinearLayout>
@@ -39,6 +43,8 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
+        android:background="@color/black"
+        app:itemTextColor="@color/white"
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer" />
 </androidx.drawerlayout.widget.DrawerLayout>

@@ -16,6 +16,9 @@ import com.govnokoder.velotracker.BL.ParcelableTraining;
 import com.govnokoder.velotracker.BL.Model.Training;
 import com.govnokoder.velotracker.R;
 import com.govnokoder.velotracker.messages.SharedViewModel;
+import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.plugins.annotation.LineManager;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -85,7 +88,6 @@ public class PageStat extends Fragment {
     }
     @Override
     public void onStop() {
-        EventBus.getDefault().unregister(this);
         super.onStop();
     }
 }

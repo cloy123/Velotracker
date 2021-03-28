@@ -4,6 +4,7 @@
     <string name="statistic">Статистика</string>
     <string name="settings">Настройки</string>
     <string name="main">Главная</string>
+    <string name="title_activity_look_training">LookTraining</string>
 
     <string name="access_token">pk.eyJ1IjoiY2xveSIsImEiOiJja2g3aXBwNTMwZGFvMnRydG02Z2N1cThmIn0.DnBlGpercJNbzT0Nz7UPhw</string>
     <string name="start_navigating">Start navigating</string>
@@ -99,8 +100,11 @@
     <string name="dialog_open_sett_read_phone_state_text">Для работы приложения требуется разрешение на состояние устройства!</string>
     <string name="dialog_open_sett_gps_text">Для работы приложения требуется доступ к данным о местоположении устройства!</string>
     <string name="dialog_battery_optimization_checkbox_text">Не показывать это предупреждение</string>
-
-
+    <string name="dialog_remove_training_text">Удалить эту запись?</string>
+    <string name="yes">Да</string>
+    <string name="total_records">Всего записей</string>
+    <string name="total_time">Всего времени</string>
+    <string name="max_temp">Макс.темп</string>
 
 
 </resources>
