@@ -28,7 +28,7 @@ import java.util.List;
 public class TrainingController {
     private final String TRAINING_FILE_NAME = "data.json";
     private List<Training> trainings;
-    private Training currentTraining;
+    private Training training;
     private Context context;
 
     public TrainingController(Context context){
@@ -52,23 +52,21 @@ public class TrainingController {
 
     public void setNewTrainingData(Date date, Time time, double distance,
                                    double maxSpeed, double averageSpeed, List<LineList> lines,
-                                   LatLng startPoint, List<Long> heights, long averageHeight, long maxHeight, long minHeight){
-        currentTraining = new Training();
-        currentTraining.Date = date;
-        currentTraining.Time = time;
-        currentTraining.Distance = distance;
-        currentTraining.MaxSpeed = maxSpeed;
-        currentTraining.AverageSpeed = averageSpeed;
-        currentTraining.Lines = lines;
-
-        currentTraining.setStartPoint(startPoint);
-
-        currentTraining.MaxHeight = maxHeight;
-        currentTraining.MinHeight = minHeight;
-        currentTraining.AverageHeight = averageHeight;
-        currentTraining.Heights = heights;
-
-        trainings.add(currentTraining);
+                                   LatLng startPoint, List<Long> heights, List<Double> speeds, long averageHeight, long maxHeight, long minHeight){
+        training = new Training();
+        training.Date = date;
+        training.Time = time;
+        training.Distance = distance;
+        training.MaxSpeed = maxSpeed;
+        training.AverageSpeed = averageSpeed;
+        training.Lines = lines;
+        training.setStartPoint(startPoint);
+        training.MaxHeight = maxHeight;
+        training.MinHeight = minHeight;
+        training.AverageHeight = averageHeight;
+        training.Heights = heights;
+        training.Speeds = speeds;
+        trainings.add(training);
         Save();
     }
 

@@ -81,7 +81,7 @@ public class CurrentTraining{
             }
 
         }
-        trainingController.setNewTrainingData(Date, Time, Distance, MaxSpeed, AverageSpeed, Lines, startPoint, Heights, AverageHeight, MaxHeight, MinHeight);
+        trainingController.setNewTrainingData(Date, Time, Distance, MaxSpeed, AverageSpeed, Lines, startPoint, Heights, SpeedList, AverageHeight, MaxHeight, MinHeight);
     }
 
 

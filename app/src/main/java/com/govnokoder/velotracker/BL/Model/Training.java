@@ -23,16 +23,23 @@ public class Training {
     public long MinHeight = 0;
     public long AverageHeight = 0;
     public List<Long> Heights = new ArrayList<>();
+    public List<Double> Speeds = new ArrayList<>();
 
-    public Time getTemp(String unit){
+    public static enum  Units{
+        MILES,
+        KILOMETERS,
+        METERS
+    }
+
+    public Time getTemp(Units unit){
         if(Distance > 0 && Time != null && Time.getAllSeconds() > 0) {
             long allSeconds = Time.getAllSeconds();;
             long tempSeconds;
             switch (unit) {
-                case "m":
+                case MILES:
                     tempSeconds = (long) (allSeconds / convertToMiles(Distance));
                     return Time.getTimeFromSeconds(tempSeconds);
-                case "k":
+                case KILOMETERS:
                     tempSeconds = (long) (allSeconds / Distance);
                     return Time.getTimeFromSeconds(tempSeconds);
             }

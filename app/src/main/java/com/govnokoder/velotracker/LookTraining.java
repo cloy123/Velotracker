@@ -82,7 +82,7 @@ public class LookTraining extends AppCompatActivity
         averageSpeedText.setText(Double.toString(Training.round(CurrentTraining.AverageSpeed, 1)) + " " + getString(R.string.kph));
         timeText.setText(CurrentTraining.Time.toString());
         averageHeightText.setText(Long.toString(CurrentTraining.AverageHeight) + " " + getString(R.string.m));
-        tempText.setText(CurrentTraining.getTemp("k").toString() + " /" + getString(R.string.km));
+        tempText.setText(CurrentTraining.getTemp(Training.Units.KILOMETERS).toString() + " /" + getString(R.string.km));
         maxHeightText.setText(Long.toString(CurrentTraining.MaxHeight) + " " + getString(R.string.m));
         minHeightText.setText(Long.toString(CurrentTraining.MinHeight) + " " + getString(R.string.m));
 
