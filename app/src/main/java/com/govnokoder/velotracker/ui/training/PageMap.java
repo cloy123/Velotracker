@@ -3,7 +3,6 @@ package com.govnokoder.velotracker.ui.training;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,7 +26,6 @@ import com.govnokoder.velotracker.BL.Model.Training;
 import com.govnokoder.velotracker.MainActivity;
 import com.govnokoder.velotracker.R;
 import com.govnokoder.velotracker.messages.SharedViewModel;
-import com.mapbox.android.core.location.LocationEngine;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
@@ -44,7 +41,6 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.plugins.annotation.LineManager;
 import com.mapbox.mapboxsdk.plugins.annotation.LineOptions;
-import com.mapbox.mapboxsdk.utils.ColorUtils;
 
 import static com.govnokoder.velotracker.R.drawable.tracking_on;
 

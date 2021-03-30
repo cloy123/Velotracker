@@ -39,8 +39,8 @@
         <item name="colorOnSecondary">@color/white</item>
 
     </style>
-    
-    
+
+
     <style name="Theme.Velotracker.StatTextViews">
         <item name="android:textAllCaps">true</item>
         <item name="android:textSize">15sp</item>
@@ -67,8 +67,8 @@
 
     <style name="Theme.AppCompat.Settings">
         <item name="android:textColor">@color/white</item>
-        <item name = "android:textColorTertiary"> @color/white </item>
-        <item name = "android:textColorSecondary"> @color/gray </item>
+        <item name="android:textColorTertiary">@color/white</item>
+        <item name="android:textColorSecondary">@color/gray</item>
     </style>
 
     <style name="Theme.Velotracker.Dialogs_TextViews" parent="Theme.AppCompat">
