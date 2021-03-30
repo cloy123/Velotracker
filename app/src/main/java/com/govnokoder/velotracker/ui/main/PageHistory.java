@@ -88,7 +88,7 @@ public class PageHistory extends Fragment {
                 View view = super.getView(position, convertView, parent);
                 TextView textView = (TextView)view.findViewById(android.R.id.text1);
                 textView.setTextColor(Color.WHITE);
-                textView.setBackgroundColor(Color.argb(255, 66, 66, 66));
+                textView.setBackgroundColor(Color.argb(255, 0, 0, 0));
                 return view;
             }
         };
