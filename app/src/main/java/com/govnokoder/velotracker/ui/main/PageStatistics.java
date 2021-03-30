@@ -115,8 +115,8 @@ public class PageStatistics extends Fragment implements OnMapReadyCallback {
             tempTextView.setText("00:00" + " /" + getString(R.string.km));
             maxTempTextView.setText("00:00" + " /" + getString(R.string.km));
             averageHeightTextView.setText("0" + " " + getString(R.string.m));
-            minHeightTextView.setText("0" + " " + getString(R.string.m));
-            maxHeightTextView.setText("0" + " " + getString(R.string.m));
+            minHeightTextView.setText("");
+            maxHeightTextView.setText("");
             return;
         }
         double totalDist = 0;
@@ -125,8 +125,6 @@ public class PageStatistics extends Fragment implements OnMapReadyCallback {
         long maxHeight = trainings.get(0).MaxHeight;
         long minHeight = trainings.get(0).MinHeight;
         int totalRecords = trainings.size();
-        double totalSpeed = 0;
-        long totalSpeedValues = 0;
         long totalHeights = 0;
         long totalHeightsValues = 0;
         long totalTempSeconds = 0;
@@ -134,8 +132,6 @@ public class PageStatistics extends Fragment implements OnMapReadyCallback {
         for (Training training : trainings) {
             totalDist += training.Distance;
             totalSeconds += training.Time.getAllSeconds();
-            totalSpeed += training.AverageSpeed * training.Speeds.size();
-            totalSpeedValues += training.Speeds.size();
             totalHeights += training.AverageHeight * training.Heights.size();
             totalHeightsValues += training.Heights.size();
             totalTempSeconds += training.getTemp(Training.Units.KILOMETERS).getAllSeconds();
@@ -157,9 +153,15 @@ public class PageStatistics extends Fragment implements OnMapReadyCallback {
                 }
             }
         }
-        double averageSpeed = totalSpeed / totalSpeedValues;
+        double averageSpeed = totalDist / ((double)totalSeconds/3600);
         Time averageTemp = Time.getTimeFromSeconds(totalTempSeconds / trainings.size());
         long averageHeight = totalHeights / totalHeightsValues;
+
+        String maxHeightStr = Long.toString(maxHeight) + " " + getString(R.string.m);
+        if(maxHeight == Long.MIN_VALUE){maxHeightStr = "";}
+        String minHeightStr = Long.toString(minHeight) + " " + getString(R.string.m);
+        if(minHeight == Long.MAX_VALUE){minHeightStr = "";}
+
         totalDistanceTextView.setText(Double.toString(Training.round(totalDist, 2)) + " " + getString(R.string.km));
         totalRecordsTextView.setText(Integer.toString(totalRecords));
         totalTimeTextView.setText(Time.getTimeFromSeconds(totalSeconds).toString());
@@ -168,12 +170,8 @@ public class PageStatistics extends Fragment implements OnMapReadyCallback {
         tempTextView.setText(averageTemp.toString() + " /" + getString(R.string.km));
         maxTempTextView.setText(maxTemp.toString() + " /" + getString(R.string.km));
         averageHeightTextView.setText(Long.toString(averageHeight) + " " + getString(R.string.m));
-        minHeightTextView.setText(Long.toString(minHeight) + " " + getString(R.string.m));
-        maxHeightTextView.setText(Long.toString(maxHeight) + " " + getString(R.string.m));
-
-
-        //TODo тут заполнять всё
-
+        minHeightTextView.setText(minHeightStr);
+        maxHeightTextView.setText(maxHeightStr);
     }
 
     @Override

@@ -9,6 +9,7 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.view.WindowManager;
 
 import com.google.android.material.tabs.TabLayout;
 
@@ -64,7 +65,7 @@ public class TrainingActivity extends AppCompatActivity implements PageMap.onSom
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_training);
-
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         viewPager = findViewById(R.id.view_pager);
         viewPagerAdapterTr = new ViewPagerAdapterTr(this);
         viewPager.setAdapter(viewPagerAdapterTr);

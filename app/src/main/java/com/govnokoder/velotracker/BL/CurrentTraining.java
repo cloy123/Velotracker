@@ -102,7 +102,7 @@ public class CurrentTraining{
                 }
                 SpeedList.add(speed);
                 SumSpeed += speed;
-                AverageSpeed = SumSpeed/SpeedList.size();
+                AverageSpeed = Distance/((double) Time.getAllSeconds()/3600);
             }
 
             if(location.hasVerticalAccuracy() && location.hasAltitude()) {

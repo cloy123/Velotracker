@@ -56,6 +56,8 @@ public class LocationService extends Service {
 
     private LocationRequest mLocationRequest;
 
+    private int locationsBeforeStart = 2;
+
     private FusedLocationProviderClient mFusedLocationClient;
 
     private LocationCallback mLocationCallback;
@@ -134,6 +136,10 @@ public class LocationService extends Service {
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 super.onLocationResult(locationResult);
+                if(locationsBeforeStart != 0){
+                    locationsBeforeStart -=1 ;
+                    return;
+                }
                 currentTraining.setValuesFromLocation(locationResult.getLastLocation());
             }
         };
@@ -211,7 +217,7 @@ public class LocationService extends Service {
                         @Override
                         public void onComplete(@NonNull Task<Location> task) {
                             if (task.isSuccessful() && task.getResult() != null) {
-                                currentTraining.setValuesFromLocation(task.getResult());
+                                //currentTraining.setValuesFromLocation(task.getResult());
                             } else {
                                 Log.w(TAG, "Failed to get location.");
                             }

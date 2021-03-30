@@ -16,11 +16,6 @@ import com.govnokoder.velotracker.BL.ParcelableTraining;
 import com.govnokoder.velotracker.BL.Model.Training;
 import com.govnokoder.velotracker.R;
 import com.govnokoder.velotracker.messages.SharedViewModel;
-import com.mapbox.mapboxsdk.Mapbox;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.plugins.annotation.LineManager;
-
-import org.greenrobot.eventbus.EventBus;
 
 public class PageStat extends Fragment {
     private int pageNumber;
@@ -79,8 +74,12 @@ public class PageStat extends Fragment {
                     averageSpeedText.setText(String.valueOf((Training.round(parcelableTraining.averageSpeed, 1))) + " " + getString(R.string.kph));
                     maxSpeedText.setText(String.valueOf(Training.round(parcelableTraining.maxSpeed, 1)) + " " + getString(R.string.kph));
                     heightText.setText(String.valueOf(parcelableTraining.height + " " + getString(R.string.m)));
-                    maxHeightText.setText(String.valueOf(parcelableTraining.maxHeight) + " " + getString(R.string.m));
-                    minHeightText.setText(String.valueOf(parcelableTraining.minHeight) + " " + getString(R.string.m));
+                    String maxHeight = Long.toString(parcelableTraining.maxHeight) + " " + getString(R.string.m);
+                    if(parcelableTraining.maxHeight == Long.MIN_VALUE){maxHeight = "";}
+                    String minHeight = Long.toString(parcelableTraining.minHeight) + " " + getString(R.string.m);
+                    if(parcelableTraining.minHeight == Long.MAX_VALUE){minHeight = "";}
+                    maxHeightText.setText(maxHeight);
+                    minHeightText.setText(minHeight);
                     averageHeightText.setText(String.valueOf(parcelableTraining.averageHeight) + " " + getString(R.string.m));
                 }
             }

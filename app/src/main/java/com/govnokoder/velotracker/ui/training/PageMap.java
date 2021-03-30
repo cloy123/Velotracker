@@ -1,10 +1,12 @@
 package com.govnokoder.velotracker.ui.training;
 
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +28,10 @@ import com.govnokoder.velotracker.BL.Model.Training;
 import com.govnokoder.velotracker.MainActivity;
 import com.govnokoder.velotracker.R;
 import com.govnokoder.velotracker.messages.SharedViewModel;
+import com.mapbox.android.core.location.LocationEngine;
+import com.mapbox.android.core.location.LocationEngineCallback;
+import com.mapbox.android.core.location.LocationEngineRequest;
+import com.mapbox.android.core.location.LocationEngineResult;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
@@ -39,8 +45,14 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
+import com.mapbox.mapboxsdk.plugins.annotation.Annotation;
+import com.mapbox.mapboxsdk.plugins.annotation.AnnotationManager;
+import com.mapbox.mapboxsdk.plugins.annotation.Line;
 import com.mapbox.mapboxsdk.plugins.annotation.LineManager;
 import com.mapbox.mapboxsdk.plugins.annotation.LineOptions;
+import com.mapbox.mapboxsdk.plugins.annotation.OnAnnotationDragListener;
+
+import java.util.List;
 
 import static com.govnokoder.velotracker.R.drawable.tracking_on;
 
@@ -66,6 +78,8 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
     public static final String TAG = "TrainingActivity";
 
     private boolean isFinish = false;
+
+    private boolean isLineDrawn = false;
 
     private ParcelableTraining mParcelableTraining;
 
@@ -222,7 +236,7 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
             // Set the component's camera mode
             locationComponent.setCameraMode(CameraMode.TRACKING);
             // Set the component's render mode
-            locationComponent.setRenderMode(RenderMode.COMPASS);
+            locationComponent.setRenderMode(RenderMode.NORMAL);
             locationComponent.zoomWhileTracking(16f);
             locationComponent.addOnCameraTrackingChangedListener(this);
             LocationButton.setOnClickListener(new View.OnClickListener() {
@@ -246,8 +260,9 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
                         setButtonsState(parcelableTraining.isRunning);
                     }
                     mParcelableTraining = parcelableTraining;
-                    if(mapboxMap.getLocationComponent() != null && mapboxMap.getLocationComponent().isLocationComponentActivated()){
-                        mapboxMap.getLocationComponent().forceLocationUpdate(parcelableTraining.originLocation);
+                    if(locationComponent != null && locationComponent.isLocationComponentActivated()){
+                        locationComponent.forceLocationUpdate(parcelableTraining.originLocation);
+                        //mapboxMap.getLocationComponent().forceLocationUpdate(parcelableTraining.originLocation);
                     }
                     TimeTextView.setText(parcelableTraining.time.toString());
                     CurrentSpeedTextView.setText(String.valueOf(Training.round(parcelableTraining.originLocation.getSpeed() * 3.6, 1)) + " " + getString(R.string.kph));
@@ -281,6 +296,7 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
     public void onStart() {
         super.onStart();
         mapView.onStart();
+        isLineDrawn = false;
     }
 
     @Override
