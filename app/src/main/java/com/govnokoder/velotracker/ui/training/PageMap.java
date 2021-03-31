@@ -252,7 +252,7 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
         }
 
         SharedViewModel model = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
-        model.message.observe(getViewLifecycleOwner(), new Observer<ParcelableTraining>() {
+        model.messagesParcelableTraining.observe(getViewLifecycleOwner(), new Observer<ParcelableTraining>() {
             @Override
             public void onChanged(ParcelableTraining parcelableTraining) {
                 if(parcelableTraining != null && parcelableTraining.originLocation != null){
@@ -282,6 +282,16 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
                 }
             }
         });
+
+        model.messagesLocation.observe(getViewLifecycleOwner(), new Observer<Location>() {
+            @Override
+            public void onChanged(Location location) {
+                if(location != null){
+                    locationComponent.forceLocationUpdate(location);
+                }
+            }
+        });
+
     }
 
     private void drawLine(LineList line){

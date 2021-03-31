@@ -7,9 +7,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.ProgressBar;
 
 import com.google.android.material.tabs.TabLayout;
 
@@ -33,6 +36,7 @@ public class TrainingActivity extends AppCompatActivity implements PageMap.onSom
     TabLayout tabLayout;
     ViewPager2 viewPager;
     ViewPagerAdapterTr viewPagerAdapterTr;
+    ProgressBar progressBar;
 
     private MyReceiver myReceiver;
 
@@ -86,6 +90,8 @@ public class TrainingActivity extends AppCompatActivity implements PageMap.onSom
         tabLayoutMediator.attach();
         myReceiver = new MyReceiver();
         startForegroundService(new Intent(this, LocationService.class));
+        progressBar = findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -122,6 +128,11 @@ public class TrainingActivity extends AppCompatActivity implements PageMap.onSom
         model.sendMessage(parcelableTraining);
     }
 
+    private void sendLocation(Location location){
+        SharedViewModel model = new ViewModelProvider(this).get(SharedViewModel.class);
+        model.sendMessage(location);
+    }
+
     @Override
     public void onPauseTraining() {
         mService.onPause();
@@ -143,6 +154,11 @@ public class TrainingActivity extends AppCompatActivity implements PageMap.onSom
             ParcelableTraining parcelableTraining = intent.getParcelableExtra(LocationService.EXTRA_PARCELABLE_TRAINING);
             if (parcelableTraining != null) {
                 sendParcelableTraining(parcelableTraining);
+                progressBar.setVisibility(View.INVISIBLE);
+            }
+            Location location = intent.getParcelableExtra(LocationService.EXTRA_LOCATION);
+            if(location != null){
+                sendLocation(location);
             }
         }
     }

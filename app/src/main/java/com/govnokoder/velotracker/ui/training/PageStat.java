@@ -64,7 +64,7 @@ public class PageStat extends Fragment {
     public void onResume() {
         super.onResume();
         SharedViewModel model = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
-        model.message.observe(getViewLifecycleOwner(), new Observer<ParcelableTraining>() {
+        model.messagesParcelableTraining.observe(getViewLifecycleOwner(), new Observer<ParcelableTraining>() {
             @Override
             public void onChanged(ParcelableTraining parcelableTraining) {
                 if(parcelableTraining != null){

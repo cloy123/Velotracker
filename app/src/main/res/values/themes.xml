@@ -25,6 +25,7 @@
 
     <style name="MyTabLayoutTheme">
         <item name="android:lines">1</item>
+        <item name="textAllCaps">true</item>
     </style>
 
 
@@ -52,7 +53,7 @@
 
     <style name="Theme.Velotracker.StatTextViewsValue">
         <item name="android:textAllCaps">true</item>
-        <item name="android:textSize">26sp</item>
+        <item name="android:textSize">22sp</item>
         <item name="maxLines">1</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textColor">#fff</item>

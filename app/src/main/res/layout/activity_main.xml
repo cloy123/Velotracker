@@ -14,7 +14,7 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="50dp"
             android:background="?attr/colorPrimary"
             app:navigationIcon="@drawable/ic_menu"
             app:titleTextColor="#fff"
@@ -29,13 +29,12 @@
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="50dp"
             android:background="@color/black"
             app:tabIndicatorColor="#FFFFFF"
+            android:theme="@style/MyTabLayoutTheme"
             app:tabTextColor="@color/white" />
 <!--        app:tabMode="scrollable"-->
-<!--        android:theme="@style/MyTabLayoutTheme"-->
     </LinearLayout>
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"

@@ -81,6 +81,7 @@ public class Training {
     public Training() { }
 
     public static double round(double value, int places) {
+        if(Double.isNaN(value)) { return 0; }
         if (places < 0) { throw new IllegalArgumentException(); }
         if(value == 0){return 0;}
         BigDecimal bd = new BigDecimal(Double.toString(value));

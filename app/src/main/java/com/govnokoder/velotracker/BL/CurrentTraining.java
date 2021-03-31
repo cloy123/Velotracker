@@ -42,7 +42,7 @@ public class CurrentTraining{
     public long SumHeight = 0;
     public long AverageHeight = 0;
 
-    public boolean isRunning = true;
+    public boolean isRunning = false;
 
     public Location originLocation = null;
 

@@ -60,11 +60,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
+                    android:text="00:00:00"
                     android:layout_gravity="center"
                     android:textAllCaps="true"
                     android:theme="@style/Theme.Velotracker.StatTextViewsValue"
-                    android:textColor="#FFFFFF"
-                    android:textSize="30sp"
                     android:maxLines="1" />
             </LinearLayout>
             <com.google.android.material.internal.BaselineLayout
@@ -103,9 +102,8 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:layout_gravity="center"
+                    android:text="0000,00"
                     android:textAllCaps="true"
-                    android:textColor="#FFFFFF"
-                    android:textSize="30sp"
                     android:theme="@style/Theme.Velotracker.StatTextViewsValue"
                     android:maxLines="1" />
             </LinearLayout>
@@ -154,8 +152,7 @@
                     android:layout_weight="1"
                     android:layout_gravity="center"
                     android:textAllCaps="true"
-                    android:textColor="#FFFFFF"
-                    android:textSize="30sp"
+                    android:text="00:00:00/km"
                     android:theme="@style/Theme.Velotracker.StatTextViewsValue"
                     android:maxLines="1" />
             </LinearLayout>
@@ -196,8 +193,7 @@
                     android:layout_weight="1"
                     android:layout_gravity="center"
                     android:textAllCaps="true"
-                    android:textColor="#FFFFFF"
-                    android:textSize="30sp"
+                    android:text="000 km/h"
                     android:theme="@style/Theme.Velotracker.StatTextViewsValue"
                     android:maxLines="1" />
             </LinearLayout>
@@ -247,9 +243,8 @@
                     android:layout_weight="1"
                     android:layout_gravity="center"
                     android:textAllCaps="true"
-                    android:textColor="#FFFFFF"
+                    android:text="000 km/h"
                     android:theme="@style/Theme.Velotracker.StatTextViewsValue"
-                    android:textSize="30sp"
                     android:maxLines="1" />
             </LinearLayout>
             <com.google.android.material.internal.BaselineLayout
@@ -286,8 +281,7 @@
                     android:layout_weight="1"
                     android:layout_gravity="center"
                     android:textAllCaps="true"
-                    android:textColor="#FFFFFF"
-                    android:textSize="30sp"
+                    android:text="0000 m"
                     android:theme="@style/Theme.Velotracker.StatTextViewsValue"
                     android:maxLines="1" />
             </LinearLayout>
@@ -336,8 +330,7 @@
                     android:layout_weight="1"
                     android:layout_gravity="center"
                     android:textAllCaps="true"
-                    android:textColor="#FFFFFF"
-                    android:textSize="30sp"
+                    android:text="0000 m"
                     android:theme="@style/Theme.Velotracker.StatTextViewsValue"
                     android:maxLines="1" />
             </LinearLayout>
@@ -375,8 +368,7 @@
                     android:layout_weight="1"
                     android:layout_gravity="center"
                     android:textAllCaps="true"
-                    android:textColor="#FFFFFF"
-                    android:textSize="30sp"
+                    android:text="0000 m"
                     android:theme="@style/Theme.Velotracker.StatTextViewsValue"
                     android:maxLines="1" />
             </LinearLayout>

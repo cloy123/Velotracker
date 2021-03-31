@@ -50,13 +50,15 @@ public class LocationService extends Service {
 
     public static final String ACTION_BROADCAST = PACKAGE_NAME + ".broadcast";
 
-    public static final String EXTRA_PARCELABLE_TRAINING = PACKAGE_NAME + ".location";
+    public static final String EXTRA_PARCELABLE_TRAINING = PACKAGE_NAME + ".parcelabletraining";
+    public static final String EXTRA_LOCATION = PACKAGE_NAME + ".location";
 
     private final IBinder mBinder = new LocalBinder();
 
     private LocationRequest mLocationRequest;
 
-    private int locationsBeforeStart = 2;
+    private int locationsBeforeStart = 1;
+    private boolean isStart = false;
 
     private FusedLocationProviderClient mFusedLocationClient;
 
@@ -136,14 +138,22 @@ public class LocationService extends Service {
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 super.onLocationResult(locationResult);
+                if(locationResult.getLastLocation() == null){
+                    return;
+                }
                 if(locationsBeforeStart != 0){
                     locationsBeforeStart -=1 ;
+                    sendLocationToActivity(locationResult.getLastLocation());
                     return;
+                }
+                else if(!isStart) {
+                    isStart = true;
+                    countDownTimer.start();
+                    currentTraining.isRunning = true;
                 }
                 currentTraining.setValuesFromLocation(locationResult.getLastLocation());
             }
         };
-
         createLocationRequest();
         getLastLocation();
         HandlerThread handlerThread = new HandlerThread(TAG);
@@ -151,9 +161,12 @@ public class LocationService extends Service {
         mServiceHandler = new Handler(handlerThread.getLooper());
         notificationManager = new TrainingServiceNotificationManager(this);
         startNotification();
-        if (currentTraining != null) {
-            countDownTimer.start();
-        }
+    }
+
+    private void sendLocationToActivity(Location location){
+        Intent intent = new Intent(ACTION_BROADCAST);
+        intent.putExtra(EXTRA_LOCATION, location);
+        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
     }
 
     private void sendMessageToActivity(){
