@@ -98,9 +98,8 @@ public class MainActivity extends AppCompatActivity implements PageStart.onSomeE
                     case R.id.nav_statistics:
                         tabLayout.selectTab(tabLayout.getTabAt(2));
                         break;
-                    case R.id.nav_settings:
-                        startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
-                        //TODO доделать настройки
+                    case R.id.nav_about_program:
+                        startActivity(new Intent(getApplicationContext(), AboutProgramActivity.class));
                         break;
                 }
                 drawerLayout.closeDrawers();

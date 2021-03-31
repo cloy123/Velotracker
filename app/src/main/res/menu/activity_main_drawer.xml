@@ -14,7 +14,7 @@
             android:id="@+id/nav_statistics"
             android:title="@string/statistic" />
         <item
-            android:id="@+id/nav_settings"
-            android:title="@string/settings" />
+            android:id="@+id/nav_about_program"
+            android:title="@string/about_program" />
     </group>
 </menu>

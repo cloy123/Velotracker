@@ -105,15 +105,15 @@
     <string name="total_records">Всего записей</string>
     <string name="total_time">Всего времени</string>
     <string name="max_temp">Макс.темп</string>
-    <string name="title_activity_about_program">AboutProgramActivity</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
+    <string name="title_activity_about_program">AboutProgramActivity</string>
+    <string name="about_program_title">Velotracker:</string>
+    <string name="about_program_text">Velotracker - трекер для велосипеда.</string>
+    <string name="about_program_link_to_github">github.com/cloy123</string>
+    <string name="about_program_email">cosoygnoy@gmail.com</string>
+    <string name="about_program">О программе</string>
+
 
 
 </resources>

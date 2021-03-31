@@ -14,7 +14,7 @@ public class AppConstants {
     public static final long MAX_WAIT_TIME_IN_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS*2;
 
     //TODO получать из настроек
-    public static final String LINE_COLOR = ColorUtils.colorToRgbaString(Color.argb(255, 255, 0, 0));
+    public static final String LINE_COLOR = ColorUtils.colorToRgbaString(Color.argb(255, 0, 0, 0));
     public static final float LINE_WIDTH = 5;
 
     public static String MAP_STYLE = Style.OUTDOORS;
