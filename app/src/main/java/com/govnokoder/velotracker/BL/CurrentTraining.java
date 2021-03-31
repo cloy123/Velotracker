@@ -25,7 +25,7 @@ public class CurrentTraining{
     public Date Date = new Date(0,0,0);
     public Time Time = new Time(0,0,0);
 
-    public double Distance = 0;//в *.***км
+    public double Distance = 0;//в *.**км
 
     public List<Double> SpeedList = new ArrayList<>();
     public double MaxSpeed = 0;

@@ -58,7 +58,9 @@ public class LocationService extends Service {
     private LocationRequest mLocationRequest;
 
     private int locationsBeforeStart = 1;
+    private int secondsBeforeStart = 5;
     private boolean isStart = false;
+    private Location location;
 
     private FusedLocationProviderClient mFusedLocationClient;
 
@@ -104,6 +106,17 @@ public class LocationService extends Service {
         countDownTimer = new CountDownTimer(Long.MAX_VALUE, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
+                if(location != null){
+                    sendLocationToActivity(location);
+                }
+                if(!isStart){
+                    if(secondsBeforeStart != 0){
+                        secondsBeforeStart -= 1;
+                    }else {
+                        isStart = true;
+                    }
+                    return;
+                }
                 if (currentTraining != null) {
                     if (currentTraining.isRunning) {
                         currentTraining.Time.addSecond();
@@ -143,12 +156,11 @@ public class LocationService extends Service {
                 }
                 if(locationsBeforeStart != 0){
                     locationsBeforeStart -=1 ;
-                    sendLocationToActivity(locationResult.getLastLocation());
+                    location = locationResult.getLastLocation();
                     return;
                 }
                 else if(!isStart) {
                     isStart = true;
-                    countDownTimer.start();
                     currentTraining.isRunning = true;
                 }
                 currentTraining.setValuesFromLocation(locationResult.getLastLocation());
@@ -161,6 +173,7 @@ public class LocationService extends Service {
         mServiceHandler = new Handler(handlerThread.getLooper());
         notificationManager = new TrainingServiceNotificationManager(this);
         startNotification();
+        countDownTimer.start();
     }
 
     private void sendLocationToActivity(Location location){
@@ -246,6 +259,7 @@ public class LocationService extends Service {
         mLocationRequest.setInterval(AppConstants.UPDATE_INTERVAL_IN_MILLISECONDS);
         mLocationRequest.setFastestInterval(AppConstants.FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setMaxWaitTime(AppConstants.MAX_WAIT_TIME_IN_IN_MILLISECONDS);
         mLocationRequest.setWaitForAccurateLocation(true);
         mLocationRequest.setSmallestDisplacement(1);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

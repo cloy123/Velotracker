@@ -79,8 +79,6 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
 
     private boolean isFinish = false;
 
-    private boolean isLineDrawn = false;
-
     private ParcelableTraining mParcelableTraining;
 
     public interface onSomeEventListener {
@@ -250,6 +248,20 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
                 }
             });
         }
+    }
+
+    private void drawLine(LineList line){
+        LineOptions lineOptions = new LineOptions();
+        lineOptions.withLatLngs(line);
+        lineOptions.withLineColor(AppConstants.LINE_COLOR);
+        lineOptions.withLineWidth(AppConstants.LINE_WIDTH);
+        lineManager.create(lineOptions);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mapView.onStart();
 
         SharedViewModel model = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
         model.messagesParcelableTraining.observe(getViewLifecycleOwner(), new Observer<ParcelableTraining>() {
@@ -261,8 +273,8 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
                     }
                     mParcelableTraining = parcelableTraining;
                     if(locationComponent != null && locationComponent.isLocationComponentActivated()){
-                        locationComponent.forceLocationUpdate(parcelableTraining.originLocation);
-                        //mapboxMap.getLocationComponent().forceLocationUpdate(parcelableTraining.originLocation);
+                        //locationComponent.forceLocationUpdate(parcelableTraining.originLocation);
+                        mapboxMap.getLocationComponent().forceLocationUpdate(parcelableTraining.originLocation);
                     }
                     TimeTextView.setText(parcelableTraining.time.toString());
                     CurrentSpeedTextView.setText(String.valueOf(Training.round(parcelableTraining.originLocation.getSpeed() * 3.6, 1)) + " " + getString(R.string.kph));
@@ -286,27 +298,11 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
         model.messagesLocation.observe(getViewLifecycleOwner(), new Observer<Location>() {
             @Override
             public void onChanged(Location location) {
-                if(location != null){
+                if(location != null && locationComponent!= null){
                     locationComponent.forceLocationUpdate(location);
                 }
             }
         });
-
-    }
-
-    private void drawLine(LineList line){
-        LineOptions lineOptions = new LineOptions();
-        lineOptions.withLatLngs(line);
-        lineOptions.withLineColor(AppConstants.LINE_COLOR);
-        lineOptions.withLineWidth(AppConstants.LINE_WIDTH);
-        lineManager.create(lineOptions);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mapView.onStart();
-        isLineDrawn = false;
     }
 
     @Override
