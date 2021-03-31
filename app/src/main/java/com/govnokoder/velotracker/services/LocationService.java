@@ -51,7 +51,6 @@ public class LocationService extends Service {
     public static final String ACTION_BROADCAST = PACKAGE_NAME + ".broadcast";
 
     public static final String EXTRA_PARCELABLE_TRAINING = PACKAGE_NAME + ".parcelabletraining";
-    public static final String EXTRA_LOCATION = PACKAGE_NAME + ".location";
 
     private final IBinder mBinder = new LocalBinder();
 
@@ -106,9 +105,6 @@ public class LocationService extends Service {
         countDownTimer = new CountDownTimer(Long.MAX_VALUE, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                if(location != null){
-                    sendLocationToActivity(location);
-                }
                 if(!isStart){
                     if(secondsBeforeStart != 0){
                         secondsBeforeStart -= 1;
@@ -176,12 +172,6 @@ public class LocationService extends Service {
         countDownTimer.start();
     }
 
-    private void sendLocationToActivity(Location location){
-        Intent intent = new Intent(ACTION_BROADCAST);
-        intent.putExtra(EXTRA_LOCATION, location);
-        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
-    }
-
     private void sendMessageToActivity(){
         Intent intent = new Intent(ACTION_BROADCAST);
         long height = 0;
@@ -190,7 +180,7 @@ public class LocationService extends Service {
         }
         ParcelableTraining parcelableTraining = new ParcelableTraining(currentTraining.Time, currentTraining.Distance, currentTraining.MaxSpeed,
                 currentTraining.AverageSpeed, currentTraining.Lines, currentTraining.CurrentLine, currentTraining.MaxHeight, height,
-                currentTraining.MinHeight, currentTraining.AverageHeight, currentTraining.isRunning, currentTraining.originLocation);
+                currentTraining.MinHeight, currentTraining.AverageHeight, currentTraining.isRunning, currentTraining.originLocation, currentTraining.CurrentSpeed);
         intent.putExtra(EXTRA_PARCELABLE_TRAINING, parcelableTraining);
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
     }
@@ -259,7 +249,7 @@ public class LocationService extends Service {
         mLocationRequest.setInterval(AppConstants.UPDATE_INTERVAL_IN_MILLISECONDS);
         mLocationRequest.setFastestInterval(AppConstants.FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setMaxWaitTime(AppConstants.MAX_WAIT_TIME_IN_IN_MILLISECONDS);
+        //mLocationRequest.setMaxWaitTime(AppConstants.MAX_WAIT_TIME_IN_IN_MILLISECONDS);
         mLocationRequest.setWaitForAccurateLocation(true);
         mLocationRequest.setSmallestDisplacement(1);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

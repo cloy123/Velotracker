@@ -41,6 +41,7 @@ public class TrainingActivity extends AppCompatActivity implements PageMap.onSom
     private MyReceiver myReceiver;
 
     private LocationService mService = null;
+    private boolean isStart = false;
 
     private boolean mBound = false;
 
@@ -128,11 +129,6 @@ public class TrainingActivity extends AppCompatActivity implements PageMap.onSom
         model.sendMessage(parcelableTraining);
     }
 
-    private void sendLocation(Location location){
-        SharedViewModel model = new ViewModelProvider(this).get(SharedViewModel.class);
-        model.sendMessage(location);
-    }
-
     @Override
     public void onPauseTraining() {
         mService.onPause();
@@ -153,12 +149,10 @@ public class TrainingActivity extends AppCompatActivity implements PageMap.onSom
         public void onReceive(Context context, Intent intent) {
             ParcelableTraining parcelableTraining = intent.getParcelableExtra(LocationService.EXTRA_PARCELABLE_TRAINING);
             if (parcelableTraining != null) {
+                if(!isStart){
+                    progressBar.setVisibility(View.INVISIBLE);
+                }
                 sendParcelableTraining(parcelableTraining);
-                progressBar.setVisibility(View.INVISIBLE);
-            }
-            Location location = intent.getParcelableExtra(LocationService.EXTRA_LOCATION);
-            if(location != null){
-                sendLocation(location);
             }
         }
     }

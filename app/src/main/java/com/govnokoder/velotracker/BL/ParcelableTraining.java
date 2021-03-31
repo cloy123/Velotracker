@@ -15,6 +15,7 @@ public class ParcelableTraining implements Parcelable {
     public Time time;
     public double distance;
     public double maxSpeed;
+    public double speed;
     public double averageSpeed;
     private List<LineList> _lines;
     public List<LineList> getLines() { return _lines; };
@@ -31,14 +32,14 @@ public class ParcelableTraining implements Parcelable {
                               double averageSpeed, List<LineList> lines,
                               LineList currentLine, long maxHeight, long height,
                               long minHeight, long averageHeight, boolean isRunning,
-                              Location originLocation){
+                              Location originLocation, double speed){
         this.time = time;
         this.distance = distance;
         this.maxSpeed = maxSpeed;
         this.averageSpeed = averageSpeed;
         setLines(lines);
         this.currentLine = currentLine;
-
+        this.speed = speed;
         this.maxHeight = maxHeight;
         this.minHeight = minHeight;
         this.height = height;
@@ -50,6 +51,7 @@ public class ParcelableTraining implements Parcelable {
     protected ParcelableTraining(Parcel in) {
         distance = in.readDouble();
         maxSpeed = in.readDouble();
+        speed = in.readDouble();
         averageSpeed = in.readDouble();
         maxHeight = in.readLong();
         minHeight = in.readLong();
@@ -84,6 +86,7 @@ public class ParcelableTraining implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeDouble(distance);
         dest.writeDouble(maxSpeed);
+        dest.writeDouble(speed);
         dest.writeDouble(averageSpeed);
         dest.writeLong(maxHeight);
         dest.writeLong(minHeight);

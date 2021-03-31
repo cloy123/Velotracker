@@ -1,5 +1,6 @@
 package com.govnokoder.velotracker.ui.training;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -7,12 +8,14 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,10 +33,13 @@ import com.govnokoder.velotracker.R;
 import com.govnokoder.velotracker.messages.SharedViewModel;
 import com.mapbox.android.core.location.LocationEngine;
 import com.mapbox.android.core.location.LocationEngineCallback;
+import com.mapbox.android.core.location.LocationEngineProvider;
 import com.mapbox.android.core.location.LocationEngineRequest;
 import com.mapbox.android.core.location.LocationEngineResult;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.camera.CameraUpdate;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.location.LocationComponent;
@@ -52,6 +58,7 @@ import com.mapbox.mapboxsdk.plugins.annotation.LineManager;
 import com.mapbox.mapboxsdk.plugins.annotation.LineOptions;
 import com.mapbox.mapboxsdk.plugins.annotation.OnAnnotationDragListener;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import static com.govnokoder.velotracker.R.drawable.tracking_on;
@@ -80,6 +87,11 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
     private boolean isFinish = false;
 
     private ParcelableTraining mParcelableTraining;
+
+    private LocationEngine locationEngine;
+    private long DEFAULT_INTERVAL_IN_MILLISECONDS = AppConstants.UPDATE_INTERVAL_IN_MILLISECONDS;
+    private long DEFAULT_MAX_WAIT_TIME = AppConstants.MAX_WAIT_TIME_IN_IN_MILLISECONDS;
+    private LocationListeningCallback callback = new LocationListeningCallback(this);
 
     public interface onSomeEventListener {
         public void onPauseTraining();
@@ -225,7 +237,7 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
             // Set the LocationComponent activation options
             LocationComponentActivationOptions locationComponentActivationOptions =
                     LocationComponentActivationOptions.builder(getContext(), loadedMapStyle)
-                            .useDefaultLocationEngine(false)
+                            .useDefaultLocationEngine(true)
                             .build();
             // Activate with the LocationComponentActivationOptions object
             locationComponent.activateLocationComponent(locationComponentActivationOptions);
@@ -247,6 +259,7 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
                     }
                 }
             });
+            initLocationEngine();
         }
     }
 
@@ -259,25 +272,34 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
     }
 
     @Override
+    @SuppressLint("MissingPermission")
     public void onStart() {
         super.onStart();
+        if(locationEngine != null) {
+            LocationEngineRequest request = new LocationEngineRequest.Builder(DEFAULT_INTERVAL_IN_MILLISECONDS)
+                    .setPriority(LocationEngineRequest.PRIORITY_HIGH_ACCURACY)
+                    .setMaxWaitTime(DEFAULT_MAX_WAIT_TIME).build();
+            locationEngine.requestLocationUpdates(request, callback, Looper.getMainLooper());
+            locationEngine.getLastLocation(callback);
+        }
         mapView.onStart();
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mapView.onResume();
         SharedViewModel model = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
         model.messagesParcelableTraining.observe(getViewLifecycleOwner(), new Observer<ParcelableTraining>() {
             @Override
             public void onChanged(ParcelableTraining parcelableTraining) {
-                if(parcelableTraining != null && parcelableTraining.originLocation != null){
+                if(parcelableTraining != null){
                     if(mParcelableTraining == null){
                         setButtonsState(parcelableTraining.isRunning);
                     }
                     mParcelableTraining = parcelableTraining;
-                    if(locationComponent != null && locationComponent.isLocationComponentActivated()){
-                        //locationComponent.forceLocationUpdate(parcelableTraining.originLocation);
-                        mapboxMap.getLocationComponent().forceLocationUpdate(parcelableTraining.originLocation);
-                    }
                     TimeTextView.setText(parcelableTraining.time.toString());
-                    CurrentSpeedTextView.setText(String.valueOf(Training.round(parcelableTraining.originLocation.getSpeed() * 3.6, 1)) + " " + getString(R.string.kph));
+                    CurrentSpeedTextView.setText(String.valueOf(Training.round(parcelableTraining.speed, 1)) + " " + getString(R.string.kph));
                     WayLengthTextView.setText(String.valueOf(Training.round(parcelableTraining.distance, 2)) + " " + getString(R.string.km));
                     //отрисовка путей
                     if (lineManager != null){
@@ -294,21 +316,6 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
                 }
             }
         });
-
-        model.messagesLocation.observe(getViewLifecycleOwner(), new Observer<Location>() {
-            @Override
-            public void onChanged(Location location) {
-                if(location != null && locationComponent!= null){
-                    locationComponent.forceLocationUpdate(location);
-                }
-            }
-        });
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mapView.onResume();
     }
 
     @Override
@@ -325,6 +332,9 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
         } else {
             Intent intent = new Intent(getActivity().getApplicationContext(), MainActivity.class);
             startActivity(intent);
+        }
+        if (locationEngine != null) {
+            locationEngine.removeLocationUpdates(callback);
         }
         mapView.onStop();
     }
@@ -343,6 +353,9 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
 
     @Override
     public void onDestroy() {
+        if (locationEngine != null) {
+            locationEngine.removeLocationUpdates(callback);
+        }
         mapView.onDestroy();
         super.onDestroy();
     }
@@ -356,4 +369,63 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
     @Override
     public void onCameraTrackingChanged(int currentMode) { }
 
+
+    @SuppressLint("MissingPermission")
+    private void initLocationEngine() {
+        locationEngine = LocationEngineProvider.getBestLocationEngine(getContext());
+        LocationEngineRequest request = new LocationEngineRequest.Builder(DEFAULT_INTERVAL_IN_MILLISECONDS)
+                .setDisplacement(1)//TODO возможно можно будет сделать точнее
+                .setPriority(LocationEngineRequest.PRIORITY_HIGH_ACCURACY)
+                .setMaxWaitTime(DEFAULT_MAX_WAIT_TIME).build();
+        locationEngine.requestLocationUpdates(request, callback, Looper.getMainLooper());
+        locationEngine.getLastLocation(callback);
+    }
+
+    private static class LocationListeningCallback
+            implements LocationEngineCallback<LocationEngineResult> {
+
+        private final WeakReference<PageMap> fragmentWeakReference;
+
+        LocationListeningCallback(PageMap fragment) {
+            this.fragmentWeakReference = new WeakReference<>(fragment);
+        }
+
+        /**
+         * The LocationEngineCallback interface's method which fires when the device's location has changed.
+         *
+         * @param result the LocationEngineResult object which has the last known location within it.
+         */
+
+        @SuppressLint("StringFormatInvalid")
+        @Override
+        public void onSuccess(LocationEngineResult result) {
+            // The LocationEngineCallback interface's method which fires when the device's location has changed.
+            //при изменениии местоположения
+            PageMap fragment = fragmentWeakReference.get();
+            if (fragment != null) {
+                Location location = result.getLastLocation();
+                if(fragment.locationComponent != null && fragment.locationComponent.isLocationComponentActivated() && location != null){
+                    fragment.mapboxMap.getLocationComponent().forceLocationUpdate(location);
+                }
+            }
+        }
+
+        /**
+         * The LocationEngineCallback interface's method which fires when the device's location can not be captured
+         *
+         * @param exception the exception message
+         */
+
+        @Override
+        public void onFailure(@NonNull Exception exception) {
+            // The LocationEngineCallback interface's method which fires when the device's location can not be captured
+            //когда не может определить местоположение
+            Log.d("LocationChangeActivity", exception.getLocalizedMessage());
+            PageMap fragment = fragmentWeakReference.get();
+            if (fragment != null) {
+                Toast.makeText(fragment.getContext(), exception.getLocalizedMessage(),
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 }

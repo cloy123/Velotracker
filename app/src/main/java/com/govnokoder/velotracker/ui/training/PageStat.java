@@ -70,7 +70,7 @@ public class PageStat extends Fragment {
                 if(parcelableTraining != null){
                     timeText.setText(parcelableTraining.time.toString());
                     wayLengthText.setText(String.valueOf(Training.round(parcelableTraining.distance, 2)) + " " + getString(R.string.km));
-                    speedText.setText(String.valueOf(Training.round(parcelableTraining.originLocation.getSpeed() * 3.6, 1)) + " " + getString(R.string.kph));
+                    speedText.setText(String.valueOf(Training.round(parcelableTraining.speed, 1)) + " " + getString(R.string.kph));
                     averageSpeedText.setText(String.valueOf((Training.round(parcelableTraining.averageSpeed, 1))) + " " + getString(R.string.kph));
                     maxSpeedText.setText(String.valueOf(Training.round(parcelableTraining.maxSpeed, 1)) + " " + getString(R.string.kph));
                     heightText.setText(String.valueOf(parcelableTraining.height + " " + getString(R.string.m)));

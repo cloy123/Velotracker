@@ -23,10 +23,6 @@
             android:theme="@style/Theme.AppCompat" />
 
         <activity
-            android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings"
-            android:theme="@style/Theme.AppCompat.Settings" />
-        <activity
             android:name=".TrainingActivity"
             android:label="@string/title_activity_training"
             android:screenOrientation="portrait"
