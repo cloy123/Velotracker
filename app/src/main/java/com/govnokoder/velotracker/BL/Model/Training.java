@@ -53,6 +53,11 @@ public class Training {
 
 
     public LatLng getStartPoint(){
+        if(Lines != null && Lines.size() > 0){
+            if(Lines.get(0) != null && Lines.get(0).size() > 0){
+                return new LatLng(Lines.get(0).get(0));
+            }
+        }
         return new LatLng(startLatitude, startLongitude);
     }
 

@@ -109,7 +109,6 @@ public class TrainingController {
         DataItems dataItems = new DataItems();
         dataItems.setTrainings(trainings);
         String jsonString = gson.toJson(dataItems);
-
         FileOutputStream fileOutputStream = null;
 
         try {

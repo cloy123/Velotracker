@@ -59,7 +59,6 @@ public class LocationService extends Service {
     private int locationsBeforeStart = 1;
     private int secondsBeforeStart = 5;
     private boolean isStart = false;
-    private Location location;
 
     private FusedLocationProviderClient mFusedLocationClient;
 
@@ -152,7 +151,6 @@ public class LocationService extends Service {
                 }
                 if(locationsBeforeStart != 0){
                     locationsBeforeStart -=1 ;
-                    location = locationResult.getLastLocation();
                     return;
                 }
                 else if(!isStart) {

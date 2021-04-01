@@ -1,6 +1,8 @@
 package com.govnokoder.velotracker.ui.main;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Icon;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,12 +21,17 @@ import com.govnokoder.velotracker.MainActivity;
 import com.govnokoder.velotracker.R;
 import com.govnokoder.velotracker.ui.training.MapViewInScroll;
 import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.plugins.annotation.LineManager;
 import com.mapbox.mapboxsdk.plugins.annotation.LineOptions;
+import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
+import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
+import com.mapbox.mapboxsdk.style.layers.Layer;
+import com.mapbox.mapboxsdk.style.layers.Property;
 
 import java.util.List;
 
@@ -34,10 +41,13 @@ public class PageStatistics extends Fragment implements OnMapReadyCallback {
     private MapViewInScroll mapView;
     private MapboxMap mapboxMap;
     private LineManager lineManager;
+    private SymbolManager symbolManager;
 
     private TextView totalDistanceTextView, totalRecordsTextView, totalTimeTextView,
                     maxSpeedTextView, averageSpeedTextView, tempTextView, maxTempTextView,
                     averageHeightTextView, maxHeightTextView, minHeightTextView;
+
+    private List<Training> trainings;
 
     public static PageStatistics newInstance(int page) {
         PageStatistics fragment = new PageStatistics();
@@ -79,10 +89,22 @@ public class PageStatistics extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(@NonNull final MapboxMap mapboxMap) {
         this.mapboxMap = mapboxMap;
-        mapboxMap.setStyle(AppConstants.MAP_STYLE, new Style.OnStyleLoaded() {//MAPBOX_STREETS
+        mapboxMap.setStyle(AppConstants.MAP_STYLE, new Style.OnStyleLoaded() {
             @Override
             public void onStyleLoaded(@NonNull Style style) {
                 lineManager = new LineManager(mapView, mapboxMap, style);
+                symbolManager = new SymbolManager(mapView, mapboxMap, style);
+                symbolManager.setIconAllowOverlap(true);
+                symbolManager.setTextAllowOverlap(true);
+
+                for (Training training: trainings) {
+                    if(training.Lines.size() > 0){
+                        for (LineList line: training.Lines) {
+                            drawLine(line);
+                        }
+                    }
+                    drawMarker(training.getStartPoint(), training.Date.toString());
+                }
             }
         });
     }
@@ -95,6 +117,16 @@ public class PageStatistics extends Fragment implements OnMapReadyCallback {
         lineManager.create(lineOptions);
     }
 
+    private void drawMarker(LatLng latLng, String text){
+        SymbolOptions symbolOptions = new SymbolOptions();
+        symbolOptions.withLatLng(latLng);
+        symbolOptions.withTextAnchor(text);
+        symbolOptions.withIconSize(3.0f);
+        symbolOptions.withIconColor(AppConstants.LINE_COLOR);
+        symbolOptions.withIconImage("marker-15");
+        symbolManager.create(symbolOptions);
+    }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -105,7 +137,7 @@ public class PageStatistics extends Fragment implements OnMapReadyCallback {
     public void onResume() {
         super.onResume();
         mapView.onResume();
-        List<Training> trainings = new TrainingController(getContext()).LoadTrainingsData();
+        trainings = new TrainingController(getContext()).LoadTrainingsData();
         if(trainings == null || trainings.size() == 0){
             totalDistanceTextView.setText("0" + " " + getString(R.string.km));
             totalRecordsTextView.setText("0");
@@ -146,11 +178,6 @@ public class PageStatistics extends Fragment implements OnMapReadyCallback {
             }
             if(training.getTemp(Training.Units.KILOMETERS).getAllSeconds() < maxTemp.getAllSeconds()){
                 maxTemp = training.getTemp(Training.Units.KILOMETERS);
-            }
-            if(lineManager != null && training.Lines.size() > 0){
-                for (LineList line: training.Lines) {
-                    drawLine(line);
-                }
             }
         }
         double averageSpeed = totalDist / ((double)totalSeconds/3600);

@@ -74,15 +74,8 @@ public class GpsUtils {
                                         // result in onActivityResult().
                                         ResolvableApiException rae = (ResolvableApiException) e;
                                         rae.startResolutionForResult((Activity) context, AppConstants.GPS_REQUEST);
-                                    } catch (IntentSender.SendIntentException sie) {
-                                        //Log.i(TAG, "PendingIntent unable to execute request.");
-                                    }
+                                    } catch (IntentSender.SendIntentException ignored) { }
                                     break;
-                                case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                                    String errorMessage = "Location settings are inadequate, and cannot be " +
-                                            "fixed here. Fix in Settings.";
-                                    //Log.e(TAG, errorMessage);
-                                   // Toast.makeText((Activity) context, errorMessage, Toast.LENGTH_LONG).show();
                             }
                         }
                     });

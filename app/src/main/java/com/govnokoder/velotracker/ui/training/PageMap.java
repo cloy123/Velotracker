@@ -214,7 +214,7 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
     @Override
     public void onMapReady(@NonNull final MapboxMap mapboxMap) {
         this.mapboxMap = mapboxMap;
-        mapboxMap.setStyle(AppConstants.MAP_STYLE, new Style.OnStyleLoaded() {//MAPBOX_STREETS
+        mapboxMap.setStyle(AppConstants.MAP_STYLE, new Style.OnStyleLoaded() {
             @Override
             public void onStyleLoaded(@NonNull Style style) {
                 // Map is set up and the style has loaded. Now you can add data or make other map adjustments
@@ -374,7 +374,7 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
     private void initLocationEngine() {
         locationEngine = LocationEngineProvider.getBestLocationEngine(getContext());
         LocationEngineRequest request = new LocationEngineRequest.Builder(DEFAULT_INTERVAL_IN_MILLISECONDS)
-                .setDisplacement(1)//TODO возможно можно будет сделать точнее
+                .setDisplacement(1)
                 .setPriority(LocationEngineRequest.PRIORITY_HIGH_ACCURACY)
                 .setMaxWaitTime(DEFAULT_MAX_WAIT_TIME).build();
         locationEngine.requestLocationUpdates(request, callback, Looper.getMainLooper());
@@ -390,17 +390,9 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
             this.fragmentWeakReference = new WeakReference<>(fragment);
         }
 
-        /**
-         * The LocationEngineCallback interface's method which fires when the device's location has changed.
-         *
-         * @param result the LocationEngineResult object which has the last known location within it.
-         */
-
         @SuppressLint("StringFormatInvalid")
         @Override
         public void onSuccess(LocationEngineResult result) {
-            // The LocationEngineCallback interface's method which fires when the device's location has changed.
-            //при изменениии местоположения
             PageMap fragment = fragmentWeakReference.get();
             if (fragment != null) {
                 Location location = result.getLastLocation();
@@ -410,16 +402,8 @@ public class PageMap extends Fragment implements OnMapReadyCallback, OnCameraTra
             }
         }
 
-        /**
-         * The LocationEngineCallback interface's method which fires when the device's location can not be captured
-         *
-         * @param exception the exception message
-         */
-
         @Override
         public void onFailure(@NonNull Exception exception) {
-            // The LocationEngineCallback interface's method which fires when the device's location can not be captured
-            //когда не может определить местоположение
             Log.d("LocationChangeActivity", exception.getLocalizedMessage());
             PageMap fragment = fragmentWeakReference.get();
             if (fragment != null) {
