@@ -20,6 +20,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
+import android.os.PowerManager;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -70,6 +71,8 @@ public class LocationService extends Service {
 
     private Handler mServiceHandler;
 
+    private PowerManager.WakeLock wakeLock;
+
     public void onPause() {
         if (currentTraining != null && currentTraining.isRunning) {
             currentTraining.Pause();
@@ -87,6 +90,7 @@ public class LocationService extends Service {
         if(isSave){
             currentTraining.StopAndSave(getApplicationContext());
         }
+        releaseWakeLock();
         stopSelf();
     }
 
@@ -215,6 +219,41 @@ public class LocationService extends Service {
     @Override
     public void onDestroy() {
         mServiceHandler.removeCallbacksAndMessages(null);
+        releaseWakeLock();
+    }
+
+    public void releaseWakeLock() {
+        if (wakeLock != null && wakeLock.isHeld()) {
+            wakeLock.release();
+        }
+    }
+
+    @SuppressLint("WakelockTimeout")
+    public void acquireWakeLock() {
+        Log.i(TAG, "Acquiring wake lock.");
+        Context context = getApplicationContext();
+        try {
+            PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+            if (powerManager == null) {
+                Log.e(TAG, "Power manager null.");
+                return;
+            }
+            if (wakeLock == null) {
+                wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
+                if (wakeLock == null) {
+                    Log.e(TAG, "Cannot create a new wake lock.");
+                    return;
+                }
+            }
+            if (!wakeLock.isHeld()) {
+                wakeLock.acquire();
+                if (!wakeLock.isHeld()) {
+                    Log.e(TAG, "Cannot acquire wake lock.");
+                }
+            }
+        } catch (RuntimeException e) {
+            Log.e(TAG, e.getMessage(), e);
+        }
     }
 
     public void startNotification(){
@@ -254,6 +293,7 @@ public class LocationService extends Service {
             return;
         }
         mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, getMainLooper());
+        acquireWakeLock();
     }
 
     public class LocalBinder extends Binder {
