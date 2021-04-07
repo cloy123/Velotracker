@@ -34,7 +34,7 @@
             app:tabIndicatorColor="#FFFFFF"
             android:theme="@style/MyTabLayoutTheme"
             app:tabTextColor="@color/white" />
-<!--        app:tabMode="scrollable"-->
+        <!--        app:tabMode="scrollable"-->
     </LinearLayout>
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"

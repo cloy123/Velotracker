@@ -1,16 +1,19 @@
 <resources>
     <string name="app_name">Velotracker</string>
+
     <string name="history">История</string>
     <string name="statistic">Статистика</string>
     <string name="settings">Настройки</string>
     <string name="main">Главная</string>
+
+    <!-- title activities -->
     <string name="title_activity_look_training">LookTraining</string>
+    <string name="title_activity_training">TrainingActivity</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_about_program">AboutProgramActivity</string>
 
     <string name="access_token">pk.eyJ1IjoiY2xveSIsImEiOiJja2g3aXBwNTMwZGFvMnRydG02Z2N1cThmIn0.DnBlGpercJNbzT0Nz7UPhw</string>
-    <string name="start_navigating">Start navigating</string>
-    <string name="my_location">My location</string>
-    <string name="user_location_permission_explanation">EXPLANATION_HERE</string>
-    <string name="user_location_permission_not_granted" />
+
     <!-- Strings used for fragments for navigation -->
 
     <string name="time">Время</string>
@@ -32,21 +35,10 @@
     <string name="pause_button">Пауза</string>
 
 
-    <string name="nav_header_desc">Navigation header</string>
-    <string name="snackbar_text">Разрешение \"Местоположениe\" не предоставлено</string>
 
-    <string name="notification_stop_action_text">Stop</string>
-    <string name="notification_text_title">Awake is running</string>
-    <string name="notification_text_content">Click to open the app</string>
-    <string name="notification_channel_name">Awake Notifications</string>
-    <string name="notification_channel_id">awake_channel_id</string>
-    <string name="notification_title">notification_title11</string>
-    <string name="notification_message">notification_message11</string>
-    <string name="ticker_text">ticker_text</string>
-    <string name="title_activity_training">TrainingActivity</string>
     <string name="open_settings_dialog">Открыть настройки</string>
-    <string name="start">Старт</string>
 
+    <string name="start">Старт</string>
     <string name="open">Открыть</string>
     <string name="deleteButton">Удалить</string>
     <string name="save_and_exit_question">Сохранить и выйти?</string>
@@ -58,7 +50,7 @@
     <string name="m">м</string>
     <string name="kph">km/ч</string>
     <string name="mph">mph</string>
-    <string name="title_activity_settings">SettingsActivity</string>
+
 
     <string name="meters">Метры</string>
     <string name="foot">Футы</string>
@@ -82,24 +74,18 @@
     <string name="map_style_title">Стиль карты</string>
     <string name="line_width_title">Толщина линии</string>
 
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
 
-    <!--Dialog Open Sittings With Checkbox-->
+    <!--Dialog Open Settings With Checkbox-->
     <string name="dialog_battery_optimization_text">В настойках оптимизации аккумулятора выберите «Все приложения», а затем найдите Velotracker в списке и отключите оптимизацию аккумулятора.</string>
     <string name="settings_checkboxes">checkboxes</string>
     <string name="dialog_battery_optimization_settings_checkbox_key">isChecked</string>
 
 
     <!--Dialog open settings -->
-    <string name="dialog_open_sett_access_fine_location_text">Для работы приложения требуется разрешение на местоположение устройства!</string>
     <string name="dialog_open_sett_read_phone_state_text">Для работы приложения требуется разрешение на состояние устройства!</string>
     <string name="dialog_open_sett_gps_text">Для работы приложения требуется доступ к данным о местоположении устройства!</string>
     <string name="dialog_battery_optimization_checkbox_text">Не показывать это предупреждение</string>
+
     <string name="dialog_remove_training_text">Удалить эту запись?</string>
     <string name="yes">Да</string>
     <string name="total_records">Всего записей</string>
@@ -107,7 +93,7 @@
     <string name="max_temp">Макс.темп</string>
 
 
-    <string name="title_activity_about_program">AboutProgramActivity</string>
+
     <string name="about_program_title">Velotracker:</string>
     <string name="about_program_text">Velotracker - трекер для велосипеда.</string>
     <string name="about_program_link_to_github">github.com/cloy123</string>
