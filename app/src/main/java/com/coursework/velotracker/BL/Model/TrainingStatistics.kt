@@ -7,7 +7,7 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-class TrainingStatistics(trainingRecorder: TrainingRecorder) {
+class TrainingStatistics() {
 
     var date: LocalDate = LocalDate.now()
     var totalTime: LocalTime = LocalTime.MIN
@@ -53,7 +53,7 @@ class TrainingStatistics(trainingRecorder: TrainingRecorder) {
         return temp
     }
 
-    init {
+    constructor(trainingRecorder: TrainingRecorder) : this() {
         date = trainingRecorder.date
         totalTime = trainingRecorder.totalTime
         totalDistance = trainingRecorder.totalDistance
@@ -65,8 +65,6 @@ class TrainingStatistics(trainingRecorder: TrainingRecorder) {
         lines = trainingRecorder.lines
     }
 
-
-
     private fun calculateTemp(){
         val allSeconds = totalTime.getAllSeconds()
         if(totalDistance > 0  && allSeconds > 0){
@@ -74,7 +72,7 @@ class TrainingStatistics(trainingRecorder: TrainingRecorder) {
         }
     }
 
-    fun getStartPoint(): LatLng? {
+    fun getStartPoint(): LatLng {
         if (lines?.size > 0) {
             if (lines[0]?.size > 0) {
                 return LatLng(lines[0][0])

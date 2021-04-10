@@ -10,7 +10,7 @@ object AppConstants {
     const val FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2
     const val MAX_WAIT_TIME_IN_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS * 2
 
-    var LINE_COLOR = ColorUtils.colorToRgbaString(Color.argb(255, 0, 0, 0))
+    val LINE_COLOR = ColorUtils.colorToRgbaString(Color.argb(255, 0, 0, 0))
     const val LINE_WIDTH = 5f
     const val MAP_STYLE = Style.OUTDOORS
 

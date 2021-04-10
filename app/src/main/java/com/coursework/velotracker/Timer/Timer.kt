@@ -56,5 +56,4 @@ class Timer(onTickListener: OnTickListener){
     interface OnTickListener{
         fun onTick(time:LocalTime)
     }
-
 }

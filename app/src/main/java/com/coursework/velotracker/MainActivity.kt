@@ -14,16 +14,13 @@ import java.time.format.DateTimeFormatter
 class MainActivity : AppCompatActivity() {
 
     private lateinit var tableLayout: TableLayout
-
     private lateinit var navigationView: NavigationView
-
     private lateinit var drawerLayout: DrawerLayout
-
     private lateinit var pager: ViewPager2
 
     private val REQUEST_PERMISSION_ACCESS_FINE_LOCATION = 111
-
     private val REQUEST_PERMISSION_READ_PHONE_STATE = 333
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -80,7 +80,7 @@ class TrainingRecorder {
         isRunning = true
     }
 
-    fun StopAndSave(context: Context?) {
+    fun StopAndSave(context: Context) {
         val trainingController = TrainingController(context)
         if (heights.size == 0) {
             maxHeight = 0
@@ -93,8 +93,7 @@ class TrainingRecorder {
         trainingController.setNewTrainingData(this)
     }
 
-    fun setValuesFromLocation(location: Location?) {
-        if (location != null) {
+    fun setValuesFromLocation(location: Location) {
             setSpeedValues(location)
             setHeightValues(location)
             setDistanceValues(location)
@@ -102,7 +101,6 @@ class TrainingRecorder {
             if (location.hasAccuracy()) {
                 originLocation = location
             }
-        }
     }
 
     private fun setLinesValues(location: Location){

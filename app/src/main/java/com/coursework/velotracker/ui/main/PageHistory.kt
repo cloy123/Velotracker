@@ -54,12 +54,10 @@ class PageHistory: Fragment(), AdapterView.OnItemClickListener {
     override fun onResume() {
         super.onResume()
         val trainingController = TrainingController(context)
-        val trainings: MutableList<TrainingStatistics>? = trainingController.loadTrainings()
+        val trainings: MutableList<TrainingStatistics> = trainingController.loadTrainings()
         val listDate: ArrayList<String> = ArrayList()
-        if (trainings != null) {
-            for (training in trainings) {
-                listDate.add(training.date.toString(AppConstants.DATE_FORMAT))
-            }
+        for (training in trainings) {
+            listDate.add(training.date.toString(AppConstants.DATE_FORMAT))
         }
         val adapter:MyArrayAdapter = MyArrayAdapter(context!!, android.R.layout.simple_list_item_1, listDate)
         listView.adapter = adapter
