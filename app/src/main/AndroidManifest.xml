@@ -27,6 +27,12 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".TrainingActivity"
+            android:label="@string/title_activity_training"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Velotracker.NoActionBar" />
+
         <service
             android:name=".Services.LocationService"
             android:enabled="true"

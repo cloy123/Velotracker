@@ -7,7 +7,6 @@ import android.widget.Toast
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.viewpager2.widget.ViewPager2
 
-import com.coursework.velotracker.BL.Model.toString
 import com.google.android.material.navigation.NavigationView
 import java.time.format.DateTimeFormatter
 
