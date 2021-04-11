@@ -13,16 +13,12 @@ class ViewPagerAdapter(fragmentActivity: FragmentActivity): FragmentStateAdapter
     }
 
     override fun createFragment(position: Int): Fragment {
-        TODO()
-//        switch (position) {
-//            case 0:
-//            return(PageStart.newInstance(position));
-//            case 1:
-//            return(PageHistory.newInstance(position));
-//            case 2:
-//            return(PageStatistics.newInstance(position));
-//        }
-//        return(PageStart.newInstance(position));
+        return when(position){
+            0 -> PageStart.newInstance(position)
+            1 -> PageHistory.newInstance(position)
+            2 -> PageStatistics.newInstance(position)
+            else -> PageStart.newInstance(position)
+        }
     }
 
     override fun getItemId(position: Int): Long {

@@ -14,6 +14,10 @@ import androidx.core.app.ActivityCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.coursework.velotracker.AppConstants
 import com.coursework.velotracker.BL.Model.*
+import com.coursework.velotracker.BL.Model.Training.ParcelableTraining
+import com.coursework.velotracker.BL.Model.Training.TrainingRecorder
+import com.coursework.velotracker.BL.Model.Training.round
+import com.coursework.velotracker.BL.Model.Training.toString
 import com.coursework.velotracker.R
 import com.coursework.velotracker.Services.MyNotificationManager.Companion.NOTIFICATION_ID
 import com.coursework.velotracker.Timer.Timer

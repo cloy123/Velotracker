@@ -3,7 +3,7 @@ package com.coursework.velotracker.Services
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.coursework.velotracker.BL.Model.ParcelableTraining
+import com.coursework.velotracker.BL.Model.Training.ParcelableTraining
 
 class MyReceiver: BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {

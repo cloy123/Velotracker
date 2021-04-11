@@ -1,5 +1,7 @@
-package com.coursework.velotracker.BL.Model
+package com.coursework.velotracker.BL.Model.Training
 
+import com.coursework.velotracker.BL.Model.Line
+import com.coursework.velotracker.BL.Model.UnitsConverter
 import com.mapbox.mapboxsdk.geometry.LatLng
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -13,34 +15,31 @@ class TrainingStatistics() {
     var totalTime: LocalTime = LocalTime.MIN
 
     var totalDistance : Double = 0.0
-        get(){
-            return UnitsConverter().convertKilometersToUnits(totalDistance, units)
-        }
+        get() = UnitsConverter().convertKilometersToUnits(totalDistance, units)
 
     var maxSpeed : Double = 0.0
-        get(){
-            return UnitsConverter().convertKilometersToUnits(maxSpeed, units)
-        }
+        get() = UnitsConverter().convertKilometersToUnits(maxSpeed, units)
 
     var averageSpeed : Double = 0.0
-        get(){
-            return UnitsConverter().convertKilometersToUnits(averageSpeed, units)
-        }
+        get() = UnitsConverter().convertKilometersToUnits(averageSpeed, units)
 
     var maxHeight: Long = 0
-        get(){
-        return UnitsConverter().convertMetersToUnits(maxHeight, units)
-        }
+        get() = UnitsConverter().convertMetersToUnits(maxHeight, units)
 
     var minHeight: Long = 0
-        get(){
-            return UnitsConverter().convertMetersToUnits(minHeight, units)
-        }
+        get() = UnitsConverter().convertMetersToUnits(minHeight, units)
 
     var averageHeight: Long = 0
-        get(){
-            return UnitsConverter().convertMetersToUnits(averageHeight, units)
+        get() = UnitsConverter().convertMetersToUnits(averageHeight, units)
+
+    var heights: MutableList<Long> = ArrayList()
+    get(){
+        val heightList: MutableList<Long> = ArrayList()
+        for(i in 0 until heights.size){
+            heightList.add(UnitsConverter().convertMetersToUnits(heights[i], units))
         }
+        return heightList
+    }
 
     var lines: List<Line> = ArrayList()
 
@@ -66,15 +65,15 @@ class TrainingStatistics() {
     }
 
     private fun calculateTemp(){
-        val allSeconds = totalTime.getAllSeconds()
+        val allSeconds = getAllSeconds(totalTime)
         if(totalDistance > 0  && allSeconds > 0){
-            temp.timeFromSeconds((allSeconds / totalDistance).toInt())
+            temp = timeFromSeconds((allSeconds / totalDistance).toInt())
         }
     }
 
     fun getStartPoint(): LatLng {
-        if (lines?.size > 0) {
-            if (lines[0]?.size > 0) {
+        if (lines.isNotEmpty()) {
+            if (lines[0].size > 0) {
                 return LatLng(lines[0][0])
             }
         }
@@ -93,11 +92,11 @@ fun LocalTime.toString(format: String):String{
     return format(formatter)
 }
 
-fun LocalTime.getAllSeconds(): Int {
-    return this.second + this.minute * 60 + this.hour * 3600
+fun getAllSeconds(localTime: LocalTime): Int {
+    return localTime.second + localTime.minute * 60 + localTime.hour * 3600
 }
-fun LocalTime.timeFromSeconds(seconds: Int): LocalTime{
-    val horses:Int = seconds / 3600
+fun timeFromSeconds(seconds: Int): LocalTime{
+    val horses = seconds / 3600
     val minutes = (seconds - horses * 3600) / 60
     return LocalTime.of(horses, minutes, seconds - (horses * 3600 + minutes * 60))
 }

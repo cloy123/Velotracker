@@ -1,8 +1,10 @@
-package com.coursework.velotracker.BL.Model
+package com.coursework.velotracker.BL.Model.Training
 
 import android.content.Context
 import android.location.Location
 import com.coursework.velotracker.BL.Controller.TrainingController
+import com.coursework.velotracker.BL.Model.Line
+import com.coursework.velotracker.BL.Model.UnitsConverter
 import com.mapbox.mapboxsdk.geometry.LatLng
 import java.time.LocalDate
 import java.time.LocalTime
@@ -131,7 +133,7 @@ class TrainingRecorder {
                 maxSpeed = speed
             }
             sumSpeed += speed
-            averageSpeed = totalDistance / (totalTime.getAllSeconds() as Double / 3600)
+            averageSpeed = totalDistance / (getAllSeconds(totalTime) as Double / 3600)
         }
     }
 

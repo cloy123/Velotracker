@@ -1,7 +1,8 @@
-package com.coursework.velotracker.BL.Model
+package com.coursework.velotracker.BL.Model.Training
 
 import android.location.Location
 import android.os.Parcelable
+import com.coursework.velotracker.BL.Model.Line
 import kotlinx.parcelize.Parcelize
 
 import java.time.LocalTime

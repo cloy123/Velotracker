@@ -12,13 +12,14 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.coursework.velotracker.AppConstants
 import com.coursework.velotracker.BL.Controller.TrainingController
-import com.coursework.velotracker.BL.Model.TrainingStatistics
-import com.coursework.velotracker.BL.Model.round
-import com.coursework.velotracker.BL.Model.toString
+import com.coursework.velotracker.BL.Model.Training.TrainingStatistics
+import com.coursework.velotracker.BL.Model.Training.round
+import com.coursework.velotracker.BL.Model.Training.toString
 import com.coursework.velotracker.R
 
 
 class PageStart(): Fragment() {
+
     private var pageNumber = 1
     private lateinit var startButton: Button
     private lateinit var linearStat: LinearLayout

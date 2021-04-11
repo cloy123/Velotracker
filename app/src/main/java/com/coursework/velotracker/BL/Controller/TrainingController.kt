@@ -1,8 +1,8 @@
 package com.coursework.velotracker.BL.Controller
 
 import android.content.Context
-import com.coursework.velotracker.BL.Model.TrainingRecorder
-import com.coursework.velotracker.BL.Model.TrainingStatistics
+import com.coursework.velotracker.BL.Model.Training.TrainingRecorder
+import com.coursework.velotracker.BL.Model.Training.TrainingStatistics
 import com.google.gson.Gson
 import java.io.FileInputStream
 import java.io.FileOutputStream
