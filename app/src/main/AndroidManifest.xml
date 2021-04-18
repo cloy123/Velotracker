@@ -28,6 +28,18 @@
         </activity>
 
         <activity
+            android:name=".AboutProgramActivity"
+            android:label="@string/title_activity_about_program"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat" />
+
+        <activity
+            android:name=".LookTraining"
+            android:label="@string/title_activity_look_training"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat" />
+
+        <activity
             android:name=".TrainingActivity"
             android:label="@string/title_activity_training"
             android:screenOrientation="portrait"
