@@ -5,14 +5,16 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 
 class ViewPagerAdapter(fragmentActivity: FragmentActivity): FragmentStateAdapter(fragmentActivity) {
-    override fun getItemCount(): Int {
-        return 2
-    }
 
     override fun createFragment(position: Int): Fragment {
-        TODO("сначала доделать фрагменты")
-//        return when(position){
-//
-//        }
+        return when(position){
+            0 -> PageMap.newInstance(position)
+            1 -> PageStat.newInstance(position)
+            else -> PageMap.newInstance(position)
+        }
+    }
+
+    override fun getItemCount(): Int {
+        return 2
     }
 }

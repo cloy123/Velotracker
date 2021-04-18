@@ -1,5 +1,6 @@
 package com.coursework.velotracker.ui.training
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.coursework.velotracker.AppConstants
 import com.coursework.velotracker.BL.Model.Line
 import com.coursework.velotracker.BL.Model.Training.ParcelableTraining
+import com.coursework.velotracker.MainActivity
 import com.coursework.velotracker.Messages.SharedViewModel
 import com.coursework.velotracker.R
 import com.mapbox.android.core.permissions.PermissionsManager
@@ -194,12 +196,58 @@ class PageMap(): Fragment(), OnMapReadyCallback, OnCameraTrackingChangedListener
     override fun onResume() {
         super.onResume()
         mapView.onResume()
-        val model: SharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
-        model.messagesParcelableTraining.observe(viewLifecycleOwner, Observer {
-            if(it != null){
-                //тут остановился
-            }
-        })
+        TODO("ViewModel")
+//        val model: SharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+//        model.messagesParcelableTraining.observe(viewLifecycleOwner, Observer {
+//            if(it != null){
+//                //тут остановился
+//            }
+//        })
     }
 
+    override fun onPause() {
+        super.onPause()
+        mapView.onPause()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if(!isFinish){
+            activity?.finish()
+        }else run {
+            val intent: Intent = Intent(activity?.applicationContext, MainActivity::class.java)
+            startActivity(intent)
+        }
+        mapView.onStop()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        mapView.onSaveInstanceState(outState)
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        mapView.onLowMemory()
+    }
+
+    override fun onDestroy() {
+        mapView.onDestroy()
+        super.onDestroy()
+    }
+
+    override fun onCameraTrackingDismissed() {
+        isInTrackingMode = false
+        locationButton.setImageResource(R.drawable.tracking_off)
+    }
+
+    override fun onCameraTrackingChanged(currentMode: Int) { }
+
+    override fun onMapReady(mapboxMap: MapboxMap) {
+        this.mapboxMap = mapboxMap
+        mapboxMap.setStyle(AppConstants.MAP_STYLE, Style.OnStyleLoaded {
+            enableLocationComponent(it)
+            lineManager = LineManager(mapView, mapboxMap, it)
+        } )
+    }
 }
