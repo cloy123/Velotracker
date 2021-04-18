@@ -26,7 +26,7 @@ class GpsUtils(context: Context) {
         builder.setAlwaysShow(true)
     }
 
-    fun turnGPSon(onGpsListener: OnGpsListener){
+    public fun turnGPSOn(onGpsListener: OnGpsListener){
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             onGpsListener.gpsStatus(true)
         } else {
