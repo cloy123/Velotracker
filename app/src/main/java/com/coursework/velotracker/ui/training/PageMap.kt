@@ -1,5 +1,6 @@
 package com.coursework.velotracker.ui.training
 
+//import com.coursework.velotracker.MapViewInScroll
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -19,9 +20,11 @@ import com.coursework.velotracker.BL.Model.Training.ParcelableTraining
 import com.coursework.velotracker.BL.Model.Training.round
 import com.coursework.velotracker.BL.Model.Training.toString
 import com.coursework.velotracker.MainActivity
+import com.coursework.velotracker.MapViewInScroll
 import com.coursework.velotracker.Messages.SharedViewModel
 import com.coursework.velotracker.R
 import com.mapbox.android.core.permissions.PermissionsManager
+import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.location.LocationComponent
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
 import com.mapbox.mapboxsdk.location.OnCameraTrackingChangedListener
@@ -35,12 +38,11 @@ import com.mapbox.mapboxsdk.plugins.annotation.LineManager
 import com.mapbox.mapboxsdk.plugins.annotation.LineOptions
 
 
-@Suppress("UNREACHABLE_CODE")
 class PageMap(): Fragment(), OnMapReadyCallback, OnCameraTrackingChangedListener {
 
     private var pageNumber = 1
 
-    private lateinit var mapView: MapView
+    private lateinit var mapView: MapViewInScroll
     private lateinit var mapboxMap: MapboxMap
 
     private lateinit var currentSpeedTextView: TextView
@@ -85,11 +87,19 @@ class PageMap(): Fragment(), OnMapReadyCallback, OnCameraTrackingChangedListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Mapbox.getInstance(requireContext(), getString(R.string.access_token))
         pageNumber = arguments?.getInt("num")?:1
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val result = inflater.inflate(R.layout.training_map_page, container, false)
+        mapView = result.findViewById<MapViewInScroll>(R.id.mapView)
+        mapView.onCreate(savedInstanceState)
+        mapView.getMapAsync(this)
         timeTextView = result.findViewById(R.id.TimeText)
         currentSpeedTextView = result.findViewById(R.id.CurrentSpeedText)
         wayLengthTextView = result.findViewById(R.id.WayLengthText)
@@ -140,19 +150,19 @@ class PageMap(): Fragment(), OnMapReadyCallback, OnCameraTrackingChangedListener
     }
 
     private fun showExitDialog(){
-        val dialog: AlertDialog = AlertDialog.Builder(context!!).create()
+        val dialog: AlertDialog = AlertDialog.Builder(requireContext()).create()
         val cl = layoutInflater.inflate(R.layout.dialog_save_and_exit, null) as ConstraintLayout
         cl.getViewById(R.id.saveAndExitB).setOnClickListener {
             isFinish = true
             onSomeEventListener.onStopTraining(true)
             dialog.dismiss()
-            activity!!.finish()
+            requireActivity().finish()
         }
         cl.getViewById(R.id.exitWithoutSavingB).setOnClickListener {
             isFinish = true
             onSomeEventListener.onStopTraining(false)
             dialog.dismiss()
-            activity!!.finish()
+            requireActivity().finish()
         }
         cl.getViewById(R.id.cancel).setOnClickListener { dialog.dismiss() }
         dialog.setView(cl)
@@ -165,7 +175,10 @@ class PageMap(): Fragment(), OnMapReadyCallback, OnCameraTrackingChangedListener
             return
         }
             locationComponent = mapboxMap.locationComponent
-            val locationComponentActivationOptions = LocationComponentActivationOptions.builder(context!!, loadedMapStyle)
+            val locationComponentActivationOptions = LocationComponentActivationOptions.builder(
+                requireContext(),
+                loadedMapStyle
+            )
                     .useDefaultLocationEngine(true)
                     .build()
             locationComponent.activateLocationComponent(locationComponentActivationOptions)
@@ -201,27 +214,29 @@ class PageMap(): Fragment(), OnMapReadyCallback, OnCameraTrackingChangedListener
         mapView.onResume()
         val model: SharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
         model.parcelableTraining.observe(viewLifecycleOwner, Observer {
-            if(it != null){
-                if(mParcelableTraining != null){
-                    if(it.isRunning){
+            if (it != null) {
+                if (mParcelableTraining != null) {
+                    if (it.isRunning) {
                         setButtonsStateResume()
-                    }else{
+                    } else {
                         setButtonsStatePause()
                     }
                 }
                 mParcelableTraining = it
                 timeTextView.text = it.time.toString(AppConstants.TIME_FORMAT)
-                currentSpeedTextView.text = round(it.currentSpeed, 1).toString() + " " + getString(R.string.kph)
-                wayLengthTextView.text = round(it.totalDistance, 2).toString()+ " " + getString(R.string.km)
+                currentSpeedTextView.text =
+                    round(it.currentSpeed, 1).toString() + " " + getString(R.string.kph)
+                wayLengthTextView.text =
+                    round(it.totalDistance, 2).toString() + " " + getString(R.string.km)
 
                 TODO("Вынести в отдельный метод")
-                if(it.lines.size > 0){
+                if (it.lines.size > 0) {
                     lineManager.deleteAll()
-                    for (line in it.lines){
+                    for (line in it.lines) {
                         drawLine(line)
                     }
                 }
-                if(it.currentLine.size > 0){
+                if (it.currentLine.size > 0) {
                     drawLine(it.currentLine)
                 }
             }
@@ -271,6 +286,6 @@ class PageMap(): Fragment(), OnMapReadyCallback, OnCameraTrackingChangedListener
         mapboxMap.setStyle(AppConstants.MAP_STYLE, Style.OnStyleLoaded {
             enableLocationComponent(it)
             lineManager = LineManager(mapView, mapboxMap, it)
-        } )
+        })
     }
 }

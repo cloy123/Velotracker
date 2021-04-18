@@ -20,10 +20,4 @@ class ViewPagerAdapter(fragmentActivity: FragmentActivity): FragmentStateAdapter
             else -> PageStart.newInstance(position)
         }
     }
-
-    override fun getItemId(position: Int): Long {
-        return 3
-    }
-
-
 }

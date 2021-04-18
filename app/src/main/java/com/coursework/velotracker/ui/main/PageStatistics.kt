@@ -12,9 +12,11 @@ import com.coursework.velotracker.BL.Controller.TrainingController
 import com.coursework.velotracker.BL.Model.Line
 import com.coursework.velotracker.BL.Model.Training.*
 import com.coursework.velotracker.MapViewInScroll
+//import com.coursework.velotracker.MapViewInScroll
 import com.coursework.velotracker.R
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.geometry.LatLng
+import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.plugins.annotation.LineManager
@@ -57,7 +59,7 @@ class PageStatistics(): Fragment(), OnMapReadyCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Mapbox.getInstance(context!!, getString(R.string.access_token))
+        Mapbox.getInstance(requireContext(), getString(R.string.access_token))
         pageNumber = arguments?.getInt("num")?:1
     }
 
@@ -213,7 +215,7 @@ class PageStatistics(): Fragment(), OnMapReadyCallback {
         mapView.onStop()
     }
 
-    fun onSaveInstanceState(outState: Bundle) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         mapView.onSaveInstanceState(outState)
     }

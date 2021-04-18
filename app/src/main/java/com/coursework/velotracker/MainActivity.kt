@@ -1,6 +1,7 @@
 package com.coursework.velotracker
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
@@ -82,11 +83,8 @@ class MainActivity : AppCompatActivity(), PageStart.OnSomeEventListener {
         toolbar.setNavigationOnClickListener { drawerLayout.open() }
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
+    @SuppressLint("ResourceType")
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         var allowed = false
         var currentPer = permissions[0]
         allowed = grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
@@ -94,10 +92,11 @@ class MainActivity : AppCompatActivity(), PageStart.OnSomeEventListener {
             startTraining()
             return
         }
-        if(currentPer == android.Manifest.permission.ACCESS_FINE_LOCATION && !shouldShowRequestPermissionRationale(
-                android.Manifest.permission.ACCESS_FINE_LOCATION
-            )) {
-            TODO("доделать всё")
+        if(currentPer == android.Manifest.permission.ACCESS_FINE_LOCATION && !shouldShowRequestPermissionRationale(android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+            dialogOpenPermissionsSettings(getString(R.string.dialog_open_sett_access_fine_location_text))
+        }
+        if (currentPer == Manifest.permission.READ_PHONE_STATE && !shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE)){
+            dialogOpenPermissionsSettings(getString(R.string.dialog_open_sett_read_phone_state_text))
         }
     }
 
@@ -134,12 +133,7 @@ class MainActivity : AppCompatActivity(), PageStart.OnSomeEventListener {
         val textView = cl.getViewById(R.id.textView) as TextView
         textView.text = text
         cl.getViewById(R.id.openSettB).setOnClickListener {
-            startActivity(
-                Intent(
-                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                    Uri.parse("package:$packageName")
-                )
-            )
+            startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:$packageName")))
             dialog.dismiss()
         }
         dialog.setView(cl)
@@ -148,15 +142,9 @@ class MainActivity : AppCompatActivity(), PageStart.OnSomeEventListener {
 
     private fun dialogBatteryOptimizationSettings() {
         //если таких настроек не существует, они создаются
-        val sharedPreferences = getSharedPreferences(
-            getString(R.string.settings_checkboxes),
-            MODE_PRIVATE
-        )
+        val sharedPreferences = getSharedPreferences(getString(R.string.settings_checkboxes), MODE_PRIVATE)
         if (sharedPreferences.contains(getString(R.string.dialog_battery_optimization_settings_checkbox_key))) {
-            if (sharedPreferences.getBoolean(
-                    getString(R.string.dialog_battery_optimization_settings_checkbox_key),
-                    false
-                )) {
+            if (sharedPreferences.getBoolean(getString(R.string.dialog_battery_optimization_settings_checkbox_key), false)) {
                 //если стоит больше не показывать
                 startActivityTraining()
                 return
@@ -164,10 +152,7 @@ class MainActivity : AppCompatActivity(), PageStart.OnSomeEventListener {
         }
         val isInSettings = booleanArrayOf(false)
         //добавляю настройку и потом вызываю диалог
-        sharedPreferences.edit().putBoolean(
-            getString(R.string.dialog_battery_optimization_settings_checkbox_key),
-            false
-        ).apply()
+        sharedPreferences.edit().putBoolean(getString(R.string.dialog_battery_optimization_settings_checkbox_key), false).apply()
         val dialog = AlertDialog.Builder(this).create()
         val cl = layoutInflater.inflate(R.layout.dialog_open_settings_with_checkbox, null) as ConstraintLayout
         val textView = cl.getViewById(R.id.textView) as TextView
@@ -180,14 +165,8 @@ class MainActivity : AppCompatActivity(), PageStart.OnSomeEventListener {
         val compatCheckBox = cl.getViewById(R.id.checkbox) as AppCompatCheckBox
         dialog.setOnDismissListener(DialogInterface.OnDismissListener {
             if (compatCheckBox.isChecked) {
-                val sharedPreferences = getSharedPreferences(
-                    getString(R.string.settings_checkboxes),
-                    MODE_PRIVATE
-                )
-                sharedPreferences.edit().putBoolean(
-                    getString(R.string.dialog_battery_optimization_settings_checkbox_key),
-                    true
-                ).apply()
+                val sharedPreferences = getSharedPreferences(getString(R.string.settings_checkboxes), MODE_PRIVATE)
+                sharedPreferences.edit().putBoolean(getString(R.string.dialog_battery_optimization_settings_checkbox_key), true).apply()
             }
             if (!isInSettings[0]) {
                 startActivityTraining()

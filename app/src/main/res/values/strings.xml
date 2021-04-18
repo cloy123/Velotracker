@@ -92,7 +92,7 @@
     <string name="total_time">Всего времени</string>
     <string name="max_temp">Макс.темп</string>
 
-
+    <string name="dialog_open_sett_access_fine_location_text">Для работы приложения требуется разрешение на местоположение устройства!</string>
 
     <string name="about_program_title">Velotracker:</string>
     <string name="about_program_text">Velotracker - трекер для велосипеда.</string>

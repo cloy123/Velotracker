@@ -20,7 +20,7 @@
             android:layout_marginLeft="0dp"
             android:background="#bbb" />
 
-        <com.govnokoder.velotracker.ui.training.MapViewInScroll
+        <com.coursework.velotracker.MapViewInScroll
             android:id="@+id/mapView"
             android:layout_width="match_parent"
             android:layout_height="400dp" />

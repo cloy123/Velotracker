@@ -16,23 +16,21 @@ class MyNotificationManager(context: Context) {
         const val NOTIFICATION_ID = 123
     }
 
-    private val notificationBuilder: NotificationCompat.Builder = NotificationCompat.Builder(context, CHANNEL_ID)
-    private val notificationManager: NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    private var notificationBuilder: NotificationCompat.Builder? = null//NotificationCompat.Builder(context, CHANNEL_ID)
+    private var notificationManager: NotificationManager? = null//context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
     init{
+        notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val notificationChannel = NotificationChannel(
-                CHANNEL_ID,
-                context.getString(R.string.app_name),
-                NotificationManager.IMPORTANCE_HIGH
-            )
+            val notificationChannel = NotificationChannel(CHANNEL_ID, context.getString(R.string.app_name), NotificationManager.IMPORTANCE_HIGH)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 notificationChannel.setAllowBubbles(true)
             }
-            notificationManager.createNotificationChannel(notificationChannel)
+            notificationManager?.createNotificationChannel(notificationChannel)
         }
 
-        notificationBuilder
+        notificationBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
+        notificationBuilder!!
             .setDefaults(NotificationCompat.DEFAULT_ALL)
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setOnlyAlertOnce(true)
@@ -43,26 +41,26 @@ class MyNotificationManager(context: Context) {
     }
 
     fun updateNotificationText(title: String, text: String) {
-        notificationBuilder.setContentTitle(title)
-        notificationBuilder.setContentText(text)
+        notificationBuilder!!.setContentTitle(title)
+        notificationBuilder!!.setContentText(text)
         updateNotification()
-        notificationBuilder.setOnlyAlertOnce(true)
+        notificationBuilder!!.setOnlyAlertOnce(true)
     }
 
     fun updatePendingIntent(pendingIntent: PendingIntent) {
-        notificationBuilder.setContentIntent(pendingIntent)
+        notificationBuilder!!.setContentIntent(pendingIntent)
         updateNotification()
     }
 
     fun cancelNotification() {
-        notificationManager.cancel(NOTIFICATION_ID)
+        notificationManager!!.cancel(NOTIFICATION_ID)
     }
 
     fun getNotification(): Notification {
-        return notificationBuilder.build()
+        return notificationBuilder!!.build()
     }
 
     private fun updateNotification() {
-        notificationManager.notify(NOTIFICATION_ID, getNotification())
+        notificationManager!!.notify(NOTIFICATION_ID, getNotification())
     }
 }

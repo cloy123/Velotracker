@@ -133,7 +133,7 @@ class TrainingRecorder {
                 maxSpeed = speed
             }
             sumSpeed += speed
-            averageSpeed = totalDistance / (getAllSeconds(totalTime) as Double / 3600)
+            averageSpeed = totalDistance / (getAllSeconds(totalTime).toDouble() / 3600)
         }
     }
 

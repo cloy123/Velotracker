@@ -21,6 +21,7 @@ import com.coursework.velotracker.BL.Model.Training.toString
 import com.coursework.velotracker.R
 import com.coursework.velotracker.Services.MyNotificationManager.Companion.NOTIFICATION_ID
 import com.coursework.velotracker.Timer.Timer
+import com.coursework.velotracker.TrainingActivity
 import com.google.android.gms.location.*
 import java.time.LocalDate
 import java.time.LocalTime
@@ -31,15 +32,15 @@ class LocationService: Service(), Timer.OnTickListener {
     private var locationsBeforeStart = 1
     private var secondsBeforeStart = 5
     private var isStart = false
-    private var mFusedLocationClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+    private lateinit var mFusedLocationClient: FusedLocationProviderClient //= LocationServices.getFusedLocationProviderClient(this)
     var trainingRecorder: TrainingRecorder = TrainingRecorder()
     private var timer: Timer = Timer(this)
-    private var myNotificationManager: MyNotificationManager = MyNotificationManager(this)
+    private lateinit var myNotificationManager: MyNotificationManager// MyNotificationManager(this)
     private lateinit var mServiceHandler: Handler
     private var wakeLock: WakeLock? = null
 
     companion object {
-        private val PACKAGE_NAME = "com.govnokoder.velotracker.services.locationservice"
+        private val PACKAGE_NAME = "com.coursework.velotracker.Services.locationservice"
         val TABLE_USER_ATTRIBUTE_DATA = "data"
         private var TAG = LocationService::class.java.simpleName
         val ACTION_BROADCAST = "$PACKAGE_NAME.broadcast"
@@ -70,11 +71,14 @@ class LocationService: Service(), Timer.OnTickListener {
     @SuppressLint("ServiceCast")
     override fun onCreate() {
 
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        myNotificationManager = MyNotificationManager(this)
+
         val accessFineLocation = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
         if (!accessFineLocation)
             stopSelf()
 
-        mFusedLocationClient.requestLocationUpdates(createLocationRequest(), MyLocationCallback(), mainLooper)
+        mFusedLocationClient?.requestLocationUpdates(createLocationRequest(), MyLocationCallback(), mainLooper)
 
         acquireWakeLock()
 
@@ -156,8 +160,8 @@ class LocationService: Service(), Timer.OnTickListener {
 
     private fun getLastLocation() {
         try {
-            mFusedLocationClient.lastLocation
-                    .addOnCompleteListener { task ->
+            mFusedLocationClient?.lastLocation
+                    ?.addOnCompleteListener { task ->
                     if (!task.isSuccessful || task.result == null) {
                         Log.w(TAG, "Failed to get location.")
                     }
