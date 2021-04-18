@@ -16,6 +16,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.coursework.velotracker.AppConstants
 import com.coursework.velotracker.BL.Model.Line
 import com.coursework.velotracker.BL.Model.Training.ParcelableTraining
+import com.coursework.velotracker.BL.Model.Training.round
+import com.coursework.velotracker.BL.Model.Training.toString
 import com.coursework.velotracker.MainActivity
 import com.coursework.velotracker.Messages.SharedViewModel
 import com.coursework.velotracker.R
@@ -33,6 +35,7 @@ import com.mapbox.mapboxsdk.plugins.annotation.LineManager
 import com.mapbox.mapboxsdk.plugins.annotation.LineOptions
 
 
+@Suppress("UNREACHABLE_CODE")
 class PageMap(): Fragment(), OnMapReadyCallback, OnCameraTrackingChangedListener {
 
     private var pageNumber = 1
@@ -60,7 +63,7 @@ class PageMap(): Fragment(), OnMapReadyCallback, OnCameraTrackingChangedListener
 
     private var isFinish = false
 
-    private val mParcelableTraining: ParcelableTraining? = null
+    private var mParcelableTraining: ParcelableTraining? = null
 
     private lateinit var onSomeEventListener: OnSomeEventListener
 
@@ -196,13 +199,33 @@ class PageMap(): Fragment(), OnMapReadyCallback, OnCameraTrackingChangedListener
     override fun onResume() {
         super.onResume()
         mapView.onResume()
-        TODO("ViewModel")
-//        val model: SharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
-//        model.messagesParcelableTraining.observe(viewLifecycleOwner, Observer {
-//            if(it != null){
-//                //тут остановился
-//            }
-//        })
+        val model: SharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+        model.parcelableTraining.observe(viewLifecycleOwner, Observer {
+            if(it != null){
+                if(mParcelableTraining != null){
+                    if(it.isRunning){
+                        setButtonsStateResume()
+                    }else{
+                        setButtonsStatePause()
+                    }
+                }
+                mParcelableTraining = it
+                timeTextView.text = it.time.toString(AppConstants.TIME_FORMAT)
+                currentSpeedTextView.text = round(it.currentSpeed, 1).toString() + " " + getString(R.string.kph)
+                wayLengthTextView.text = round(it.totalDistance, 2).toString()+ " " + getString(R.string.km)
+
+                TODO("Вынести в отдельный метод")
+                if(it.lines.size > 0){
+                    lineManager.deleteAll()
+                    for (line in it.lines){
+                        drawLine(line)
+                    }
+                }
+                if(it.currentLine.size > 0){
+                    drawLine(it.currentLine)
+                }
+            }
+        })
     }
 
     override fun onPause() {

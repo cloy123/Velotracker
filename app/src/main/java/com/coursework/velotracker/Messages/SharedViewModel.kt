@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import com.coursework.velotracker.BL.Model.Training.ParcelableTraining
 
 class SharedViewModel(): ViewModel() {
-    var messagesParcelableTraining:MutableLiveData<ParcelableTraining> = MutableLiveData<ParcelableTraining>()
+    var parcelableTraining:MutableLiveData<ParcelableTraining> = MutableLiveData<ParcelableTraining>()
     fun sendMessage(parcelableTraining: ParcelableTraining){
-        messagesParcelableTraining.value = parcelableTraining
+        this.parcelableTraining.value = parcelableTraining
     }
 }
