@@ -12,9 +12,10 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.coursework.velotracker.AppConstants
 import com.coursework.velotracker.BL.Controller.TrainingController
+import com.coursework.velotracker.BL.Model.Extensions.round
+import com.coursework.velotracker.BL.Model.Extensions.toString
+import com.coursework.velotracker.BL.Model.Extensions.toStringExtension
 import com.coursework.velotracker.BL.Model.Training.TrainingStatistics
-import com.coursework.velotracker.BL.Model.Training.round
-import com.coursework.velotracker.BL.Model.Training.toString
 import com.coursework.velotracker.R
 
 
@@ -31,10 +32,10 @@ class PageStart(): Fragment() {
     private lateinit var lastTrainingAverageSpeedText:TextView
     private lateinit var onSomeEventListener: OnSomeEventListener
 
-    public interface OnSomeEventListener{
-        public fun startTraining()
-        public fun openLastTraining()
-        public fun openStatistic()
+    interface OnSomeEventListener{
+        fun startTraining()
+        fun openLastTraining()
+        fun openStatistic()
     }
 
     companion object{
@@ -101,7 +102,7 @@ class PageStart(): Fragment() {
             totalDistance+=training.totalDistance
         }
         totalDistanceText.text = round(totalDistance, 2).toString() + getString(R.string.km)
-        lastTrainingTimeText.text = lastTraining.totalTime.toString(AppConstants.TIME_FORMAT)
+        lastTrainingTimeText.text = lastTraining.totalTime.toStringExtension()
         lastTrainingDateText.text = lastTraining.date.toString(AppConstants.DATE_FORMAT)
         lastTrainingAverageSpeedText.text = round(lastTraining.averageSpeed, 1).toString() + getString(R.string.kph)
         lastTrainingDistanceText.text = round(lastTraining.totalDistance, 2).toString() + getString(R.string.km)

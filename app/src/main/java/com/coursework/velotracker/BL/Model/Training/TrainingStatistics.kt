@@ -1,5 +1,7 @@
 package com.coursework.velotracker.BL.Model.Training
 
+import com.coursework.velotracker.BL.Model.Extensions.getAllSeconds
+import com.coursework.velotracker.BL.Model.Extensions.timeFromSeconds
 import com.coursework.velotracker.BL.Model.Line
 import com.coursework.velotracker.BL.Model.UnitsConverter
 import com.mapbox.mapboxsdk.geometry.LatLng
@@ -15,28 +17,28 @@ class TrainingStatistics() {
     var totalTime: LocalTime = LocalTime.MIN
 
     var totalDistance : Double = 0.0
-        get() = UnitsConverter().convertKilometersToUnits(totalDistance, units)
+        get() = UnitsConverter().convertKilometersToUnits(field, units)
 
     var maxSpeed : Double = 0.0
-        get() = UnitsConverter().convertKilometersToUnits(maxSpeed, units)
+        get() = UnitsConverter().convertKilometersToUnits(field, units)
 
     var averageSpeed : Double = 0.0
-        get() = UnitsConverter().convertKilometersToUnits(averageSpeed, units)
+        get() = UnitsConverter().convertKilometersToUnits(field, units)
 
     var maxHeight: Long = 0
-        get() = UnitsConverter().convertMetersToUnits(maxHeight, units)
+        get() = UnitsConverter().convertMetersToUnits(field, units)
 
     var minHeight: Long = 0
-        get() = UnitsConverter().convertMetersToUnits(minHeight, units)
+        get() = UnitsConverter().convertMetersToUnits(field, units)
 
     var averageHeight: Long = 0
-        get() = UnitsConverter().convertMetersToUnits(averageHeight, units)
+        get() = UnitsConverter().convertMetersToUnits(field, units)
 
     var heights: MutableList<Long> = ArrayList()
     get(){
         val heightList: MutableList<Long> = ArrayList()
-        for(i in 0 until heights.size){
-            heightList.add(UnitsConverter().convertMetersToUnits(heights[i], units))
+        for(i in 0 until field.size){
+            heightList.add(UnitsConverter().convertMetersToUnits(field[i], units))
         }
         return heightList
     }
@@ -49,7 +51,7 @@ class TrainingStatistics() {
     var temp:LocalTime = LocalTime.MIN
     get(){
         calculateTemp()
-        return temp
+        return field
     }
 
     constructor(trainingRecorder: TrainingRecorder) : this() {
@@ -80,36 +82,4 @@ class TrainingStatistics() {
         return LatLng(0.0, 0.0)
     }
 
-}
-
-fun LocalDate.toString(format: String):String{
-    val formatter = DateTimeFormatter.ofPattern(format)
-    return format(formatter)
-}
-
-fun LocalTime.toString(format: String):String{
-    val formatter = DateTimeFormatter.ofPattern(format)
-    return format(formatter)
-}
-
-fun getAllSeconds(localTime: LocalTime): Int {
-    return localTime.second + localTime.minute * 60 + localTime.hour * 3600
-}
-fun timeFromSeconds(seconds: Int): LocalTime{
-    val horses = seconds / 3600
-    val minutes = (seconds - horses * 3600) / 60
-    return LocalTime.of(horses, minutes, seconds - (horses * 3600 + minutes * 60))
-}
-
-fun round(value: Double, places: Int): Double {
-    if (java.lang.Double.isNaN(value)) {
-        return 0.0
-    }
-    require(places >= 0)
-    if (value == 0.0) {
-        return 0.0
-    }
-    var bd = BigDecimal(value.toString())
-    bd = bd.setScale(places, RoundingMode.HALF_UP)
-    return bd.toDouble()
 }

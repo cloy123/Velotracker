@@ -14,12 +14,13 @@ import androidx.viewpager2.widget.ViewPager2
 import com.coursework.velotracker.BL.Model.Training.ParcelableTraining
 import com.coursework.velotracker.Messages.SharedViewModel
 import com.coursework.velotracker.Services.LocationService
+import com.coursework.velotracker.ui.training.PageMap
 import com.coursework.velotracker.ui.training.ViewPagerAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
 
-class TrainingActivity: AppCompatActivity() {
+class TrainingActivity: AppCompatActivity(), PageMap.OnSomeEventListener {
 
     lateinit var tabLayout: TabLayout
     lateinit var viewPager: ViewPager2
@@ -104,15 +105,15 @@ class TrainingActivity: AppCompatActivity() {
         model.sendMessage(parcelableTraining)
     }
 
-    fun onPauseTraining() {
+    override fun onPauseTraining() {
         mService!!.onPause()
     }
 
-    fun onStopTraining(isSave: Boolean) {
+    override fun onStopTraining(isSave: Boolean) {
         mService!!.onStop(isSave)
     }
 
-    fun onResumeTraining() {
+    override fun onResumeTraining() {
         mService!!.onResume()
     }
 

@@ -12,10 +12,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.coursework.velotracker.BL.Controller.TrainingController
+import com.coursework.velotracker.BL.Model.Extensions.round
+import com.coursework.velotracker.BL.Model.Extensions.toString
+import com.coursework.velotracker.BL.Model.Extensions.toStringExtension
 import com.coursework.velotracker.BL.Model.Line
 import com.coursework.velotracker.BL.Model.Training.TrainingStatistics
-import com.coursework.velotracker.BL.Model.Training.round
-import com.coursework.velotracker.BL.Model.Training.toString
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
@@ -81,9 +82,9 @@ class LookTraining(): AppCompatActivity(), OnMapReadyCallback {
         distanceText.text = round(currentTraining.totalDistance, 2).toString() + " " + getString(R.string.km)
         maxSpeedText.text = round(currentTraining.maxSpeed, 1).toString() + " " + getString(R.string.kph)
         averageSpeedText.text = round(currentTraining.averageSpeed, 1).toString() + " " + getString(R.string.kph)
-        timeText.text = currentTraining.totalTime.toString(AppConstants.TIME_FORMAT)
+        timeText.text = currentTraining.totalTime.toStringExtension()
         averageHeightText.text = currentTraining.averageHeight.toString() + " " + getString(R.string.m)
-        tempText.text = currentTraining.temp.toString(AppConstants.TIME_FORMAT) + " /" + getString(R.string.km)
+        tempText.text = currentTraining.temp.toStringExtension() + " /" + getString(R.string.km)
         maxHeightText.text = currentTraining.maxHeight.toString() + " " + getString(R.string.m)
         minHeightText.text = currentTraining.minHeight.toString() + " " + getString(R.string.m)
 

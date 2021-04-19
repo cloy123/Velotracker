@@ -14,14 +14,13 @@ class Timer(onTickListener: OnTickListener){
     var isPaused = true
     var isLaunched = false
     var time:LocalTime = LocalTime.MIN
-    var onTickListener : OnTickListener = onTickListener
 
     var countDownTimer:CountDownTimer = object : CountDownTimer(Long.MAX_VALUE, 1000) {
         override fun onTick(millisUntilFinished: Long) {
             if(!isPaused){
-                time.plusSeconds(1)
-                onTickListener.onTick(time)
+                time = time.plusSeconds(1)
             }
+            onTickListener.onTick(time)
         }
 
         override fun onFinish() {
@@ -32,11 +31,15 @@ class Timer(onTickListener: OnTickListener){
     }
 
     fun start(){
-        if(!isLaunched){
+        if(!isLaunched) {
             countDownTimer.start()
             isPaused = false
             isLaunched = true
-        }else if(isPaused){
+        }
+    }
+
+    fun resume(){
+        if(isLaunched && isPaused){
             isPaused = false
         }
     }

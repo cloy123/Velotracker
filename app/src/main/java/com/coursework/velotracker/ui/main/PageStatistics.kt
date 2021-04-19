@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.coursework.velotracker.AppConstants
 import com.coursework.velotracker.BL.Controller.TrainingController
+import com.coursework.velotracker.BL.Model.Extensions.*
 import com.coursework.velotracker.BL.Model.Line
 import com.coursework.velotracker.BL.Model.Training.*
 import com.coursework.velotracker.MapViewInScroll
@@ -194,11 +195,11 @@ class PageStatistics(): Fragment(), OnMapReadyCallback {
 
         totalDistanceTextView.text = round(totalDist, 2).toString() + " " + getString(R.string.km)
         totalRecordsTextView.text = totalRecords.toString()
-        totalTimeTextView.text = timeFromSeconds(totalSeconds.toInt()).toString()
+        totalTimeTextView.text = timeFromSeconds(totalSeconds.toInt()).toStringExtension()
         maxSpeedTextView.text = round(maxSpeed, 1).toString() + " " + getString(R.string.kph)
         averageSpeedTextView.text = round(averageSpeed, 1).toString() + " " + getString(R.string.kph)
-        tempTextView.text = averageTemp.toString() + " /" + getString(R.string.km)
-        maxTempTextView.text = maxTemp.toString() + " /" + getString(R.string.km)
+        tempTextView.text = averageTemp.toStringExtension() + " /" + getString(R.string.km)
+        maxTempTextView.text = maxTemp.toStringExtension() + " /" + getString(R.string.km)
         averageHeightTextView.text = averageHeight.toString() + " " + getString(R.string.m)
         minHeightTextView.text = minHeightStr
         maxHeightTextView.text = maxHeightStr

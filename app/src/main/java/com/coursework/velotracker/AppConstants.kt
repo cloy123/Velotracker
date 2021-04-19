@@ -14,6 +14,5 @@ object AppConstants {
     const val LINE_WIDTH = 5f
     const val MAP_STYLE = Style.OUTDOORS
 
-    const val TIME_FORMAT = "00:00:00"
-    const val DATE_FORMAT = "00/00/0000"
+    const val DATE_FORMAT = "DD/MM/YYYY"
 }

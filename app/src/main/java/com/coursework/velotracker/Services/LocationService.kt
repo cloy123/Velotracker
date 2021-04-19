@@ -14,10 +14,10 @@ import androidx.core.app.ActivityCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.coursework.velotracker.AppConstants
 import com.coursework.velotracker.BL.Model.*
+import com.coursework.velotracker.BL.Model.Extensions.round
+import com.coursework.velotracker.BL.Model.Extensions.toStringExtension
 import com.coursework.velotracker.BL.Model.Training.ParcelableTraining
 import com.coursework.velotracker.BL.Model.Training.TrainingRecorder
-import com.coursework.velotracker.BL.Model.Training.round
-import com.coursework.velotracker.BL.Model.Training.toString
 import com.coursework.velotracker.R
 import com.coursework.velotracker.Services.MyNotificationManager.Companion.NOTIFICATION_ID
 import com.coursework.velotracker.Timer.Timer
@@ -50,12 +50,14 @@ class LocationService: Service(), Timer.OnTickListener {
     fun onPause() {
         if (trainingRecorder.isRunning) {
             trainingRecorder.Pause()
+            timer.pause()
         }
     }
 
     fun onResume() {
         if (!trainingRecorder.isRunning) {
             trainingRecorder.Resume()
+            timer.resume()
         }
     }
 
@@ -78,7 +80,7 @@ class LocationService: Service(), Timer.OnTickListener {
         if (!accessFineLocation)
             stopSelf()
 
-        mFusedLocationClient?.requestLocationUpdates(createLocationRequest(), MyLocationCallback(), mainLooper)
+        mFusedLocationClient.requestLocationUpdates(createLocationRequest(), MyLocationCallback(), mainLooper)
 
         acquireWakeLock()
 
@@ -160,12 +162,12 @@ class LocationService: Service(), Timer.OnTickListener {
 
     private fun getLastLocation() {
         try {
-            mFusedLocationClient?.lastLocation
-                    ?.addOnCompleteListener { task ->
-                    if (!task.isSuccessful || task.result == null) {
-                        Log.w(TAG, "Failed to get location.")
+            mFusedLocationClient.lastLocation
+                    .addOnCompleteListener { task ->
+                        if (!task.isSuccessful || task.result == null) {
+                            Log.w(TAG, "Failed to get location.")
+                        }
                     }
-                }
         } catch (unlikely: SecurityException) {
             Log.e(TAG, "Lost location permission.$unlikely")
         }
@@ -204,32 +206,29 @@ class LocationService: Service(), Timer.OnTickListener {
                 isStart = true
             }
         }
+        trainingRecorder.totalTime = time
         updateNotificationText()
         sendMessageToActivity()
     }
 
     private fun updateNotificationText(){
         if (trainingRecorder.isRunning) {
-            myNotificationManager!!.updateNotificationText(applicationContext.getString(R.string.pause_button), getNotificationTextIfNotRunning())
+            myNotificationManager.updateNotificationText(applicationContext.getString(R.string.app_name), getNotificationTextIfNotRunning())
         }else{
-            myNotificationManager!!.updateNotificationText(applicationContext.getString(R.string.pause_button), getNotificationTextIfRunning())
+            myNotificationManager.updateNotificationText(applicationContext.getString(R.string.pause_button), getNotificationTextIfRunning())
         }
     }
 
     private fun getNotificationTextIfRunning():String{
-        return  trainingRecorder.totalTime.toString().toString() + " | " +
-                 round(trainingRecorder.currentSpeed, 1) + " " +
-                 applicationContext.getString(R.string.kph) + " | " +
-                 round(trainingRecorder.totalDistance, 2) + " " +
-                 applicationContext.getString(R.string.km)
+        return  trainingRecorder.totalTime.toStringExtension() + " | " +
+                 round(trainingRecorder.currentSpeed, 1) + " " + applicationContext.getString(R.string.kph) + " | " +
+                 round(trainingRecorder.totalDistance, 2) + " " + applicationContext.getString(R.string.km)
     }
 
     private fun getNotificationTextIfNotRunning():String{
-        return trainingRecorder.totalTime.toString(AppConstants.TIME_FORMAT) + " | " +
-                round(trainingRecorder.currentSpeed, 1) + " " +
-                applicationContext.getString(R.string.kph) + " | " +
-                round(trainingRecorder.totalDistance, 2) + " " +
-                applicationContext.getString(R.string.km)
+        return trainingRecorder.totalTime.toStringExtension() + " | " +
+                round(trainingRecorder.currentSpeed, 1) + " " + applicationContext.getString(R.string.kph) + " | " +
+                round(trainingRecorder.totalDistance, 2) + " " + applicationContext.getString(R.string.km)
     }
 
     private fun sendMessageToActivity() {

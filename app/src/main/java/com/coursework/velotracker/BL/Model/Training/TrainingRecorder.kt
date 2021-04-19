@@ -3,6 +3,7 @@ package com.coursework.velotracker.BL.Model.Training
 import android.content.Context
 import android.location.Location
 import com.coursework.velotracker.BL.Controller.TrainingController
+import com.coursework.velotracker.BL.Model.Extensions.getAllSeconds
 import com.coursework.velotracker.BL.Model.Line
 import com.coursework.velotracker.BL.Model.UnitsConverter
 import com.mapbox.mapboxsdk.geometry.LatLng
@@ -17,44 +18,44 @@ class TrainingRecorder {
 
     var totalDistance : Double = 0.0
         get(){
-            return UnitsConverter().convertKilometersToUnits(totalDistance, units)
+            return UnitsConverter().convertKilometersToUnits(field, units)
         }
 
     var maxSpeed : Double = 0.0
         get(){
-            return UnitsConverter().convertKilometersToUnits(maxSpeed, units)
+            return UnitsConverter().convertKilometersToUnits(field, units)
         }
 
     var averageSpeed : Double = 0.0
         get(){
-            return UnitsConverter().convertKilometersToUnits(averageSpeed, units)
+            return UnitsConverter().convertKilometersToUnits(field, units)
         }
 
     var currentSpeed : Double = 0.0
         get(){
-            return UnitsConverter().convertKilometersToUnits(currentSpeed, units)
+            return UnitsConverter().convertKilometersToUnits(field, units)
         }
 
     var heights: MutableList<Long> = ArrayList<Long>()
 
     var currentHeight: Long = 0
         get(){
-            return UnitsConverter().convertMetersToUnits(currentHeight, units)
+            return UnitsConverter().convertMetersToUnits(field, units)
         }
 
     var maxHeight: Long = 0
         get(){
-            return UnitsConverter().convertMetersToUnits(maxHeight, units)
+            return UnitsConverter().convertMetersToUnits(field, units)
         }
 
     var minHeight: Long = 0
         get(){
-            return UnitsConverter().convertMetersToUnits(minHeight, units)
+            return UnitsConverter().convertMetersToUnits(field, units)
         }
 
     var averageHeight: Long = 0
         get(){
-            return UnitsConverter().convertMetersToUnits(averageHeight, units)
+            return UnitsConverter().convertMetersToUnits(field, units)
         }
 
     var sumHeight: Long = 0

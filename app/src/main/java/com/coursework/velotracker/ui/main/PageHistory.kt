@@ -14,8 +14,8 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.coursework.velotracker.AppConstants
 import com.coursework.velotracker.BL.Controller.TrainingController
+import com.coursework.velotracker.BL.Model.Extensions.toString
 import com.coursework.velotracker.BL.Model.Training.TrainingStatistics
-import com.coursework.velotracker.BL.Model.Training.toString
 import com.coursework.velotracker.LookTraining
 import com.coursework.velotracker.R
 import java.util.*
@@ -60,7 +60,7 @@ class PageHistory: Fragment(), AdapterView.OnItemClickListener {
         for (training in trainings) {
             listDate.add(training.date.toString(AppConstants.DATE_FORMAT))
         }
-        val adapter:MyArrayAdapter = MyArrayAdapter(context!!, android.R.layout.simple_list_item_1, listDate)
+        val adapter:MyArrayAdapter = MyArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, listDate)
         listView.adapter = adapter
     }
 

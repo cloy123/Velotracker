@@ -1,6 +1,7 @@
 package com.coursework.velotracker.ui.training
 
-//import com.coursework.velotracker.MapViewInScroll
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,10 +16,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.coursework.velotracker.AppConstants
+import com.coursework.velotracker.BL.Model.Extensions.round
+import com.coursework.velotracker.BL.Model.Extensions.toStringExtension
 import com.coursework.velotracker.BL.Model.Line
 import com.coursework.velotracker.BL.Model.Training.ParcelableTraining
-import com.coursework.velotracker.BL.Model.Training.round
-import com.coursework.velotracker.BL.Model.Training.toString
 import com.coursework.velotracker.MainActivity
 import com.coursework.velotracker.MapViewInScroll
 import com.coursework.velotracker.Messages.SharedViewModel
@@ -36,11 +37,12 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.plugins.annotation.LineManager
 import com.mapbox.mapboxsdk.plugins.annotation.LineOptions
+import java.lang.ClassCastException
 
 
 class PageMap(): Fragment(), OnMapReadyCallback, OnCameraTrackingChangedListener {
 
-    private var pageNumber = 1
+    private var pageNumber: Int = 0
 
     private lateinit var mapView: MapViewInScroll
     private lateinit var mapboxMap: MapboxMap
@@ -55,7 +57,7 @@ class PageMap(): Fragment(), OnMapReadyCallback, OnCameraTrackingChangedListener
 
     private lateinit var locationButton: ImageButton
 
-    private lateinit var lineManager: LineManager
+    private var lineManager: LineManager? = null
 
     var isInTrackingMode = false
 
@@ -85,19 +87,24 @@ class PageMap(): Fragment(), OnMapReadyCallback, OnCameraTrackingChangedListener
         }
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        try {
+            onSomeEventListener = context as OnSomeEventListener
+        }catch (e:ClassCastException){
+            throw ClassCastException("$context must implement onSomeEventListener")
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Mapbox.getInstance(requireContext(), getString(R.string.access_token))
-        pageNumber = arguments?.getInt("num")?:1
+        pageNumber = arguments?.getInt("num")?:0
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val result = inflater.inflate(R.layout.training_map_page, container, false)
-        mapView = result.findViewById<MapViewInScroll>(R.id.mapView)
+        mapView = result.findViewById(R.id.mapView)
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
         timeTextView = result.findViewById(R.id.TimeText)
@@ -110,7 +117,7 @@ class PageMap(): Fragment(), OnMapReadyCallback, OnCameraTrackingChangedListener
         stopButton = result.findViewById(R.id.StopButton)
         stopButton.setOnClickListener(this::onClickStopButton)
         locationButton = result.findViewById(R.id.locationButton)
-        return super.onCreateView(inflater, container, savedInstanceState)
+        return result
     }
 
     private fun onClickPauseButton(v: View) {
@@ -201,7 +208,7 @@ class PageMap(): Fragment(), OnMapReadyCallback, OnCameraTrackingChangedListener
         lineOptions.withLatLngs(line)
         lineOptions.withLineColor(AppConstants.LINE_COLOR)
         lineOptions.withLineWidth(AppConstants.LINE_WIDTH)
-        lineManager.create(lineOptions)
+        lineManager?.create(lineOptions)
     }
 
     override fun onStart() {
@@ -209,6 +216,7 @@ class PageMap(): Fragment(), OnMapReadyCallback, OnCameraTrackingChangedListener
         mapView.onStart()
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onResume() {
         super.onResume()
         mapView.onResume()
@@ -223,15 +231,13 @@ class PageMap(): Fragment(), OnMapReadyCallback, OnCameraTrackingChangedListener
                     }
                 }
                 mParcelableTraining = it
-                timeTextView.text = it.time.toString(AppConstants.TIME_FORMAT)
-                currentSpeedTextView.text =
-                    round(it.currentSpeed, 1).toString() + " " + getString(R.string.kph)
-                wayLengthTextView.text =
-                    round(it.totalDistance, 2).toString() + " " + getString(R.string.km)
+                timeTextView.text = it.time.toStringExtension()
+                currentSpeedTextView.text = round(it.currentSpeed, 1).toString() + " " + getString(R.string.kph)
+                wayLengthTextView.text = round(it.totalDistance, 2).toString() + " " + getString(R.string.km)
 
-                TODO("Вынести в отдельный метод")
+                //TODO("Вынести в отдельный метод")
                 if (it.lines.size > 0) {
-                    lineManager.deleteAll()
+                    lineManager?.deleteAll()
                     for (line in it.lines) {
                         drawLine(line)
                     }
