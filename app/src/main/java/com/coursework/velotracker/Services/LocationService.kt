@@ -10,11 +10,13 @@ import android.content.res.Configuration
 import android.os.*
 import android.os.PowerManager.WakeLock
 import android.util.Log
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.coursework.velotracker.AppConstants
 import com.coursework.velotracker.BL.Model.*
 import com.coursework.velotracker.BL.Model.Extensions.round
+import com.coursework.velotracker.BL.Model.Extensions.toString
 import com.coursework.velotracker.BL.Model.Extensions.toStringExtension
 import com.coursework.velotracker.BL.Model.Training.ParcelableTraining
 import com.coursework.velotracker.BL.Model.Training.TrainingRecorder
@@ -49,14 +51,14 @@ class LocationService: Service(), Timer.OnTickListener {
 
     fun onPause() {
         if (trainingRecorder.isRunning) {
-            trainingRecorder.Pause()
+            trainingRecorder.pause()
             timer.pause()
         }
     }
 
     fun onResume() {
         if (!trainingRecorder.isRunning) {
-            trainingRecorder.Resume()
+            trainingRecorder.resume()
             timer.resume()
         }
     }
@@ -64,7 +66,7 @@ class LocationService: Service(), Timer.OnTickListener {
     fun onStop(isSave: Boolean) {
         timer.stop()
         if (isSave) {
-            trainingRecorder.StopAndSave(applicationContext)
+            trainingRecorder.stopAndSave(applicationContext)
         }
         releaseWakeLock()
         stopSelf()
@@ -85,7 +87,7 @@ class LocationService: Service(), Timer.OnTickListener {
         acquireWakeLock()
 
         trainingRecorder.date = LocalDate.now()
-        trainingRecorder.isRunning = true
+        trainingRecorder.resume()
 
         getLastLocation()
         val handlerThread = HandlerThread(TAG)

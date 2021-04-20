@@ -69,7 +69,7 @@ class TrainingRecorder {
     var lines: MutableList<Line> = ArrayList()
     var currentLine: Line = Line()
 
-    fun Pause() {
+    fun pause() {
         isRunning = false
         val line = Line()
         for (latlng in currentLine) {
@@ -79,11 +79,11 @@ class TrainingRecorder {
         currentLine = Line()
     }
 
-    fun Resume() {
+    fun resume() {
         isRunning = true
     }
 
-    fun StopAndSave(context: Context) {
+    fun stopAndSave(context: Context) {
         val trainingController = TrainingController(context)
         if (heights.size == 0) {
             maxHeight = 0

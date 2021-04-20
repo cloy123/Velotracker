@@ -62,8 +62,6 @@ class LookTraining(): AppCompatActivity(), OnMapReadyCallback {
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
 
-        mapView.getMapAsync(this);
-
         distanceText = findViewById(R.id.distanceText);
         maxSpeedText = findViewById(R.id.maxSpeedText);
         averageSpeedText = findViewById(R.id.averageSpeedText);
@@ -103,7 +101,7 @@ class LookTraining(): AppCompatActivity(), OnMapReadyCallback {
         val dialog: AlertDialog = AlertDialog.Builder(this).create()
         val cl = layoutInflater.inflate(R.layout.dialog_remove_training, null) as ConstraintLayout
         cl.getViewById(R.id.yesB).setOnClickListener {
-            trainingController.RemoveTraining(index)
+            trainingController.removeTraining(index)
             dialog.dismiss()
             finish()
         }

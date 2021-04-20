@@ -22,12 +22,12 @@ class TrainingController(context: Context?) {
     private var fileOutputStream: FileOutputStream? = null
 
 
-    fun RemoveTraining(index: Int) {
+    fun removeTraining(index: Int) {
         trainings.removeAt(index)
         save()
     }
 
-    fun DeleteAll() {
+    fun deleteAll() {
         trainings.clear()
         save()
     }

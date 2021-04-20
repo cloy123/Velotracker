@@ -13,8 +13,28 @@ import java.time.format.DateTimeFormatter
 
 class TrainingStatistics() {
 
-    var date: LocalDate = LocalDate.now()
-    var totalTime: LocalTime = LocalTime.MIN
+    var date: LocalDate
+    get() = LocalDate.of(year, month, dayOfMonth)
+    set(value) {
+        dayOfMonth = value.dayOfMonth
+        month = value.monthValue
+        year = value.year
+    }
+    private var dayOfMonth = 0
+    private var month = 0
+    private var year = 0
+
+    var totalTime: LocalTime
+    get() = LocalTime.of(hour, minute, second)
+    set(value){
+        second = value.second
+        minute = value.minute
+        hour = value.hour
+    }
+    private var second = 0
+    private var minute = 0
+    private var hour = 0
+
 
     var totalDistance : Double = 0.0
         get() = UnitsConverter().convertKilometersToUnits(field, units)
