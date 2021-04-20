@@ -34,7 +34,8 @@ class TrainingController(context: Context?) {
 
     fun setNewTrainingData(trainingRecorder: TrainingRecorder) {
         currentTraining = TrainingStatistics(trainingRecorder)
-        trainings.add(currentTraining)
+        trainings = loadTrainings()
+        trainings.add(trainings.size, currentTraining)
         save()
     }
 

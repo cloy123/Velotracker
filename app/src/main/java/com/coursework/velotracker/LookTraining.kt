@@ -43,7 +43,7 @@ class LookTraining(): AppCompatActivity(), OnMapReadyCallback {
     private lateinit var maxHeightText:TextView
     private lateinit var minHeightText:TextView
 
-    private lateinit var mapView: MapView//MapViewInScroll
+    private lateinit var mapView: MapViewInScroll
     private lateinit var mapboxMap: MapboxMap
     private lateinit var lineManager: LineManager
     private lateinit var deleteButton: AppCompatButton
@@ -54,8 +54,8 @@ class LookTraining(): AppCompatActivity(), OnMapReadyCallback {
     private lateinit var currentTraining: TrainingStatistics
 
     @SuppressLint("SetTextI18n")
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         Mapbox.getInstance(this, getString(R.string.access_token))
         setContentView(R.layout.activity_look_training)
         mapView = findViewById(R.id.mapView)

@@ -28,6 +28,7 @@ import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.location.LocationComponent
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
+import com.mapbox.mapboxsdk.location.LocationUpdate
 import com.mapbox.mapboxsdk.location.OnCameraTrackingChangedListener
 import com.mapbox.mapboxsdk.location.modes.CameraMode
 import com.mapbox.mapboxsdk.location.modes.RenderMode
@@ -182,10 +183,7 @@ class PageMap(): Fragment(), OnMapReadyCallback, OnCameraTrackingChangedListener
             return
         }
             locationComponent = mapboxMap.locationComponent
-            val locationComponentActivationOptions = LocationComponentActivationOptions.builder(
-                requireContext(),
-                loadedMapStyle
-            )
+            val locationComponentActivationOptions = LocationComponentActivationOptions.builder(requireContext(), loadedMapStyle)
                     .useDefaultLocationEngine(true)
                     .build()
             locationComponent.activateLocationComponent(locationComponentActivationOptions)
@@ -201,14 +199,6 @@ class PageMap(): Fragment(), OnMapReadyCallback, OnCameraTrackingChangedListener
                     locationButton.setImageResource(R.drawable.tracking_on)
                 }
             })
-    }
-
-    private fun drawLine(line: Line) {
-        val lineOptions = LineOptions()
-        lineOptions.withLatLngs(line)
-        lineOptions.withLineColor(AppConstants.LINE_COLOR)
-        lineOptions.withLineWidth(AppConstants.LINE_WIDTH)
-        lineManager?.create(lineOptions)
     }
 
     override fun onStart() {
@@ -231,22 +221,41 @@ class PageMap(): Fragment(), OnMapReadyCallback, OnCameraTrackingChangedListener
                     }
                 }
                 mParcelableTraining = it
-                timeTextView.text = it.time.toStringExtension()
-                currentSpeedTextView.text = round(it.currentSpeed, 1).toString() + " " + getString(R.string.kph)
-                wayLengthTextView.text = round(it.totalDistance, 2).toString() + " " + getString(R.string.km)
-
-                //TODO("Вынести в отдельный метод")
-                if (it.lines.size > 0) {
-                    lineManager?.deleteAll()
-                    for (line in it.lines) {
-                        drawLine(line)
-                    }
-                }
-                if (it.currentLine.size > 0) {
-                    drawLine(it.currentLine)
-                }
+                setValues()
             }
         })
+    }
+
+    @SuppressLint("SetTextI18n")
+    fun setValues(){
+        if(mParcelableTraining != null){
+            timeTextView.text = mParcelableTraining!!.time.toStringExtension()
+            currentSpeedTextView.text = round(mParcelableTraining!!.currentSpeed, 1).toString() + " " + getString(R.string.kph)
+            wayLengthTextView.text = round(mParcelableTraining!!.totalDistance, 2).toString() + " " + getString(R.string.km)
+            drawLines()
+        }
+    }
+
+    private fun drawLines(){
+        if(mParcelableTraining != null){
+            if (mParcelableTraining!!.lines.size > 0) {
+                lineManager?.deleteAll()
+                for (line in mParcelableTraining!!.lines) {
+                    drawLine(line)
+                }
+            }
+            if (mParcelableTraining!!.currentLine.size > 0) {
+                drawLine(mParcelableTraining!!.currentLine)
+            }
+        }
+    }
+
+    private fun drawLine(line: Line) {
+        val lineOptions = LineOptions()
+        lineOptions.withLatLngs(line)
+        lineOptions.withLineColor(AppConstants.LINE_COLOR)
+        lineOptions.withLineWidth(AppConstants.LINE_WIDTH)
+        lineManager?.create(lineOptions)
     }
 
     override fun onPause() {
