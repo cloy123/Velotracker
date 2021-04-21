@@ -186,29 +186,31 @@ class LocationService: Service(), Timer.OnTickListener {
         }
     }
 
-    private fun isCanStart():Boolean{
-        return if (isStart){
-            true
-        }
-        else if (secondsBeforeStart != 0) {
-            secondsBeforeStart -= 1
-            false
-        } else {
-            true
-        }
-    }
-
     override fun onTick(time: LocalTime) {
-        if(!isStart){
-            if (isCanStart()) {
-                isStart = true
-                timer.resume()
-            }
+        if(isCanStart()){
+            timer.resume()
+        }
+        else{
             return
         }
         trainingRecorder.totalTime = time
         updateNotificationText()
         sendMessageToActivity()
+    }
+
+    private fun isCanStart():Boolean{
+        return if(isStart){
+            true
+        }
+        else{
+            if(secondsBeforeStart != 0){
+                secondsBeforeStart-=1
+                false
+            } else{
+                isStart = true
+                true
+            }
+        }
     }
 
     private fun updateNotificationText(){

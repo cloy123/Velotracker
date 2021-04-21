@@ -123,16 +123,14 @@ class TrainingRecorder {
     }
 
     private fun setHeightValues(location: Location){
-        if (location.hasVerticalAccuracy() && location.hasAltitude()) {
+        if (location.hasAltitude()) {//location.hasVerticalAccuracy() &&
             val height = location.altitude.toLong()
-            if (location.hasAltitude()) {
                 currentHeight = height
                 heights.add(height)
                 minHeight = java.lang.Long.min(height, minHeight)
                 maxHeight = java.lang.Long.max(height, maxHeight)
                 sumHeight += height
                 averageHeight = sumHeight / heights.size
-            }
         }
     }
 }

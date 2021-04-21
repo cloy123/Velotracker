@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.coursework.velotracker.AppConstants
 import com.coursework.velotracker.BL.Controller.TrainingController
@@ -91,17 +92,8 @@ class PageStatistics(): Fragment(), OnMapReadyCallback {
             symbolManager = SymbolManager(mapView, mapboxMap, style)
             symbolManager.iconAllowOverlap = true
             symbolManager.textAllowOverlap = true
-            GlobalScope.launch {
-                trainings.forEach{
-                    if(it.lines.isNotEmpty()){
-                        it.lines.forEach{
-                            drawLine(it)
-                        }
-                    }
-                    drawMarker(it.getStartPoint(), it.date.toStringExtension(AppConstants.DATE_FORMAT))
-                }
-            }
         }
+        Toast.makeText(context, "fewfe", Toast.LENGTH_LONG).show()
     }
 
     private fun drawLine(line: Line) {
@@ -136,6 +128,17 @@ class PageStatistics(): Fragment(), OnMapReadyCallback {
         }else{
             GlobalScope.launch{ setDefaultValues() }
         }
+
+//        GlobalScope.launch {
+//            trainings.forEach{ training ->
+//                if(training.lines.isNotEmpty()){
+//                    training.lines.forEach(){ it ->
+//                        drawLine(it)
+//                    }
+//                }
+//                drawMarker(training.getStartPoint(), training.date.toStringExtension(AppConstants.DATE_FORMAT))
+//            }
+//        }
     }
 
     @SuppressLint("SetTextI18n")

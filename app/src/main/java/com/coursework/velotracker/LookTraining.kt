@@ -134,9 +134,7 @@ class LookTraining(): AppCompatActivity(), OnMapReadyCallback {
                 .build()
             val cameraUpdate = CameraUpdateFactory.newCameraPosition(position)
             mapboxMap.moveCamera(cameraUpdate)
-            GlobalScope.launch {
-                drawLines()
-            }
+            drawLines()
         })
     }
 

@@ -211,6 +211,7 @@ class PageMap(): Fragment(), OnMapReadyCallback, OnCameraTrackingChangedListener
                     }
                     setValues()
                 }
+                drawLines()
             }
         })
     }
@@ -221,7 +222,6 @@ class PageMap(): Fragment(), OnMapReadyCallback, OnCameraTrackingChangedListener
             timeTextView.text = mParcelableTraining!!.time.toStringExtension()
             currentSpeedTextView.text = round(mParcelableTraining!!.currentSpeed, 1).toString() + " " + getString(R.string.kph)
             wayLengthTextView.text = round(mParcelableTraining!!.totalDistance, 2).toString() + " " + getString(R.string.km)
-            drawLines()
         }
     }
 
