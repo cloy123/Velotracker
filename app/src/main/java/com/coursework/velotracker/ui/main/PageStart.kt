@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment
 import com.coursework.velotracker.AppConstants
 import com.coursework.velotracker.BL.Controller.TrainingController
 import com.coursework.velotracker.BL.Model.Extensions.round
-import com.coursework.velotracker.BL.Model.Extensions.toString
 import com.coursework.velotracker.BL.Model.Extensions.toStringExtension
 import com.coursework.velotracker.BL.Model.Training.TrainingStatistics
 import com.coursework.velotracker.R
@@ -41,7 +40,7 @@ class PageStart(): Fragment() {
     companion object{
          fun newInstance(page: Int): PageStart{
             val fragment = PageStart()
-            val args:Bundle = Bundle()
+            val args = Bundle()
             args.putInt("num", page)
             fragment.arguments = args
             return fragment
@@ -97,13 +96,12 @@ class PageStart(): Fragment() {
     fun setTrainingValues(trainings: MutableList<TrainingStatistics>){
         val lastTraining = trainings[trainings.size - 1]
         var totalDistance = 0.0
-        for(training in trainings)
-        {
-            totalDistance+=training.totalDistance
+        trainings.forEach{
+            totalDistance+= it.totalDistance
         }
         totalDistanceText.text = round(totalDistance, 2).toString() + getString(R.string.km)
         lastTrainingTimeText.text = lastTraining.totalTime.toStringExtension()
-        lastTrainingDateText.text = lastTraining.date.toString(AppConstants.DATE_FORMAT)
+        lastTrainingDateText.text = lastTraining.date.toStringExtension(AppConstants.DATE_FORMAT)
         lastTrainingAverageSpeedText.text = round(lastTraining.averageSpeed, 1).toString() + getString(R.string.kph)
         lastTrainingDistanceText.text = round(lastTraining.totalDistance, 2).toString() + getString(R.string.km)
     }
@@ -113,7 +111,7 @@ class PageStart(): Fragment() {
         lastTrainingTimeText.text = "00:00"
         lastTrainingAverageSpeedText.text = "0 " + getString(R.string.kph)
         lastTrainingDistanceText.text = "0 " + getString(R.string.km)
-        lastTrainingDateText.text = "00/00/0000";
+        lastTrainingDateText.text = "00/00/00";
         totalDistanceText.text = "0 " + getString(R.string.km)
     }
 }

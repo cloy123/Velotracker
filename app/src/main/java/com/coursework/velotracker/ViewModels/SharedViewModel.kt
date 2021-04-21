@@ -1,4 +1,4 @@
-package com.coursework.velotracker.Messages
+package com.coursework.velotracker.ViewModels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

@@ -12,6 +12,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class TrainingController(context: Context?) {
+
     private val TRAINING_FILE_NAME = "data.json"
     private var trainings: MutableList<TrainingStatistics> = ArrayList()
     private var currentTraining: TrainingStatistics = TrainingStatistics()
@@ -20,7 +21,6 @@ class TrainingController(context: Context?) {
     private var streamReader: InputStreamReader? = null
     private var fileInputStream: FileInputStream? = null
     private var fileOutputStream: FileOutputStream? = null
-
 
     fun removeTraining(index: Int) {
         trainings.removeAt(index)
@@ -65,7 +65,6 @@ class TrainingController(context: Context?) {
         }
         return false
     }
-
 
     private fun getTrainingsFromJson():MutableList<TrainingStatistics>{
         fileInputStream = context?.openFileInput(TRAINING_FILE_NAME)

@@ -16,8 +16,8 @@ class MyNotificationManager(context: Context) {
         const val NOTIFICATION_ID = 123
     }
 
-    private var notificationBuilder: NotificationCompat.Builder? = null//NotificationCompat.Builder(context, CHANNEL_ID)
-    private var notificationManager: NotificationManager? = null//context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    private var notificationBuilder: NotificationCompat.Builder? = null
+    private var notificationManager: NotificationManager? = null
 
     init{
         notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

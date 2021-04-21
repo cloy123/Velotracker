@@ -17,46 +17,30 @@ class TrainingRecorder {
     var units: UnitsConverter.Units = UnitsConverter.Units.METERS
 
     var totalDistance : Double = 0.0
-        get(){
-            return UnitsConverter().convertKilometersToUnits(field, units)
-        }
+        get() = UnitsConverter().convertKilometersToUnits(field, units)
 
     var maxSpeed : Double = 0.0
-        get(){
-            return UnitsConverter().convertKilometersToUnits(field, units)
-        }
+        get() = UnitsConverter().convertKilometersToUnits(field, units)
 
     var averageSpeed : Double = 0.0
-        get(){
-            return UnitsConverter().convertKilometersToUnits(field, units)
-        }
+        get() = UnitsConverter().convertKilometersToUnits(field, units)
 
     var currentSpeed : Double = 0.0
-        get(){
-            return UnitsConverter().convertKilometersToUnits(field, units)
-        }
+        get() = UnitsConverter().convertKilometersToUnits(field, units)
 
     var heights: MutableList<Long> = ArrayList<Long>()
 
     var currentHeight: Long = 0
-        get(){
-            return UnitsConverter().convertMetersToUnits(field, units)
-        }
+        get() = UnitsConverter().convertMetersToUnits(field, units)
 
     var maxHeight: Long = 0
-        get(){
-            return UnitsConverter().convertMetersToUnits(field, units)
-        }
+        get() = UnitsConverter().convertMetersToUnits(field, units)
 
     var minHeight: Long = 0
-        get(){
-            return UnitsConverter().convertMetersToUnits(field, units)
-        }
+        get() = UnitsConverter().convertMetersToUnits(field, units)
 
     var averageHeight: Long = 0
-        get(){
-            return UnitsConverter().convertMetersToUnits(field, units)
-        }
+        get() = UnitsConverter().convertMetersToUnits(field, units)
 
     var sumHeight: Long = 0
 
@@ -97,13 +81,13 @@ class TrainingRecorder {
     }
 
     fun setValuesFromLocation(location: Location) {
-            setSpeedValues(location)
-            setHeightValues(location)
-            setDistanceValues(location)
-            setLinesValues(location)
-            if (location.hasAccuracy()) {
-                originLocation = location
-            }
+        setSpeedValues(location)
+        setHeightValues(location)
+        setDistanceValues(location)
+        setLinesValues(location)
+        if (location.hasAccuracy()) {
+            originLocation = location
+        }
     }
 
     private fun setLinesValues(location: Location){

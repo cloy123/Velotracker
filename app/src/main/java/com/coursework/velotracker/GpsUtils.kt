@@ -10,6 +10,7 @@ import com.google.android.gms.location.*
 
 
 class GpsUtils(context: Context) {
+
     private var context: Context = context
     private var mSettingsClient: SettingsClient = LocationServices.getSettingsClient(context)
     private lateinit var mLocationSettingsRequest: LocationSettingsRequest
@@ -26,20 +27,18 @@ class GpsUtils(context: Context) {
         builder.setAlwaysShow(true)
     }
 
-    public fun turnGPSOn(onGpsListener: OnGpsListener){
+    fun turnGPSOn(onGpsListener: OnGpsListener){
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             onGpsListener.gpsStatus(true)
         } else {
             mSettingsClient
                 .checkLocationSettings(mLocationSettingsRequest)
-                .addOnSuccessListener((context as Activity)) { //  GPS is already enable, callback GPS status through listener
+                .addOnSuccessListener((context as Activity)) {
                     onGpsListener.gpsStatus(true)
                 }
                 .addOnFailureListener((context as Activity)) { e ->
                     when ((e as ApiException).statusCode) {
                         LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> try {
-                            // Show the dialog by calling startResolutionForResult(), and check the
-                            // result in onActivityResult().
                             val rae = e as ResolvableApiException
                             rae.startResolutionForResult(context as Activity, AppConstants.GPS_REQUEST)
                         } catch (ignored: SendIntentException) { }

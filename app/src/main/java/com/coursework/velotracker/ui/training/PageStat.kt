@@ -11,14 +11,16 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.coursework.velotracker.BL.Model.Extensions.round
 import com.coursework.velotracker.BL.Model.Extensions.toStringExtension
-import com.coursework.velotracker.Messages.SharedViewModel
+import com.coursework.velotracker.BL.Model.Training.ParcelableTraining
+import com.coursework.velotracker.ViewModels.SharedViewModel
 import com.coursework.velotracker.R
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class PageStat(): Fragment() {
     private var pageNumber: Int = 1
 
     private lateinit var timeText: TextView
-
     private lateinit var wayLengthText: TextView
     private lateinit var speedText: TextView
     private lateinit var averageSpeedText: TextView
@@ -57,35 +59,40 @@ class PageStat(): Fragment() {
         return result
     }
 
-    @SuppressLint("SetTextI18n")
     override fun onResume() {
         super.onResume()
         val model: SharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
         model.parcelableTraining.observe(viewLifecycleOwner, Observer {
             if (it != null) {
-                timeText.text = it.time.toStringExtension()
-                wayLengthText.text = round(it.totalDistance, 2).toString() + " " + getString(R.string.km)
-                speedText.text = round(it.currentSpeed, 1).toString() + " " + getString(R.string.kph)
-                averageSpeedText.text = round(it.averageSpeed, 1).toString() + " " + getString(R.string.kph)
-                maxSpeedText.text = round(it.maxSpeed, 1).toString() + " " + getString(R.string.kph)
-
-
-                heightText.text = it.currentHeight.toString() + " " + getString(R.string.m)
-
-                var maxHeight = it.maxHeight.toString() + " " + getString(R.string.m)
-
-                if (it.maxHeight == Long.MIN_VALUE) {
-                    maxHeight = ""
+                GlobalScope.launch {
+                    setValues(it)
                 }
-                var minHeight = it.minHeight.toString() + " " + getString(R.string.m)
-
-                if (it.minHeight == Long.MAX_VALUE) {
-                    minHeight = ""
-                }
-                maxHeightText.text = maxHeight
-                minHeightText.text = minHeight
-                averageHeightText.text = it.averageHeight.toString() + " " + getString(R.string.m)
             }
         })
+    }
+    @SuppressLint("SetTextI18n")
+    fun setValues(parcelableTraining: ParcelableTraining){
+        timeText.text = parcelableTraining.time.toStringExtension()
+        wayLengthText.text = round(parcelableTraining.totalDistance, 2).toString() + " " + getString(R.string.km)
+        speedText.text = round(parcelableTraining.currentSpeed, 1).toString() + " " + getString(R.string.kph)
+        averageSpeedText.text = round(parcelableTraining.averageSpeed, 1).toString() + " " + getString(R.string.kph)
+        maxSpeedText.text = round(parcelableTraining.maxSpeed, 1).toString() + " " + getString(R.string.kph)
+
+
+        heightText.text = parcelableTraining.currentHeight.toString() + " " + getString(R.string.m)
+
+        var maxHeight = parcelableTraining.maxHeight.toString() + " " + getString(R.string.m)
+
+        if (parcelableTraining.maxHeight == Long.MIN_VALUE) {
+            maxHeight = ""
+        }
+        var minHeight = parcelableTraining.minHeight.toString() + " " + getString(R.string.m)
+
+        if (parcelableTraining.minHeight == Long.MAX_VALUE) {
+            minHeight = ""
+        }
+        maxHeightText.text = maxHeight
+        minHeightText.text = minHeight
+        averageHeightText.text = parcelableTraining.averageHeight.toString() + " " + getString(R.string.m)
     }
 }

@@ -11,20 +11,23 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import com.coursework.velotracker.AppConstants
 import com.coursework.velotracker.BL.Controller.TrainingController
-import com.coursework.velotracker.BL.Model.Extensions.toString
+import com.coursework.velotracker.BL.Model.Extensions.toStringExtension
 import com.coursework.velotracker.BL.Model.Training.TrainingStatistics
 import com.coursework.velotracker.LookTraining
 import com.coursework.velotracker.R
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
 
 class PageHistory: Fragment(), AdapterView.OnItemClickListener {
+
     private var pageNumber: Int = 1
     lateinit var listView: ListView
 
-    public companion object{
-        public fun newInstance(page: Int):PageHistory {
-            val fragment:PageHistory = PageHistory()
-            val args:Bundle = Bundle()
+    companion object{
+        fun newInstance(page: Int):PageHistory {
+            val fragment = PageHistory()
+            val args = Bundle()
             args.putInt("num", page)
             fragment.arguments = args
             return fragment
@@ -54,10 +57,12 @@ class PageHistory: Fragment(), AdapterView.OnItemClickListener {
         val trainingController = TrainingController(context)
         val trainings: MutableList<TrainingStatistics> = trainingController.loadTrainings()
         val listDate: ArrayList<String> = ArrayList()
-        for (training in trainings) {
-            listDate.add(training.date.toString(AppConstants.DATE_FORMAT))
+        GlobalScope.launch {
+            trainings.forEach {
+                listDate.add(it.date.toStringExtension(AppConstants.DATE_FORMAT))
+            }
         }
-        val adapter:MyArrayAdapter = MyArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, listDate)
+        val adapter = MyArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, listDate)
         listView.adapter = adapter
     }
 
@@ -69,7 +74,5 @@ class PageHistory: Fragment(), AdapterView.OnItemClickListener {
             textView.setBackgroundColor(Color.BLACK)
             return view
         }
-
     }
-
 }

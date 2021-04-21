@@ -16,7 +16,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.coursework.velotracker.AppConstants
 import com.coursework.velotracker.BL.Model.*
 import com.coursework.velotracker.BL.Model.Extensions.round
-import com.coursework.velotracker.BL.Model.Extensions.toString
 import com.coursework.velotracker.BL.Model.Extensions.toStringExtension
 import com.coursework.velotracker.BL.Model.Training.ParcelableTraining
 import com.coursework.velotracker.BL.Model.Training.TrainingRecorder
@@ -34,10 +33,10 @@ class LocationService: Service(), Timer.OnTickListener {
     private var locationsBeforeStart = 1
     private var secondsBeforeStart = 5
     private var isStart = false
-    private lateinit var mFusedLocationClient: FusedLocationProviderClient //= LocationServices.getFusedLocationProviderClient(this)
+    private lateinit var mFusedLocationClient: FusedLocationProviderClient
     var trainingRecorder: TrainingRecorder = TrainingRecorder()
     private var timer: Timer = Timer(this)
-    private lateinit var myNotificationManager: MyNotificationManager// MyNotificationManager(this)
+    private lateinit var myNotificationManager: MyNotificationManager
     private lateinit var mServiceHandler: Handler
     private var wakeLock: WakeLock? = null
 
@@ -74,7 +73,6 @@ class LocationService: Service(), Timer.OnTickListener {
 
     @SuppressLint("ServiceCast")
     override fun onCreate() {
-
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         myNotificationManager = MyNotificationManager(this)
 
@@ -95,15 +93,12 @@ class LocationService: Service(), Timer.OnTickListener {
         mServiceHandler = Handler(handlerThread.looper)
         startNotification()
         timer.start()
+        timer.pause()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.i(TAG, "Service started")
         return START_NOT_STICKY
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
     }
 
     override fun onBind(intent: Intent): IBinder {
@@ -165,11 +160,11 @@ class LocationService: Service(), Timer.OnTickListener {
     private fun getLastLocation() {
         try {
             mFusedLocationClient.lastLocation
-                    .addOnCompleteListener { task ->
-                        if (!task.isSuccessful || task.result == null) {
-                            Log.w(TAG, "Failed to get location.")
-                        }
+                .addOnCompleteListener { task ->
+                    if (!task.isSuccessful || task.result == null) {
+                        Log.w(TAG, "Failed to get location.")
                     }
+                }
         } catch (unlikely: SecurityException) {
             Log.e(TAG, "Lost location permission.$unlikely")
         }
@@ -192,9 +187,10 @@ class LocationService: Service(), Timer.OnTickListener {
     }
 
     private fun isCanStart():Boolean{
-        if(isStart)
-            return true
-        return if (secondsBeforeStart != 0) {
+        return if (isStart){
+            true
+        }
+        else if (secondsBeforeStart != 0) {
             secondsBeforeStart -= 1
             false
         } else {
@@ -206,7 +202,9 @@ class LocationService: Service(), Timer.OnTickListener {
         if(!isStart){
             if (isCanStart()) {
                 isStart = true
+                timer.resume()
             }
+            return
         }
         trainingRecorder.totalTime = time
         updateNotificationText()

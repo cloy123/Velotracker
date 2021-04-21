@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelStore
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.viewpager2.widget.ViewPager2
 import com.coursework.velotracker.BL.Model.Training.ParcelableTraining
-import com.coursework.velotracker.Messages.SharedViewModel
+import com.coursework.velotracker.ViewModels.SharedViewModel
 import com.coursework.velotracker.Services.LocationService
 import com.coursework.velotracker.ui.training.PageMap
 import com.coursework.velotracker.ui.training.ViewPagerAdapter
@@ -82,8 +82,7 @@ class TrainingActivity: AppCompatActivity(), PageMap.OnSomeEventListener {
 
     override fun onResume() {
         super.onResume()
-        LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver,
-                IntentFilter(LocationService.ACTION_BROADCAST))
+        LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver, IntentFilter(LocationService.ACTION_BROADCAST))
     }
 
     override fun onPause() {
@@ -100,7 +99,6 @@ class TrainingActivity: AppCompatActivity(), PageMap.OnSomeEventListener {
     }
 
     private fun sendParcelableTraining(parcelableTraining: ParcelableTraining) {
-        val viewModel: ViewModelStore = ViewModelStore()
         val model: SharedViewModel = ViewModelProvider(this).get<SharedViewModel>(SharedViewModel::class.java)
         model.sendMessage(parcelableTraining)
     }

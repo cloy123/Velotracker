@@ -24,6 +24,8 @@ import com.mapbox.mapboxsdk.plugins.annotation.LineManager
 import com.mapbox.mapboxsdk.plugins.annotation.LineOptions
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.time.LocalTime
 
 
@@ -51,7 +53,7 @@ class PageStatistics(): Fragment(), OnMapReadyCallback {
     companion object{
         fun newInstance(page: Int): PageStatistics{
             val fragment = PageStatistics()
-            val args: Bundle = Bundle()
+            val args = Bundle()
             args.putInt("num", page)
             fragment.arguments = args
             return fragment
@@ -89,13 +91,15 @@ class PageStatistics(): Fragment(), OnMapReadyCallback {
             symbolManager = SymbolManager(mapView, mapboxMap, style)
             symbolManager.iconAllowOverlap = true
             symbolManager.textAllowOverlap = true
-            for (training in trainings) {
-                if (training.lines.isNotEmpty()) {
-                    for (line in training.lines) {
-                        drawLine(line)
+            GlobalScope.launch {
+                trainings.forEach{
+                    if(it.lines.isNotEmpty()){
+                        it.lines.forEach{
+                            drawLine(it)
+                        }
                     }
+                    drawMarker(it.getStartPoint(), it.date.toStringExtension(AppConstants.DATE_FORMAT))
                 }
-                drawMarker(training.getStartPoint(), training.date.toString(AppConstants.DATE_FORMAT))
             }
         }
     }
@@ -128,9 +132,9 @@ class PageStatistics(): Fragment(), OnMapReadyCallback {
         mapView.onResume()
         trainings = TrainingController(context).loadTrainings()
         if (trainings.size != 0) {
-            setValues()
+            GlobalScope.launch { setValues() }
         }else{
-            setDefaultValues()
+            GlobalScope.launch{ setDefaultValues() }
         }
     }
 
@@ -149,7 +153,7 @@ class PageStatistics(): Fragment(), OnMapReadyCallback {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun setValues(){
+    fun setValues(){
         var totalDist = 0.0
         var totalSeconds: Long = 0
         var maxSpeed: Double = trainings[0].maxSpeed
@@ -157,33 +161,36 @@ class PageStatistics(): Fragment(), OnMapReadyCallback {
         var minHeight: Long = trainings[0].minHeight
         val totalRecords: Int = trainings.size
         var totalHeights: Long = 0
-        var totalHeightsValues: Long = 0
+        var countHeights: Long = 0
         var totalTempSeconds: Long = 0
         var maxTemp: LocalTime = trainings[0].temp
 
-        for (training in trainings) {
-            totalDist += training.totalDistance
-            totalSeconds += getAllSeconds(training.totalTime)
-            totalHeights += training.averageHeight * training.heights.size
-            totalHeightsValues += training.heights.size
-            totalTempSeconds += getAllSeconds(training.temp)
-            if (training.maxSpeed > maxSpeed) {
-                maxSpeed = training.maxSpeed
+        trainings.forEach {
+            totalDist += it.totalDistance
+            totalSeconds += getAllSeconds(it.totalTime)
+            totalHeights += it.averageHeight * it.heights.size
+            countHeights += it.heights.size
+            totalTempSeconds += getAllSeconds(it.temp)
+            if (it.maxSpeed > maxSpeed) {
+                maxSpeed = it.maxSpeed
             }
-            if (training.maxHeight > maxHeight) {
-                maxHeight = training.maxHeight
+            if (it.maxHeight > maxHeight) {
+                maxHeight = it.maxHeight
             }
-            if (training.minHeight < minHeight) {
-                minHeight = training.minHeight
+            if (it.minHeight < minHeight) {
+                minHeight = it.minHeight
             }
-            if (getAllSeconds(training.temp) < getAllSeconds(maxTemp)) {
-                maxTemp = training.temp
+            if (getAllSeconds(it.temp) < getAllSeconds(maxTemp)) {
+                maxTemp = it.temp
             }
         }
 
         val averageSpeed = totalDist / (totalSeconds.toDouble() / 3600)
         val averageTemp: LocalTime = timeFromSeconds((totalTempSeconds / trainings.size).toInt())
-        val averageHeight = totalHeights / totalHeightsValues
+        var averageHeight: Long = 0
+        if(countHeights.toInt() != 0){
+            averageHeight = totalHeights / countHeights
+        }
         var maxHeightStr = maxHeight.toString() + " " + getString(R.string.m)
         if (maxHeight == Long.MIN_VALUE) {
             maxHeightStr = ""

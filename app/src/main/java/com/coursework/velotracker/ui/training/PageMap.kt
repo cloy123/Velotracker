@@ -22,54 +22,43 @@ import com.coursework.velotracker.BL.Model.Line
 import com.coursework.velotracker.BL.Model.Training.ParcelableTraining
 import com.coursework.velotracker.MainActivity
 import com.coursework.velotracker.MapViewInScroll
-import com.coursework.velotracker.Messages.SharedViewModel
+import com.coursework.velotracker.ViewModels.SharedViewModel
 import com.coursework.velotracker.R
 import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.location.LocationComponent
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
-import com.mapbox.mapboxsdk.location.LocationUpdate
 import com.mapbox.mapboxsdk.location.OnCameraTrackingChangedListener
 import com.mapbox.mapboxsdk.location.modes.CameraMode
 import com.mapbox.mapboxsdk.location.modes.RenderMode
-import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.plugins.annotation.LineManager
 import com.mapbox.mapboxsdk.plugins.annotation.LineOptions
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.lang.ClassCastException
 
 
 class PageMap(): Fragment(), OnMapReadyCallback, OnCameraTrackingChangedListener {
 
     private var pageNumber: Int = 0
-
     private lateinit var mapView: MapViewInScroll
     private lateinit var mapboxMap: MapboxMap
-
     private lateinit var currentSpeedTextView: TextView
     private lateinit var wayLengthTextView: TextView
     private lateinit var timeTextView: TextView
-
     private lateinit var pauseButton: Button
     private lateinit var resumeButton: Button
     private lateinit var stopButton: Button
-
     private lateinit var locationButton: ImageButton
-
     private var lineManager: LineManager? = null
-
     var isInTrackingMode = false
-
     private lateinit var locationComponent: LocationComponent
-
     val TAG = "TrainingActivity"
-
     private var isFinish = false
-
     private var mParcelableTraining: ParcelableTraining? = null
-
     private lateinit var onSomeEventListener: OnSomeEventListener
 
     interface OnSomeEventListener {
@@ -182,23 +171,23 @@ class PageMap(): Fragment(), OnMapReadyCallback, OnCameraTrackingChangedListener
         if(!PermissionsManager.areLocationPermissionsGranted(context)){
             return
         }
-            locationComponent = mapboxMap.locationComponent
-            val locationComponentActivationOptions = LocationComponentActivationOptions.builder(requireContext(), loadedMapStyle)
-                    .useDefaultLocationEngine(true)
-                    .build()
-            locationComponent.activateLocationComponent(locationComponentActivationOptions)
-            locationComponent.isLocationComponentEnabled = true
-            locationComponent.cameraMode = CameraMode.TRACKING
-            locationComponent.renderMode = RenderMode.NORMAL
-            locationComponent.zoomWhileTracking(16.0)
-            locationComponent.addOnCameraTrackingChangedListener(this)
-            locationButton.setOnClickListener(View.OnClickListener {
-                if (!isInTrackingMode) {
-                    locationComponent.cameraMode = CameraMode.TRACKING
-                    locationComponent.zoomWhileTracking(16.0)
-                    locationButton.setImageResource(R.drawable.tracking_on)
-                }
-            })
+        locationComponent = mapboxMap.locationComponent
+        val locationComponentActivationOptions = LocationComponentActivationOptions.builder(requireContext(), loadedMapStyle)
+                .useDefaultLocationEngine(true)
+                .build()
+        locationComponent.activateLocationComponent(locationComponentActivationOptions)
+        locationComponent.isLocationComponentEnabled = true
+        locationComponent.cameraMode = CameraMode.TRACKING
+        locationComponent.renderMode = RenderMode.NORMAL
+        locationComponent.zoomWhileTracking(16.0)
+        locationComponent.addOnCameraTrackingChangedListener(this)
+        locationButton.setOnClickListener(View.OnClickListener {
+            if (!isInTrackingMode) {
+                locationComponent.cameraMode = CameraMode.TRACKING
+                locationComponent.zoomWhileTracking(16.0)
+                locationButton.setImageResource(R.drawable.tracking_on)
+            }
+        })
     }
 
     override fun onStart() {
@@ -213,15 +202,15 @@ class PageMap(): Fragment(), OnMapReadyCallback, OnCameraTrackingChangedListener
         val model: SharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
         model.parcelableTraining.observe(viewLifecycleOwner, Observer {
             if (it != null) {
-                if (mParcelableTraining != null) {
+                GlobalScope.launch {
+                    mParcelableTraining = it
                     if (it.isRunning) {
                         setButtonsStateResume()
                     } else {
                         setButtonsStatePause()
                     }
+                    setValues()
                 }
-                mParcelableTraining = it
-                setValues()
             }
         })
     }

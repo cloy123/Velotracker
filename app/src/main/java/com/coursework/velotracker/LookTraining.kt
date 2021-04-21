@@ -13,7 +13,6 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.coursework.velotracker.BL.Controller.TrainingController
 import com.coursework.velotracker.BL.Model.Extensions.round
-import com.coursework.velotracker.BL.Model.Extensions.toString
 import com.coursework.velotracker.BL.Model.Extensions.toStringExtension
 import com.coursework.velotracker.BL.Model.Line
 import com.coursework.velotracker.BL.Model.Training.TrainingStatistics
@@ -27,9 +26,8 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.plugins.annotation.LineManager
 import com.mapbox.mapboxsdk.plugins.annotation.LineOptions
-
-
-
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 class LookTraining(): AppCompatActivity(), OnMapReadyCallback {
@@ -53,7 +51,6 @@ class LookTraining(): AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var currentTraining: TrainingStatistics
 
-    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Mapbox.getInstance(this, getString(R.string.access_token))
@@ -77,6 +74,23 @@ class LookTraining(): AppCompatActivity(), OnMapReadyCallback {
         val trainings = trainingController.loadTrainings()
         currentTraining = trainings[index]
 
+        GlobalScope.launch {
+            setValues()
+        }
+
+        val actionBar: ActionBar? = supportActionBar
+        actionBar?.setHomeButtonEnabled(true)
+        actionBar?.setDisplayHomeAsUpEnabled(true)
+        actionBar?.title = currentTraining.date.toStringExtension(AppConstants.DATE_FORMAT)
+
+        deleteButton = findViewById<View>(R.id.deleteButton) as AppCompatButton
+        deleteButton.setOnClickListener {
+            dialogRemoveTraining()
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    fun setValues(){
         distanceText.text = round(currentTraining.totalDistance, 2).toString() + " " + getString(R.string.km)
         maxSpeedText.text = round(currentTraining.maxSpeed, 1).toString() + " " + getString(R.string.kph)
         averageSpeedText.text = round(currentTraining.averageSpeed, 1).toString() + " " + getString(R.string.kph)
@@ -85,16 +99,6 @@ class LookTraining(): AppCompatActivity(), OnMapReadyCallback {
         tempText.text = currentTraining.temp.toStringExtension() + " /" + getString(R.string.km)
         maxHeightText.text = currentTraining.maxHeight.toString() + " " + getString(R.string.m)
         minHeightText.text = currentTraining.minHeight.toString() + " " + getString(R.string.m)
-
-        val actionBar: ActionBar? = supportActionBar
-        actionBar?.setHomeButtonEnabled(true)
-        actionBar?.setDisplayHomeAsUpEnabled(true)
-        actionBar?.title = currentTraining.date.toString(AppConstants.DATE_FORMAT)
-
-        deleteButton = findViewById<View>(R.id.deleteButton) as AppCompatButton
-        deleteButton.setOnClickListener {
-            dialogRemoveTraining()
-        }
     }
 
     private fun dialogRemoveTraining() {
@@ -111,13 +115,13 @@ class LookTraining(): AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        return when (item.itemId) {
             android.R.id.home -> {
                 finish()
-                return true
+                true
             }
+            else -> super.onOptionsItemSelected(item)
         }
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
@@ -125,18 +129,24 @@ class LookTraining(): AppCompatActivity(), OnMapReadyCallback {
         mapboxMap.setStyle(AppConstants.MAP_STYLE, Style.OnStyleLoaded {
             val latLng: LatLng = currentTraining.getStartPoint()
             val position = CameraPosition.Builder()
-                    .target(latLng)
-                    .zoom(15.0)
-                    .build()
+                .target(latLng)
+                .zoom(15.0)
+                .build()
             val cameraUpdate = CameraUpdateFactory.newCameraPosition(position)
             mapboxMap.moveCamera(cameraUpdate)
-            if (currentTraining.lines.isNotEmpty()) {
-                lineManager = LineManager(mapView, mapboxMap, mapboxMap.style!!)
-                for (line in currentTraining.lines) {
-                    drawLine(line)
-                }
+            GlobalScope.launch {
+                drawLines()
             }
         })
+    }
+
+    private fun drawLines(){
+        if (currentTraining.lines.isNotEmpty()) {
+            lineManager = LineManager(mapView, mapboxMap, mapboxMap.style!!)
+            currentTraining.lines.forEach {
+                drawLine(it)
+            }
+        }
     }
 
     private fun drawLine(line: Line) {

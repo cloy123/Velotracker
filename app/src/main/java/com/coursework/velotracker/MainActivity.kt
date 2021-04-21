@@ -42,7 +42,6 @@ class MainActivity : AppCompatActivity(), PageStart.OnSomeEventListener {
 
     private var gpsEnabled = false
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -51,9 +50,7 @@ class MainActivity : AppCompatActivity(), PageStart.OnSomeEventListener {
         val pagerAdapter = ViewPagerAdapter(this)
         pager.adapter = pagerAdapter
         tabLayout = findViewById(R.id.tabs)
-        val tabLayoutMediator = TabLayoutMediator(
-            tabLayout, pager
-        ) { tab, position ->
+        val tabLayoutMediator = TabLayoutMediator(tabLayout, pager) { tab, position ->
             when (position) {
                 0 -> tab.text = getText(R.string.start)
                 1 -> tab.text = getText(R.string.history)
@@ -86,7 +83,7 @@ class MainActivity : AppCompatActivity(), PageStart.OnSomeEventListener {
     @SuppressLint("ResourceType")
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         var allowed = false
-        var currentPer = permissions[0]
+        val currentPer = permissions[0]
         allowed = grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
         if(allowed){
             startTraining()

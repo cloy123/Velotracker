@@ -35,7 +35,6 @@ class TrainingStatistics() {
     private var minute = 0
     private var hour = 0
 
-
     var totalDistance : Double = 0.0
         get() = UnitsConverter().convertKilometersToUnits(field, units)
 
@@ -66,7 +65,6 @@ class TrainingStatistics() {
     var lines: List<Line> = ArrayList()
 
     var units: UnitsConverter.Units = UnitsConverter.Units.METERS
-
 
     var temp:LocalTime = LocalTime.MIN
     get(){
@@ -101,5 +99,4 @@ class TrainingStatistics() {
         }
         return LatLng(0.0, 0.0)
     }
-
 }

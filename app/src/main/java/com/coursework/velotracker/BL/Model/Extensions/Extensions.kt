@@ -6,7 +6,7 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-fun LocalDate.toString(format: String):String{
+fun LocalDate.toStringExtension(format: String):String{
     val formatter = DateTimeFormatter.ofPattern(format)
     return format(formatter)
 }
@@ -23,6 +23,7 @@ fun LocalTime.toStringExtension():String{
 fun getAllSeconds(localTime: LocalTime): Int {
     return localTime.second + localTime.minute * 60 + localTime.hour * 3600
 }
+
 fun timeFromSeconds(seconds: Int): LocalTime {
     val horses = seconds / 3600
     val minutes = (seconds - horses * 3600) / 60
@@ -30,13 +31,11 @@ fun timeFromSeconds(seconds: Int): LocalTime {
 }
 
 fun round(value: Double, places: Int): Double {
-    if (java.lang.Double.isNaN(value)) {
+    if (java.lang.Double.isNaN(value))
         return 0.0
-    }
     require(places >= 0)
-    if (value == 0.0 || value.isInfinite()) {
+    if (value == 0.0 || value.isInfinite())
         return 0.0
-    }
     var bd = BigDecimal(value.toString())
     bd = bd.setScale(places, RoundingMode.HALF_UP)
     return bd.toDouble()
