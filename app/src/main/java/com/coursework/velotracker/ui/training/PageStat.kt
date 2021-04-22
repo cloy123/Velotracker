@@ -82,17 +82,21 @@ class PageStat(): Fragment() {
         heightText.text = parcelableTraining.currentHeight.toString() + " " + getString(R.string.m)
 
         var maxHeight = parcelableTraining.maxHeight.toString() + " " + getString(R.string.m)
-
         if (parcelableTraining.maxHeight == Long.MIN_VALUE) {
             maxHeight = ""
         }
-        var minHeight = parcelableTraining.minHeight.toString() + " " + getString(R.string.m)
 
+        var minHeight = parcelableTraining.minHeight.toString() + " " + getString(R.string.m)
         if (parcelableTraining.minHeight == Long.MAX_VALUE) {
             minHeight = ""
         }
+
+        var averageHeight = parcelableTraining.averageHeight.toString() + " " + getString(R.string.m)
+        if(parcelableTraining.averageHeight == Long.MIN_VALUE){
+            averageHeight = " "
+        }
         maxHeightText.text = maxHeight
         minHeightText.text = minHeight
-        averageHeightText.text = parcelableTraining.averageHeight.toString() + " " + getString(R.string.m)
+        averageHeightText.text = averageHeight
     }
 }

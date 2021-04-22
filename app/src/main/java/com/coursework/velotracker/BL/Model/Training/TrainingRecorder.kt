@@ -33,13 +33,13 @@ class TrainingRecorder {
     var currentHeight: Long = 0
         get() = UnitsConverter().convertMetersToUnits(field, units)
 
-    var maxHeight: Long = 0
+    var maxHeight: Long = Long.MIN_VALUE
         get() = UnitsConverter().convertMetersToUnits(field, units)
 
-    var minHeight: Long = 0
+    var minHeight: Long = Long.MAX_VALUE
         get() = UnitsConverter().convertMetersToUnits(field, units)
 
-    var averageHeight: Long = 0
+    var averageHeight: Long = Long.MIN_VALUE
         get() = UnitsConverter().convertMetersToUnits(field, units)
 
     var sumHeight: Long = 0

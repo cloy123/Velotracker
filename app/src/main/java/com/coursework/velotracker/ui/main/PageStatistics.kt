@@ -35,8 +35,8 @@ class PageStatistics(): Fragment(), OnMapReadyCallback {
     private var pageNumber = 1
     private lateinit var mapView: MapViewInScroll
     private lateinit var mapboxMap: MapboxMap
-    private lateinit var lineManager: LineManager
-    private lateinit var symbolManager: SymbolManager
+    private var lineManager: LineManager? = null
+    private var symbolManager: SymbolManager? = null
 
     private lateinit var totalDistanceTextView: TextView
     private lateinit var totalRecordsTextView: TextView
@@ -49,7 +49,7 @@ class PageStatistics(): Fragment(), OnMapReadyCallback {
     private lateinit var maxHeightTextView: TextView
     private lateinit var minHeightTextView: TextView
 
-    private lateinit var trainings: MutableList<TrainingStatistics>
+    private var trainings: MutableList<TrainingStatistics> = TrainingController(context).loadTrainings()
 
     companion object{
         fun newInstance(page: Int): PageStatistics{
@@ -90,10 +90,10 @@ class PageStatistics(): Fragment(), OnMapReadyCallback {
         mapboxMap.setStyle(AppConstants.MAP_STYLE) { style ->
             lineManager = LineManager(mapView, mapboxMap, style)
             symbolManager = SymbolManager(mapView, mapboxMap, style)
-            symbolManager.iconAllowOverlap = true
-            symbolManager.textAllowOverlap = true
+            symbolManager!!.iconAllowOverlap = true
+            symbolManager!!.textAllowOverlap = true
         }
-        Toast.makeText(context, "fewfe", Toast.LENGTH_LONG).show()
+        drawLinesAndMarkers()
     }
 
     private fun drawLine(line: Line) {
@@ -101,7 +101,7 @@ class PageStatistics(): Fragment(), OnMapReadyCallback {
         lineOptions.withLatLngs(line)
         lineOptions.withLineColor(AppConstants.LINE_COLOR)
         lineOptions.withLineWidth(AppConstants.LINE_WIDTH)
-        lineManager.create(lineOptions)
+        lineManager!!.create(lineOptions)
     }
 
     private fun drawMarker(latLng: LatLng, text: String) {
@@ -111,7 +111,7 @@ class PageStatistics(): Fragment(), OnMapReadyCallback {
         symbolOptions.withIconSize(3.0f)
         symbolOptions.withIconColor(AppConstants.LINE_COLOR)
         symbolOptions.withIconImage("marker-15")
-        symbolManager.create(symbolOptions)
+        symbolManager!!.create(symbolOptions)
     }
 
     override fun onStart() {
@@ -128,17 +128,21 @@ class PageStatistics(): Fragment(), OnMapReadyCallback {
         }else{
             GlobalScope.launch{ setDefaultValues() }
         }
+        drawLinesAndMarkers()
+    }
 
-//        GlobalScope.launch {
-//            trainings.forEach{ training ->
-//                if(training.lines.isNotEmpty()){
-//                    training.lines.forEach(){ it ->
-//                        drawLine(it)
-//                    }
-//                }
-//                drawMarker(training.getStartPoint(), training.date.toStringExtension(AppConstants.DATE_FORMAT))
-//            }
-//        }
+    fun drawLinesAndMarkers(){
+        if(lineManager != null && symbolManager != null){
+            lineManager!!.deleteAll()
+            trainings.forEach{ training ->
+                if(training.lines.isNotEmpty()){
+                    training.lines.forEach(){ it ->
+                        drawLine(it)
+                    }
+                }
+                drawMarker(training.getStartPoint(), training.date.toStringExtension(AppConstants.DATE_FORMAT))
+            }
+        }
     }
 
     @SuppressLint("SetTextI18n")
