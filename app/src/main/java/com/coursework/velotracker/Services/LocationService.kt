@@ -30,7 +30,6 @@ import java.time.LocalTime
 class LocationService: Service(), Timer.OnTickListener {
 
     private val mBinder: IBinder = LocalBinder()
-    private var locationsBeforeStart = 1
     private var secondsBeforeStart = 5
     private var isStart = false
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
@@ -188,28 +187,26 @@ class LocationService: Service(), Timer.OnTickListener {
 
     override fun onTick(time: LocalTime) {
         if(isCanStart()){
-            timer.resume()
+            trainingRecorder.totalTime = time
+            updateNotificationText()
+            sendMessageToActivity()
         }
-        else{
-            return
-        }
-        trainingRecorder.totalTime = time
-        updateNotificationText()
-        sendMessageToActivity()
     }
 
     private fun isCanStart():Boolean{
-        return if(isStart){
-            true
+        return if(!isStart){
+            if(secondsBeforeStart != 0){
+                secondsBeforeStart -=1
+            }
+            else{
+                isStart = true
+                timer.resume()
+                trainingRecorder.resume()
+            }
+            false
         }
         else{
-            if(secondsBeforeStart != 0){
-                secondsBeforeStart-=1
-                false
-            } else{
-                isStart = true
-                true
-            }
+            true
         }
     }
 
@@ -243,14 +240,16 @@ class LocationService: Service(), Timer.OnTickListener {
     private inner class MyLocationCallback(): LocationCallback(){
         override fun onLocationResult(locationResult: LocationResult) {
             super.onLocationResult(locationResult)
-            if (locationsBeforeStart != 0) {
-                locationsBeforeStart -= 1
-                return
-            } else if (!isStart) {
+            //первое местоположение не считаю т.к. оно может быть совсем не правильным
+            //если второе местоположение не приходит то жду 5 секунд и начинаю считать уже все местоположения
+            if (!isStart) {
                 isStart = true
-                trainingRecorder.isRunning = true
+                timer.resume()
+                trainingRecorder.resume()
+                return
+            }else{
+                trainingRecorder.setValuesFromLocation(locationResult.lastLocation)
             }
-            trainingRecorder.setValuesFromLocation(locationResult.lastLocation)
         }
     }
 }

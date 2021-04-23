@@ -14,26 +14,20 @@ import com.coursework.velotracker.BL.Model.Extensions.toStringExtension
 import com.coursework.velotracker.BL.Model.Training.ParcelableTraining
 import com.coursework.velotracker.ViewModels.SharedViewModel
 import com.coursework.velotracker.R
+import com.coursework.velotracker.databinding.TrainingStatPageBinding
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class PageStat(): Fragment() {
-    private var pageNumber: Int = 1
 
-    private lateinit var timeText: TextView
-    private lateinit var wayLengthText: TextView
-    private lateinit var speedText: TextView
-    private lateinit var averageSpeedText: TextView
-    private lateinit var maxSpeedText: TextView
-    private lateinit var heightText: TextView
-    private lateinit var averageHeightText: TextView
-    private lateinit var minHeightText: TextView
-    private lateinit var maxHeightText: TextView
+    private var _binding: TrainingStatPageBinding? = null
+    private val binding get() = _binding!!
+    private var pageNumber: Int = 1
 
     companion object{
         fun newInstance(page: Int):PageStat{
-            val fragment:PageStat = PageStat()
-            val args:Bundle = Bundle()
+            val fragment = PageStat()
+            val args = Bundle()
             args.putInt("num", page)
             fragment.arguments = args
             return fragment
@@ -46,17 +40,8 @@ class PageStat(): Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val result: View = inflater.inflate(R.layout.training_stat_page, container, false)
-        timeText = result.findViewById(R.id.TimeText)
-        wayLengthText = result.findViewById(R.id.wayLengthText)
-        speedText = result.findViewById(R.id.speedText)
-        averageSpeedText = result.findViewById(R.id.averageSpeedText)
-        maxSpeedText = result.findViewById(R.id.maxSpeedText)
-        heightText = result.findViewById(R.id.heightText)
-        averageHeightText = result.findViewById(R.id.averageHeightText)
-        minHeightText = result.findViewById(R.id.minHeightText)
-        maxHeightText = result.findViewById(R.id.maxHeightText)
-        return result
+        _binding = TrainingStatPageBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onResume() {
@@ -72,31 +57,26 @@ class PageStat(): Fragment() {
     }
     @SuppressLint("SetTextI18n")
     fun setValues(parcelableTraining: ParcelableTraining){
-        timeText.text = parcelableTraining.time.toStringExtension()
-        wayLengthText.text = round(parcelableTraining.totalDistance, 2).toString() + " " + getString(R.string.km)
-        speedText.text = round(parcelableTraining.currentSpeed, 1).toString() + " " + getString(R.string.kph)
-        averageSpeedText.text = round(parcelableTraining.averageSpeed, 1).toString() + " " + getString(R.string.kph)
-        maxSpeedText.text = round(parcelableTraining.maxSpeed, 1).toString() + " " + getString(R.string.kph)
-
-
-        heightText.text = parcelableTraining.currentHeight.toString() + " " + getString(R.string.m)
-
+        binding.timeText.text = parcelableTraining.time.toStringExtension()
+        binding.wayLengthText.text = round(parcelableTraining.totalDistance, 2).toString() + " " + getString(R.string.km)
+        binding.speedText.text = round(parcelableTraining.currentSpeed, 1).toString() + " " + getString(R.string.kph)
+        binding.averageSpeedText.text = round(parcelableTraining.averageSpeed, 1).toString() + " " + getString(R.string.kph)
+        binding.maxSpeedText.text = round(parcelableTraining.maxSpeed, 1).toString() + " " + getString(R.string.kph)
+        binding.heightText.text = parcelableTraining.currentHeight.toString() + " " + getString(R.string.m)
         var maxHeight = parcelableTraining.maxHeight.toString() + " " + getString(R.string.m)
         if (parcelableTraining.maxHeight == Long.MIN_VALUE) {
             maxHeight = ""
         }
-
         var minHeight = parcelableTraining.minHeight.toString() + " " + getString(R.string.m)
         if (parcelableTraining.minHeight == Long.MAX_VALUE) {
             minHeight = ""
         }
-
         var averageHeight = parcelableTraining.averageHeight.toString() + " " + getString(R.string.m)
         if(parcelableTraining.averageHeight == Long.MIN_VALUE){
             averageHeight = " "
         }
-        maxHeightText.text = maxHeight
-        minHeightText.text = minHeight
-        averageHeightText.text = averageHeight
+        binding.maxHeightText.text = maxHeight
+        binding.minHeightText.text = minHeight
+        binding.averageHeightText.text = averageHeight
     }
 }

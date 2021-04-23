@@ -40,7 +40,7 @@
                 android:layout_marginLeft="20dp"
                 android:background="#bbb" />
             <TextView
-                android:id="@+id/TimeText"
+                android:id="@+id/timeText"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:maxLines="1"
@@ -54,13 +54,6 @@
             android:layout_marginRight="0dp"
             android:layout_marginLeft="0dp"
             android:background="#bbb" />
-
-
-
-
-
-
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -137,31 +130,12 @@
         </LinearLayout>
         </LinearLayout>
 
-
-
-
-
-
-
-
-
-
-
         <com.google.android.material.internal.BaselineLayout
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:layout_marginRight="0dp"
             android:layout_marginLeft="0dp"
             android:background="#bbb" />
-
-
-
-
-
-
-
-
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -244,9 +218,6 @@
             android:layout_marginLeft="0dp"
             android:background="#bbb" />
 
-
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_weight="1"
@@ -327,15 +298,6 @@
             android:layout_marginRight="0dp"
             android:layout_marginLeft="0dp"
             android:background="#bbb" />
-
-
-
-
-
-
-
-
-
 
         <LinearLayout
             android:layout_width="match_parent"

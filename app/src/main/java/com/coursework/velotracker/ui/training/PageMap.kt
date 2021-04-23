@@ -24,6 +24,7 @@ import com.coursework.velotracker.MainActivity
 import com.coursework.velotracker.MapViewInScroll
 import com.coursework.velotracker.ViewModels.SharedViewModel
 import com.coursework.velotracker.R
+import com.coursework.velotracker.databinding.TrainingMapPageBinding
 import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.location.LocationComponent
@@ -43,16 +44,12 @@ import java.lang.ClassCastException
 
 class PageMap(): Fragment(), OnMapReadyCallback, OnCameraTrackingChangedListener {
 
+    private var _binding: TrainingMapPageBinding? = null
+    private val binding get() = _binding!!
+
     private var pageNumber: Int = 0
     private lateinit var mapView: MapViewInScroll
     private lateinit var mapboxMap: MapboxMap
-    private lateinit var currentSpeedTextView: TextView
-    private lateinit var wayLengthTextView: TextView
-    private lateinit var timeTextView: TextView
-    private lateinit var pauseButton: Button
-    private lateinit var resumeButton: Button
-    private lateinit var stopButton: Button
-    private lateinit var locationButton: ImageButton
     private var lineManager: LineManager? = null
     var isInTrackingMode = false
     private lateinit var locationComponent: LocationComponent
@@ -93,21 +90,18 @@ class PageMap(): Fragment(), OnMapReadyCallback, OnCameraTrackingChangedListener
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val result = inflater.inflate(R.layout.training_map_page, container, false)
-        mapView = result.findViewById(R.id.mapView)
+        _binding = TrainingMapPageBinding.inflate(inflater, container, false)
+        mapView = binding.mapView
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
-        timeTextView = result.findViewById(R.id.TimeText)
-        currentSpeedTextView = result.findViewById(R.id.CurrentSpeedText)
-        wayLengthTextView = result.findViewById(R.id.WayLengthText)
-        pauseButton = result.findViewById(R.id.PauseButton)
-        pauseButton.setOnClickListener(this::onClickPauseButton)
-        resumeButton = result.findViewById(R.id.ResumeButton)
-        resumeButton.setOnClickListener(this::onClickResumeButton)
-        stopButton = result.findViewById(R.id.StopButton)
-        stopButton.setOnClickListener(this::onClickStopButton)
-        locationButton = result.findViewById(R.id.locationButton)
-        return result
+        initFunc()
+        return binding.root
+    }
+
+    private fun initFunc(){
+        binding.pauseButton.setOnClickListener(this::onClickPauseButton)
+        binding.resumeButton.setOnClickListener(this::onClickResumeButton)
+        binding.stopButton.setOnClickListener(this::onClickStopButton)
     }
 
     private fun onClickPauseButton(v: View) {
@@ -118,12 +112,12 @@ class PageMap(): Fragment(), OnMapReadyCallback, OnCameraTrackingChangedListener
     }
 
     private fun setButtonsStatePause(){
-        pauseButton.visibility = View.INVISIBLE;
-        pauseButton.isEnabled = false;
-        resumeButton.isEnabled = true;
-        resumeButton.visibility = View.VISIBLE;
-        stopButton.isEnabled = true;
-        stopButton.visibility = View.VISIBLE;
+        binding.pauseButton.visibility = View.INVISIBLE;
+        binding.pauseButton.isEnabled = false;
+        binding.resumeButton.isEnabled = true;
+        binding.resumeButton.visibility = View.VISIBLE;
+        binding.stopButton.isEnabled = true;
+        binding.stopButton.visibility = View.VISIBLE;
     }
 
     private fun onClickResumeButton(v: View) {
@@ -134,12 +128,12 @@ class PageMap(): Fragment(), OnMapReadyCallback, OnCameraTrackingChangedListener
     }
 
     private fun setButtonsStateResume(){
-        pauseButton.visibility = View.VISIBLE;
-        pauseButton.isEnabled = true;
-        resumeButton.visibility = View.INVISIBLE;
-        resumeButton.isEnabled = false;
-        stopButton.visibility = View.INVISIBLE;
-        stopButton.isEnabled = false;
+        binding.pauseButton.visibility = View.VISIBLE;
+        binding.pauseButton.isEnabled = true;
+        binding.resumeButton.visibility = View.INVISIBLE;
+        binding.resumeButton.isEnabled = false;
+        binding.stopButton.visibility = View.INVISIBLE;
+        binding.stopButton.isEnabled = false;
     }
 
     private fun onClickStopButton(v: View) {
@@ -181,11 +175,11 @@ class PageMap(): Fragment(), OnMapReadyCallback, OnCameraTrackingChangedListener
         locationComponent.renderMode = RenderMode.NORMAL
         locationComponent.zoomWhileTracking(16.0)
         locationComponent.addOnCameraTrackingChangedListener(this)
-        locationButton.setOnClickListener(View.OnClickListener {
+        binding.locationButton.setOnClickListener(View.OnClickListener {
             if (!isInTrackingMode) {
                 locationComponent.cameraMode = CameraMode.TRACKING
                 locationComponent.zoomWhileTracking(16.0)
-                locationButton.setImageResource(R.drawable.tracking_on)
+                binding.locationButton.setImageResource(R.drawable.tracking_on)
             }
         })
     }
@@ -202,7 +196,6 @@ class PageMap(): Fragment(), OnMapReadyCallback, OnCameraTrackingChangedListener
         val model: SharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
         model.parcelableTraining.observe(viewLifecycleOwner, Observer {
             if (it != null) {
-                GlobalScope.launch {
                     mParcelableTraining = it
                     if (it.isRunning) {
                         setButtonsStateResume()
@@ -210,7 +203,6 @@ class PageMap(): Fragment(), OnMapReadyCallback, OnCameraTrackingChangedListener
                         setButtonsStatePause()
                     }
                     setValues()
-                }
                 drawLines()
             }
         })
@@ -219,9 +211,9 @@ class PageMap(): Fragment(), OnMapReadyCallback, OnCameraTrackingChangedListener
     @SuppressLint("SetTextI18n")
     fun setValues(){
         if(mParcelableTraining != null){
-            timeTextView.text = mParcelableTraining!!.time.toStringExtension()
-            currentSpeedTextView.text = round(mParcelableTraining!!.currentSpeed, 1).toString() + " " + getString(R.string.kph)
-            wayLengthTextView.text = round(mParcelableTraining!!.totalDistance, 2).toString() + " " + getString(R.string.km)
+            binding.timeText.text = mParcelableTraining!!.time.toStringExtension()
+            binding.currentSpeedText.text = round(mParcelableTraining!!.currentSpeed, 1).toString() + " " + getString(R.string.kph)
+            binding.wayLengthText.text = round(mParcelableTraining!!.totalDistance, 2).toString() + " " + getString(R.string.km)
         }
     }
 
@@ -280,7 +272,7 @@ class PageMap(): Fragment(), OnMapReadyCallback, OnCameraTrackingChangedListener
 
     override fun onCameraTrackingDismissed() {
         isInTrackingMode = false
-        locationButton.setImageResource(R.drawable.tracking_off)
+        binding.locationButton.setImageResource(R.drawable.tracking_off)
     }
 
     override fun onCameraTrackingChanged(currentMode: Int) { }

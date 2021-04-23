@@ -14,6 +14,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.coursework.velotracker.BL.Model.Training.ParcelableTraining
 import com.coursework.velotracker.ViewModels.SharedViewModel
 import com.coursework.velotracker.Services.LocationService
+import com.coursework.velotracker.databinding.ActivityTrainingBinding
 import com.coursework.velotracker.ui.training.PageMap
 import com.coursework.velotracker.ui.training.ViewPagerAdapter
 import com.google.android.material.tabs.TabLayout
@@ -22,13 +23,10 @@ import com.google.android.material.tabs.TabLayoutMediator
 
 class TrainingActivity: AppCompatActivity(), PageMap.OnSomeEventListener {
 
-    lateinit var tabLayout: TabLayout
-    lateinit var viewPager: ViewPager2
+    private lateinit var binding: ActivityTrainingBinding
+
     lateinit var viewPagerAdapter: ViewPagerAdapter
-    lateinit var progressBar: ProgressBar
-
     private lateinit var myReceiver:MyReceiver
-
     private var mService: LocationService? = null
     private val isStart = false
     private var mBound = false
@@ -45,7 +43,6 @@ class TrainingActivity: AppCompatActivity(), PageMap.OnSomeEventListener {
             mService = binder.getService()
             mBound = true
         }
-
         override fun onServiceDisconnected(name: ComponentName) {
             mService = null
             mBound = false
@@ -55,13 +52,21 @@ class TrainingActivity: AppCompatActivity(), PageMap.OnSomeEventListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_training)
+        binding = ActivityTrainingBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        initFunc()
+        bindService(Intent(this, LocationService::class.java), mServiceConnection, Context.BIND_AUTO_CREATE)
+    }
+
+    private fun initFunc(){
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        viewPager = findViewById(R.id.view_pager)
         viewPagerAdapter = ViewPagerAdapter(this)
-        viewPager.adapter = viewPagerAdapter
-        tabLayout = findViewById(R.id.tabs)
-        val tabLayoutMediator = TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+        binding.viewPager.adapter = viewPagerAdapter
+        val tabLayoutMediator = TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
             when (position) {
                 0 -> tab.text = "1"
                 1 -> tab.text = "2"
@@ -70,14 +75,7 @@ class TrainingActivity: AppCompatActivity(), PageMap.OnSomeEventListener {
         tabLayoutMediator.attach()
         myReceiver = MyReceiver()
         startForegroundService(Intent(this, LocationService::class.java))
-        progressBar = findViewById(R.id.progressBar)
-        progressBar.visibility = View.VISIBLE
-    }
-
-    override fun onStart() {
-        super.onStart()
-        bindService(Intent(this, LocationService::class.java), mServiceConnection,
-                Context.BIND_AUTO_CREATE)
+        binding.progressBar.visibility = View.VISIBLE
     }
 
     override fun onResume() {
@@ -120,7 +118,7 @@ class TrainingActivity: AppCompatActivity(), PageMap.OnSomeEventListener {
             val parcelableTraining: ParcelableTraining? = intent.getParcelableExtra(LocationService.EXTRA_PARCELABLE_TRAINING)
             if (parcelableTraining != null) {
                 if (!isStart) {
-                    progressBar.visibility = View.INVISIBLE
+                    binding.progressBar.visibility = View.INVISIBLE
                 }
                 sendParcelableTraining(parcelableTraining)
             }

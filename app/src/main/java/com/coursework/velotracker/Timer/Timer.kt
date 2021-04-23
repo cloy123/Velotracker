@@ -39,15 +39,11 @@ class Timer(onTickListener: OnTickListener){
     }
 
     fun resume(){
-        if(isLaunched && isPaused){
             isPaused = false
-        }
     }
 
     fun pause(){
-        if(isLaunched && !isPaused){
             isPaused = true
-        }
     }
 
     fun stop(){

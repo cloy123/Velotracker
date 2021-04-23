@@ -11,6 +11,14 @@ class AboutProgramActivity(): AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_about_program)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        createActionBar()
+    }
+
+    private fun createActionBar(){
         val actionBar: ActionBar? = supportActionBar
         actionBar?.setHomeButtonEnabled(true)
         actionBar?.setDisplayHomeAsUpEnabled(true)

@@ -16,6 +16,8 @@ import com.coursework.velotracker.BL.Model.Training.*
 import com.coursework.velotracker.MapViewInScroll
 //import com.coursework.velotracker.MapViewInScroll
 import com.coursework.velotracker.R
+import com.coursework.velotracker.databinding.StartPageBinding
+import com.coursework.velotracker.databinding.StatisticsPageBinding
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.maps.MapView
@@ -32,24 +34,15 @@ import java.time.LocalTime
 
 class PageStatistics(): Fragment(), OnMapReadyCallback {
 
+    private var _binding: StatisticsPageBinding? = null
+    private val binding get() = _binding!!
+
     private var pageNumber = 1
     private lateinit var mapView: MapViewInScroll
     private lateinit var mapboxMap: MapboxMap
     private var lineManager: LineManager? = null
     private var symbolManager: SymbolManager? = null
-
-    private lateinit var totalDistanceTextView: TextView
-    private lateinit var totalRecordsTextView: TextView
-    private lateinit var totalTimeTextView: TextView
-    private lateinit var maxSpeedTextView: TextView
-    private lateinit var averageSpeedTextView: TextView
-    private lateinit var tempTextView: TextView
-    private lateinit var maxTempTextView: TextView
-    private lateinit var averageHeightTextView: TextView
-    private lateinit var maxHeightTextView: TextView
-    private lateinit var minHeightTextView: TextView
-
-    private var trainings: MutableList<TrainingStatistics> = TrainingController(context).loadTrainings()
+    private lateinit var trainings: MutableList<TrainingStatistics>
 
     companion object{
         fun newInstance(page: Int): PageStatistics{
@@ -68,21 +61,12 @@ class PageStatistics(): Fragment(), OnMapReadyCallback {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val result = inflater.inflate(R.layout.statistics_page, container, false)
-        mapView = result.findViewById(R.id.mapView)
+        _binding = StatisticsPageBinding.inflate(inflater, container, false)
+        mapView = binding.mapView
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
-        totalDistanceTextView = result.findViewById(R.id.totalDistanceText)
-        totalRecordsTextView = result.findViewById(R.id.totalRecordsText)
-        totalTimeTextView = result.findViewById(R.id.totalTimeText)
-        maxSpeedTextView = result.findViewById(R.id.maxSpeedText)
-        averageSpeedTextView = result.findViewById(R.id.averageSpeedText)
-        tempTextView = result.findViewById(R.id.tempText)
-        maxTempTextView = result.findViewById(R.id.maxTempText)
-        averageHeightTextView = result.findViewById(R.id.averageHeightText)
-        maxHeightTextView = result.findViewById(R.id.maxHeightText)
-        minHeightTextView = result.findViewById(R.id.minHeightText)
-        return result
+        trainings = TrainingController(context).loadTrainings()
+        return binding.root
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
@@ -131,7 +115,7 @@ class PageStatistics(): Fragment(), OnMapReadyCallback {
         drawLinesAndMarkers()
     }
 
-    fun drawLinesAndMarkers(){
+    private fun drawLinesAndMarkers(){
         if(lineManager != null && symbolManager != null){
             lineManager!!.deleteAll()
             trainings.forEach{ training ->
@@ -147,16 +131,16 @@ class PageStatistics(): Fragment(), OnMapReadyCallback {
 
     @SuppressLint("SetTextI18n")
     private fun setDefaultValues(){
-        totalDistanceTextView.text = "0" + " " + getString(R.string.km)
-        totalRecordsTextView.text = "0"
-        totalTimeTextView.text = "00:00"
-        maxSpeedTextView.text = "0" + " " + getString(R.string.kph)
-        averageSpeedTextView.text = "0" + " " + getString(R.string.kph)
-        tempTextView.text = "00:00" + " /" + getString(R.string.km)
-        maxTempTextView.text = "00:00" + " /" + getString(R.string.km)
-        averageHeightTextView.text = "0" + " " + getString(R.string.m)
-        minHeightTextView.text = ""
-        maxHeightTextView.text = ""
+        binding.totalDistanceText.text = "0" + " " + getString(R.string.km)
+        binding.totalRecordsText.text = "0"
+        binding.totalTimeText.text = "00:00"
+        binding.maxSpeedText.text = "0" + " " + getString(R.string.kph)
+        binding.averageSpeedText.text = "0" + " " + getString(R.string.kph)
+        binding.tempText.text = "00:00" + " /" + getString(R.string.km)
+        binding.maxTempText.text = "00:00" + " /" + getString(R.string.km)
+        binding.averageHeightText.text = "0" + " " + getString(R.string.m)
+        binding.minHeightText.text = ""
+        binding.maxHeightText.text = ""
     }
 
     @SuppressLint("SetTextI18n")
@@ -207,16 +191,16 @@ class PageStatistics(): Fragment(), OnMapReadyCallback {
             minHeightStr = ""
         }
 
-        totalDistanceTextView.text = round(totalDist, 2).toString() + " " + getString(R.string.km)
-        totalRecordsTextView.text = totalRecords.toString()
-        totalTimeTextView.text = timeFromSeconds(totalSeconds.toInt()).toStringExtension()
-        maxSpeedTextView.text = round(maxSpeed, 1).toString() + " " + getString(R.string.kph)
-        averageSpeedTextView.text = round(averageSpeed, 1).toString() + " " + getString(R.string.kph)
-        tempTextView.text = averageTemp.toStringExtension() + " /" + getString(R.string.km)
-        maxTempTextView.text = maxTemp.toStringExtension() + " /" + getString(R.string.km)
-        averageHeightTextView.text = averageHeight.toString() + " " + getString(R.string.m)
-        minHeightTextView.text = minHeightStr
-        maxHeightTextView.text = maxHeightStr
+        binding.totalDistanceText.text = round(totalDist, 2).toString() + " " + getString(R.string.km)
+        binding.totalRecordsText.text = totalRecords.toString()
+        binding.totalTimeText.text = timeFromSeconds(totalSeconds.toInt()).toStringExtension()
+        binding.maxSpeedText.text = round(maxSpeed, 1).toString() + " " + getString(R.string.kph)
+        binding.averageSpeedText.text = round(averageSpeed, 1).toString() + " " + getString(R.string.kph)
+        binding.tempText.text = averageTemp.toStringExtension() + " /" + getString(R.string.km)
+        binding.maxTempText.text = maxTemp.toStringExtension() + " /" + getString(R.string.km)
+        binding.averageHeightText.text = averageHeight.toString() + " " + getString(R.string.m)
+        binding.minHeightText.text = minHeightStr
+        binding.maxHeightText.text = maxHeightStr
     }
 
 

@@ -15,14 +15,17 @@ import com.coursework.velotracker.BL.Model.Extensions.toStringExtension
 import com.coursework.velotracker.BL.Model.Training.TrainingStatistics
 import com.coursework.velotracker.LookTraining
 import com.coursework.velotracker.R
+import com.coursework.velotracker.databinding.ActivityTrainingBinding
+import com.coursework.velotracker.databinding.HistoryPageBinding
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.*
 
 class PageHistory: Fragment(), AdapterView.OnItemClickListener {
 
+    private var _binding: HistoryPageBinding? = null
+    private val binding get() = _binding!!
     private var pageNumber: Int = 1
-    lateinit var listView: ListView
 
     companion object{
         fun newInstance(page: Int):PageHistory {
@@ -40,10 +43,9 @@ class PageHistory: Fragment(), AdapterView.OnItemClickListener {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val result = inflater.inflate(R.layout.history_page, container, false)
-        listView = result.findViewById(R.id.listView)
-        listView.onItemClickListener = this
-        return result
+        _binding = HistoryPageBinding.inflate(inflater, container, false)
+        binding.listView.onItemClickListener = this
+        return binding.root
     }
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -63,7 +65,7 @@ class PageHistory: Fragment(), AdapterView.OnItemClickListener {
             }
         }
         val adapter = MyArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, listDate)
-        listView.adapter = adapter
+        binding.listView.adapter = adapter
     }
 
     private class MyArrayAdapter(context: Context, resource: Int, objects: ArrayList<String>): ArrayAdapter<String>(context, resource, objects) {

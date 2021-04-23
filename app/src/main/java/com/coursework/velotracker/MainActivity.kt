@@ -23,6 +23,7 @@ import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.viewpager2.widget.ViewPager2
 import com.coursework.velotracker.BL.Controller.TrainingController
+import com.coursework.velotracker.databinding.ActivityMainBinding
 import com.coursework.velotracker.ui.main.PageStart
 import com.coursework.velotracker.ui.main.ViewPagerAdapter
 import com.google.android.material.navigation.NavigationView
@@ -32,10 +33,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 
 class MainActivity : AppCompatActivity(), PageStart.OnSomeEventListener {
 
-    private lateinit var tabLayout: TabLayout
-    private lateinit var navigationView: NavigationView
-    private lateinit var drawerLayout: DrawerLayout
-    private lateinit var pager: ViewPager2
+    private lateinit var binding: ActivityMainBinding
 
     private val REQUEST_PERMISSION_ACCESS_FINE_LOCATION = 111
     private val REQUEST_PERMISSION_READ_PHONE_STATE = 333
@@ -44,13 +42,19 @@ class MainActivity : AppCompatActivity(), PageStart.OnSomeEventListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+    }
 
-        pager = findViewById(R.id.view_pager)
+    override fun onStart() {
+        super.onStart()
+        initFunc()
+    }
+
+    private fun initFunc(){
         val pagerAdapter = ViewPagerAdapter(this)
-        pager.adapter = pagerAdapter
-        tabLayout = findViewById(R.id.tabs)
-        val tabLayoutMediator = TabLayoutMediator(tabLayout, pager) { tab, position ->
+        binding.viewPager.adapter = pagerAdapter
+        val tabLayoutMediator = TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
             when (position) {
                 0 -> tab.text = getText(R.string.start)
                 1 -> tab.text = getText(R.string.history)
@@ -58,15 +62,12 @@ class MainActivity : AppCompatActivity(), PageStart.OnSomeEventListener {
             }
         }
         tabLayoutMediator.attach()
-        val  toolbar = findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
-        drawerLayout = findViewById(R.id.drawer_layout)
-        navigationView = findViewById(R.id.nav_view)
-        navigationView.setNavigationItemSelectedListener { item -> //Установите слушателя, который будет получать уведомления при выборе пункта меню
+        setSupportActionBar(binding.toolbar)
+        binding.navView.setNavigationItemSelectedListener { item -> //Установите слушателя, который будет получать уведомления при выборе пункта меню
             when (item.itemId) {
-                R.id.nav_start -> tabLayout.selectTab(tabLayout.getTabAt(0))
-                R.id.nav_history -> tabLayout.selectTab(tabLayout.getTabAt(1))
-                R.id.nav_statistics -> tabLayout.selectTab(tabLayout.getTabAt(2))
+                R.id.nav_start -> binding.tabs.selectTab(binding.tabs.getTabAt(0))
+                R.id.nav_history -> binding.tabs.selectTab(binding.tabs.getTabAt(1))
+                R.id.nav_statistics -> binding.tabs.selectTab(binding.tabs.getTabAt(2))
                 R.id.nav_about_program -> startActivity(
                     Intent(
                         applicationContext,
@@ -74,10 +75,10 @@ class MainActivity : AppCompatActivity(), PageStart.OnSomeEventListener {
                     )
                 )
             }
-            drawerLayout.closeDrawers()
+            binding.drawerLayout.closeDrawers()
             false
         }
-        toolbar.setNavigationOnClickListener { drawerLayout.open() }
+        binding.toolbar.setNavigationOnClickListener { binding.drawerLayout.open() }
     }
 
     @SuppressLint("ResourceType")
@@ -89,7 +90,7 @@ class MainActivity : AppCompatActivity(), PageStart.OnSomeEventListener {
             startTraining()
             return
         }
-        if(currentPer == android.Manifest.permission.ACCESS_FINE_LOCATION && !shouldShowRequestPermissionRationale(android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+        if(currentPer == Manifest.permission.ACCESS_FINE_LOCATION && !shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
             dialogOpenPermissionsSettings(getString(R.string.dialog_open_sett_access_fine_location_text))
         }
         if (currentPer == Manifest.permission.READ_PHONE_STATE && !shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE)){
@@ -113,7 +114,7 @@ class MainActivity : AppCompatActivity(), PageStart.OnSomeEventListener {
     override fun openLastTraining() {
         val position: Int = TrainingController(this).loadTrainings().size - 1
         if (position >= 0) {
-            tabLayout.selectTab(tabLayout.getTabAt(1))
+            binding.tabs.selectTab(binding.tabs.getTabAt(1))
             val intent = Intent(this, LookTraining::class.java)
             intent.putExtra("INDEX", position)
             startActivity(intent)
@@ -121,7 +122,7 @@ class MainActivity : AppCompatActivity(), PageStart.OnSomeEventListener {
     }
 
     override fun openStatistic() {
-        tabLayout.selectTab(tabLayout.getTabAt(2))
+        binding.tabs.selectTab(binding.tabs.getTabAt(2))
     }
 
     private fun dialogOpenPermissionsSettings(text: String) {

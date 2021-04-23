@@ -16,6 +16,7 @@ import com.coursework.velotracker.BL.Model.Extensions.round
 import com.coursework.velotracker.BL.Model.Extensions.toStringExtension
 import com.coursework.velotracker.BL.Model.Line
 import com.coursework.velotracker.BL.Model.Training.TrainingStatistics
+import com.coursework.velotracker.databinding.ActivityLookTrainingBinding
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
@@ -32,19 +33,11 @@ import kotlinx.coroutines.launch
 
 class LookTraining(): AppCompatActivity(), OnMapReadyCallback {
 
-    private lateinit var averageSpeedText:TextView
-    private lateinit var timeText:TextView
-    private lateinit var maxSpeedText:TextView
-    private lateinit var distanceText:TextView
-    private lateinit var averageHeightText:TextView
-    private lateinit var tempText:TextView
-    private lateinit var maxHeightText:TextView
-    private lateinit var minHeightText:TextView
+    private lateinit var binding: ActivityLookTrainingBinding
 
     private lateinit var mapView: MapViewInScroll
     private lateinit var mapboxMap: MapboxMap
     private lateinit var lineManager: LineManager
-    private lateinit var deleteButton: AppCompatButton
     private var trainingController: TrainingController = TrainingController(this)
 
     private var index: Int = 0
@@ -54,51 +47,58 @@ class LookTraining(): AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Mapbox.getInstance(this, getString(R.string.access_token))
-        setContentView(R.layout.activity_look_training)
-        mapView = findViewById(R.id.mapView)
+        binding = ActivityLookTrainingBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        mapView = binding.mapView
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
 
-        distanceText = findViewById(R.id.distanceText);
-        maxSpeedText = findViewById(R.id.maxSpeedText);
-        averageSpeedText = findViewById(R.id.averageSpeedText);
-        timeText = findViewById(R.id.timeText);
-        averageHeightText = findViewById(R.id.averageHeightText);
-        tempText = findViewById(R.id.tempText);
-        maxHeightText = findViewById(R.id.maxHeightText);
-        minHeightText = findViewById(R.id.minHeightText);
-
         val bundle = intent.extras
         index = bundle!!["INDEX"] as Int
+    }
+
+    @SuppressLint("MissingPermission")
+    override fun onStart() {
+        super.onStart()
+        mapView.onStart()
+        loadTraining()
+        initFunc()
+    }
+
+    private fun loadTraining(){
         trainingController = TrainingController(applicationContext)
         val trainings = trainingController.loadTrainings()
         currentTraining = trainings[index]
+    }
 
+    private fun initFunc(){
         GlobalScope.launch {
             setValues()
         }
-
-        val actionBar: ActionBar? = supportActionBar
-        actionBar?.setHomeButtonEnabled(true)
-        actionBar?.setDisplayHomeAsUpEnabled(true)
-        actionBar?.title = currentTraining.date.toStringExtension(AppConstants.DATE_FORMAT)
-
-        deleteButton = findViewById<View>(R.id.deleteButton) as AppCompatButton
-        deleteButton.setOnClickListener {
+        createActionBar()
+        binding.deleteButton.setOnClickListener {
             dialogRemoveTraining()
         }
     }
 
+    private fun createActionBar(){
+        val actionBar: ActionBar? = supportActionBar
+        actionBar?.setHomeButtonEnabled(true)
+        actionBar?.setDisplayHomeAsUpEnabled(true)
+        actionBar?.title = currentTraining.date.toStringExtension(AppConstants.DATE_FORMAT)
+    }
+
     @SuppressLint("SetTextI18n")
     fun setValues(){
-        distanceText.text = round(currentTraining.totalDistance, 2).toString() + " " + getString(R.string.km)
-        maxSpeedText.text = round(currentTraining.maxSpeed, 1).toString() + " " + getString(R.string.kph)
-        averageSpeedText.text = round(currentTraining.averageSpeed, 1).toString() + " " + getString(R.string.kph)
-        timeText.text = currentTraining.totalTime.toStringExtension()
-        averageHeightText.text = currentTraining.averageHeight.toString() + " " + getString(R.string.m)
-        tempText.text = currentTraining.temp.toStringExtension() + " /" + getString(R.string.km)
-        maxHeightText.text = currentTraining.maxHeight.toString() + " " + getString(R.string.m)
-        minHeightText.text = currentTraining.minHeight.toString() + " " + getString(R.string.m)
+        binding.distanceText.text = round(currentTraining.totalDistance, 2).toString() + " " + getString(R.string.km)
+        binding.maxSpeedText.text = round(currentTraining.maxSpeed, 1).toString() + " " + getString(R.string.kph)
+        binding.averageSpeedText.text = round(currentTraining.averageSpeed, 1).toString() + " " + getString(R.string.kph)
+        binding.timeText.text = currentTraining.totalTime.toStringExtension()
+        binding.averageHeightText.text = currentTraining.averageHeight.toString() + " " + getString(R.string.m)
+        binding.tempText.text = currentTraining.temp.toStringExtension() + " /" + getString(R.string.km)
+        binding.maxHeightText.text = currentTraining.maxHeight.toString() + " " + getString(R.string.m)
+        binding.minHeightText.text = currentTraining.minHeight.toString() + " " + getString(R.string.m)
     }
 
     private fun dialogRemoveTraining() {
@@ -153,12 +153,6 @@ class LookTraining(): AppCompatActivity(), OnMapReadyCallback {
         lineOptions.withLineColor(AppConstants.LINE_COLOR)
         lineOptions.withLineWidth(AppConstants.LINE_WIDTH)
         lineManager.create(lineOptions)
-    }
-
-    @SuppressLint("MissingPermission")
-    override fun onStart() {
-        super.onStart()
-        mapView.onStart()
     }
 
     override fun onResume() {

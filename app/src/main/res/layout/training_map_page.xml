@@ -96,7 +96,7 @@
 
                 <TextView
 
-                    android:id="@+id/TimeText"
+                    android:id="@+id/timeText"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_gravity="center_vertical"
@@ -147,7 +147,7 @@
                     android:background="#bbb" />
 
                 <TextView
-                    android:id="@+id/WayLengthText"
+                    android:id="@+id/wayLengthText"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_gravity="center_vertical"
@@ -168,7 +168,6 @@
         <com.google.android.material.internal.BaselineLayout
             android:layout_width="match_parent"
             android:layout_height="2dp"
-
             android:layout_marginLeft="0dp"
             android:layout_marginRight="0dp"
             android:background="#bbb" />
@@ -208,7 +207,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/CurrentSpeedText"
+                android:id="@+id/currentSpeedText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -241,7 +240,7 @@
                 android:layout_weight="1">
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/PauseButton"
+                    android:id="@+id/pauseButton"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginVertical="5dp"
@@ -259,7 +258,7 @@
                     android:orientation="horizontal">
 
                     <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/ResumeButton"
+                        android:id="@+id/resumeButton"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_marginRight="10dp"
@@ -273,7 +272,7 @@
                         android:visibility="invisible" />
 
                     <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/StopButton"
+                        android:id="@+id/stopButton"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="10dp"
