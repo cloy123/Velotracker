@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/trainingStatFragment"
 
-    android:background="@color/black">
+    android:background="?attr/colorPrimary">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,7 +18,7 @@
             android:layout_height="2dp"
             android:layout_marginRight="0dp"
             android:layout_marginLeft="0dp"
-            android:background="#bbb" />
+            android:theme="@style/baseLine" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_weight="1"
@@ -35,10 +35,9 @@
             <com.google.android.material.internal.BaselineLayout
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
-                android:background="#bbb" />
+                android:theme="@style/baseLine" />
             <TextView
                 android:id="@+id/timeText"
                 android:layout_width="match_parent"
@@ -53,7 +52,7 @@
             android:layout_height="2dp"
             android:layout_marginRight="0dp"
             android:layout_marginLeft="0dp"
-            android:background="#bbb" />
+            android:theme="@style/baseLine" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -79,7 +78,7 @@
                 android:layout_height="1dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginLeft="20dp"
-                android:background="#bbb" />
+                android:theme="@style/baseLine" />
 
             <TextView
                 android:id="@+id/wayLengthText"
@@ -98,7 +97,7 @@
             android:layout_height="match_parent"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            android:background="#bbb" />
+            android:theme="@style/baseLine" />
         <LinearLayout
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -117,7 +116,7 @@
                 android:layout_height="1dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginLeft="20dp"
-                android:background="#bbb" />
+                android:theme="@style/baseLine" />
             <TextView
                 android:id="@+id/speedText"
                 android:layout_width="match_parent"
@@ -135,7 +134,7 @@
             android:layout_height="2dp"
             android:layout_marginRight="0dp"
             android:layout_marginLeft="0dp"
-            android:background="#bbb" />
+            android:theme="@style/baseLine" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -161,7 +160,7 @@
                     android:layout_height="1dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginLeft="20dp"
-                    android:background="#bbb" />
+                    android:theme="@style/baseLine" />
                 <TextView
                     android:id="@+id/maxSpeedText"
                     android:layout_width="match_parent"
@@ -178,7 +177,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
-                android:background="#bbb" />
+                android:theme="@style/baseLine" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -198,7 +197,7 @@
                     android:layout_height="1dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginLeft="10dp"
-                    android:background="#bbb" />
+                    android:theme="@style/baseLine" />
                 <TextView
                     android:id="@+id/averageSpeedText"
                     android:layout_width="match_parent"
@@ -216,7 +215,7 @@
             android:layout_height="2dp"
             android:layout_marginRight="0dp"
             android:layout_marginLeft="0dp"
-            android:background="#bbb" />
+            android:theme="@style/baseLine" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -242,7 +241,7 @@
                     android:layout_height="1dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginLeft="20dp"
-                    android:background="#bbb" />
+                    android:theme="@style/baseLine" />
                 <TextView
                     android:id="@+id/heightText"
                     android:layout_width="match_parent"
@@ -259,7 +258,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
-                android:background="#bbb" />
+                android:theme="@style/baseLine" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -279,7 +278,7 @@
                     android:layout_height="1dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginLeft="10dp"
-                    android:background="#bbb" />
+                    android:theme="@style/baseLine" />
                 <TextView
                     android:id="@+id/averageHeightText"
                     android:layout_width="match_parent"
@@ -297,7 +296,7 @@
             android:layout_height="2dp"
             android:layout_marginRight="0dp"
             android:layout_marginLeft="0dp"
-            android:background="#bbb" />
+            android:theme="@style/baseLine" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -323,7 +322,7 @@
                     android:layout_height="1dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginLeft="20dp"
-                    android:background="#bbb" />
+                    android:theme="@style/baseLine" />
                 <TextView
                     android:id="@+id/maxHeightText"
                     android:layout_width="match_parent"
@@ -339,7 +338,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
-                android:background="#bbb" />
+                android:theme="@style/baseLine" />
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -358,7 +357,7 @@
                     android:layout_height="1dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginLeft="10dp"
-                    android:background="#bbb" />
+                    android:theme="@style/baseLine" />
                 <TextView
                     android:id="@+id/minHeightText"
                     android:layout_width="match_parent"
@@ -375,6 +374,6 @@
             android:layout_height="2dp"
             android:layout_marginRight="0dp"
             android:layout_marginLeft="0dp"
-            android:background="#bbb" />
+            android:theme="@style/baseLine" />
     </LinearLayout>
 </LinearLayout>

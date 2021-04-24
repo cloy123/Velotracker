@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="single"
+        android:id="@+id/grp1">
         <item
             android:id="@+id/nav_start"
             android:title="@string/start" />
@@ -13,6 +14,9 @@
         <item
             android:id="@+id/nav_statistics"
             android:title="@string/statistic" />
+
+    </group>
+    <group>
         <item
             android:id="@+id/nav_about_program"
             android:title="@string/about_program" />

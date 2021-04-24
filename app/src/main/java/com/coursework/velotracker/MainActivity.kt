@@ -12,9 +12,11 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.view.MenuItem
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -31,7 +33,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
 
-class MainActivity : AppCompatActivity(), PageStart.OnSomeEventListener {
+class MainActivity : AppCompatActivity(), PageStart.OnSomeEventListener, NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var binding: ActivityMainBinding
 
@@ -41,7 +43,9 @@ class MainActivity : AppCompatActivity(), PageStart.OnSomeEventListener {
     private var gpsEnabled = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         super.onCreate(savedInstanceState)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
     }
@@ -52,6 +56,29 @@ class MainActivity : AppCompatActivity(), PageStart.OnSomeEventListener {
     }
 
     private fun initFunc(){
+        createViewPager()
+        setSupportActionBar(binding.toolbar)
+        binding.toolbar.setNavigationOnClickListener { binding.drawerLayout.open() }
+        binding.navView.setNavigationItemSelectedListener(this)
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.nav_start -> binding.tabs.selectTab(binding.tabs.getTabAt(0))
+            R.id.nav_history -> binding.tabs.selectTab(binding.tabs.getTabAt(1))
+            R.id.nav_statistics -> binding.tabs.selectTab(binding.tabs.getTabAt(2))
+            R.id.nav_about_program -> startActivity(
+                Intent(
+                    applicationContext,
+                    AboutProgramActivity::class.java
+                )
+            )
+        }
+        binding.drawerLayout.closeDrawers()
+        return false
+    }
+
+    private fun createViewPager(){
         val pagerAdapter = ViewPagerAdapter(this)
         binding.viewPager.adapter = pagerAdapter
         val tabLayoutMediator = TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
@@ -62,23 +89,6 @@ class MainActivity : AppCompatActivity(), PageStart.OnSomeEventListener {
             }
         }
         tabLayoutMediator.attach()
-        setSupportActionBar(binding.toolbar)
-        binding.navView.setNavigationItemSelectedListener { item -> //Установите слушателя, который будет получать уведомления при выборе пункта меню
-            when (item.itemId) {
-                R.id.nav_start -> binding.tabs.selectTab(binding.tabs.getTabAt(0))
-                R.id.nav_history -> binding.tabs.selectTab(binding.tabs.getTabAt(1))
-                R.id.nav_statistics -> binding.tabs.selectTab(binding.tabs.getTabAt(2))
-                R.id.nav_about_program -> startActivity(
-                    Intent(
-                        applicationContext,
-                        AboutProgramActivity::class.java
-                    )
-                )
-            }
-            binding.drawerLayout.closeDrawers()
-            false
-        }
-        binding.toolbar.setNavigationOnClickListener { binding.drawerLayout.open() }
     }
 
     @SuppressLint("ResourceType")

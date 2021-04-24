@@ -31,13 +31,13 @@
             android:name=".AboutProgramActivity"
             android:label="@string/title_activity_about_program"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat" />
+            android:theme="@style/Theme.Velotracker.NoActionBar" />
 
         <activity
             android:name=".LookTraining"
             android:label="@string/title_activity_look_training"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat" />
+            android:theme="@style/Theme.Velotracker.NoActionBar" />
 
         <activity
             android:name=".TrainingActivity"

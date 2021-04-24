@@ -14,10 +14,10 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:navigationIcon="@drawable/ic_menu"
-            app:titleTextColor="#fff"
+            app:titleTextColor="@color/white"
             app:title="@string/app_name" />
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/view_pager"
@@ -30,11 +30,13 @@
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@color/black"
-            app:tabIndicatorColor="#FFFFFF"
+            android:background="?attr/colorPrimary"
+            app:tabIndicatorColor="@color/white"
+            app:tabTextColor="@color/white"
             android:theme="@style/MyTabLayoutTheme"
-            app:tabTextColor="@color/white" />
+             />
         <!--        app:tabMode="scrollable"-->
+<!--        app:tabTextColor="@color/main_text_color"-->
     </LinearLayout>
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
@@ -42,8 +44,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        android:background="@color/black"
-        app:itemTextColor="@color/white"
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer" />
 </androidx.drawerlayout.widget.DrawerLayout>

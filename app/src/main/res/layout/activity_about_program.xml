@@ -4,9 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
     tools:context=".AboutProgramActivity"
     android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:title="@string/about_program" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -21,16 +27,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="10dp"/>
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_marginHorizontal="20dp"
-                android:layout_height="200dp">
+                android:layout_height="200dp"
+                android:layout_marginHorizontal="20dp">
+
                 <ImageView
-                    android:layout_width="match_parent"
+                    android:layout_width="200dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:src="@drawable/icon" />
-            </LinearLayout>
+                    android:background="?attr/colorSecondary"
+                    android:padding="1dp"
+                    android:src="@drawable/icon"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
 
                     <Space
@@ -40,8 +53,8 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/white"
                         android:layout_marginLeft="20dp"
+                        android:textColor="?attr/colorSecondary"
                         android:textAllCaps="true"
                         android:textSize="23sp"
                         android:text="@string/about_program_title"
@@ -50,9 +63,9 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/gray"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="10dp"
+                android:textColor="?attr/colorSecondary"
                 android:textSize="18sp"
                 android:text="@string/about_program_text"/>
 
@@ -65,7 +78,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:autoLink="web"
-                android:textColorLink="@color/gray"
                 android:layout_marginLeft="40dp"
                 android:textSize="20sp"
                 android:text="@string/about_program_link_to_github"
@@ -79,20 +91,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:autoLink="email"
-                android:textColorLink="@color/gray"
                 android:layout_marginLeft="40dp"
                 android:textSize="20sp"
                 android:text="@string/about_program_email" />
 
-
         </LinearLayout>
-
-
-
-
     </ScrollView>
-
-
-    
-
 </LinearLayout>

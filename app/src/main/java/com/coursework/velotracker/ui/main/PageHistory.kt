@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,12 +15,11 @@ import com.coursework.velotracker.BL.Controller.TrainingController
 import com.coursework.velotracker.BL.Model.Extensions.toStringExtension
 import com.coursework.velotracker.BL.Model.Training.TrainingStatistics
 import com.coursework.velotracker.LookTraining
-import com.coursework.velotracker.R
-import com.coursework.velotracker.databinding.ActivityTrainingBinding
 import com.coursework.velotracker.databinding.HistoryPageBinding
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.*
+
 
 class PageHistory: Fragment(), AdapterView.OnItemClickListener {
 
@@ -42,7 +42,11 @@ class PageHistory: Fragment(), AdapterView.OnItemClickListener {
         pageNumber = arguments?.getInt("num")?:1
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         _binding = HistoryPageBinding.inflate(inflater, container, false)
         binding.listView.onItemClickListener = this
         return binding.root
@@ -64,16 +68,31 @@ class PageHistory: Fragment(), AdapterView.OnItemClickListener {
                 listDate.add(it.date.toStringExtension(AppConstants.DATE_FORMAT))
             }
         }
-        val adapter = MyArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, listDate)
+        val adapter = MyArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_list_item_1,
+            listDate
+        )
         binding.listView.adapter = adapter
     }
 
-    private class MyArrayAdapter(context: Context, resource: Int, objects: ArrayList<String>): ArrayAdapter<String>(context, resource, objects) {
+    private class MyArrayAdapter(context: Context, resource: Int, objects: ArrayList<String>): ArrayAdapter<String>(
+        context,
+        resource,
+        objects
+    ) {
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             val view = super.getView(position, convertView, parent)
             val textView = view.findViewById<View>(android.R.id.text1) as TextView
-            textView.setTextColor(Color.WHITE)
-            textView.setBackgroundColor(Color.BLACK)
+            val typedValue = TypedValue()
+            if (context.theme.resolveAttribute(android.R.attr.textColor, typedValue, true)) {
+                val textColor = typedValue.data
+                textView.setTextColor(textColor)
+            }
+            if(context.theme.resolveAttribute(android.R.attr.colorPrimary, typedValue, true)){
+                val backgroundColor = typedValue.data
+                textView.setBackgroundColor(backgroundColor)
+            }
             return view
         }
     }

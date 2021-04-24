@@ -49,11 +49,9 @@ class LookTraining(): AppCompatActivity(), OnMapReadyCallback {
         Mapbox.getInstance(this, getString(R.string.access_token))
         binding = ActivityLookTrainingBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         mapView = binding.mapView
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
-
         val bundle = intent.extras
         index = bundle!!["INDEX"] as Int
     }
@@ -83,10 +81,10 @@ class LookTraining(): AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun createActionBar(){
-        val actionBar: ActionBar? = supportActionBar
-        actionBar?.setHomeButtonEnabled(true)
-        actionBar?.setDisplayHomeAsUpEnabled(true)
-        actionBar?.title = currentTraining.date.toStringExtension(AppConstants.DATE_FORMAT)
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setHomeButtonEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = currentTraining.date.toStringExtension(AppConstants.DATE_FORMAT)
     }
 
     @SuppressLint("SetTextI18n")

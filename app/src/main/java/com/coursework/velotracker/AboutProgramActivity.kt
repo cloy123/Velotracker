@@ -4,13 +4,17 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import com.coursework.velotracker.databinding.ActivityAboutProgramBinding
 
 
 class AboutProgramActivity(): AppCompatActivity() {
 
+    private lateinit var binding: ActivityAboutProgramBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_about_program)
+        binding = ActivityAboutProgramBinding.inflate(layoutInflater)
+        setContentView(binding.root)
     }
 
     override fun onStart() {
@@ -19,10 +23,9 @@ class AboutProgramActivity(): AppCompatActivity() {
     }
 
     private fun createActionBar(){
-        val actionBar: ActionBar? = supportActionBar
-        actionBar?.setHomeButtonEnabled(true)
-        actionBar?.setDisplayHomeAsUpEnabled(true)
-        actionBar?.setTitle(R.string.about_program)
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setHomeButtonEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

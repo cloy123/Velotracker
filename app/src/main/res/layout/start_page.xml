@@ -5,7 +5,7 @@
     android:id="@+id/fragment_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#424242"
+    android:background="?attr/colorOnBackground"
     android:orientation="vertical">
 
     <Space
@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="#000000"
+        android:background="?attr/colorPrimary"
         android:orientation="vertical">
 
         <LinearLayout
@@ -46,7 +46,7 @@
             android:layout_height="1dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:background="#bbb" />
+            android:theme="@style/baseLine" />
 
         <LinearLayout
 
@@ -65,7 +65,7 @@
                 android:text="0.00 км"
                 android:textAlignment="center"
                 android:textAllCaps="true"
-                android:textColor="#fff"
+                android:textColor="?attr/colorSecondary"
                 android:textSize="40sp" />
         </LinearLayout>
 
@@ -81,7 +81,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2"
-        android:background="#000"
+        android:background="?attr/colorPrimary"
         android:orientation="vertical">
 
 
@@ -89,7 +89,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="#000">
+            android:background="?attr/colorPrimary">
 
 
             <ImageView
@@ -108,7 +108,7 @@
                 android:text="@string/last_record"
                 android:textAlignment="center"
                 android:textAllCaps="true"
-                android:textColor="#fff"
+                android:textColor="?attr/colorSecondary"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -120,7 +120,7 @@
         <com.google.android.material.internal.BaselineLayout
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#bbb" />
+            android:theme="@style/baseLine" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -150,7 +150,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginLeft="10dp"
-                    android:background="#bbb" />
+                    android:theme="@style/baseLine" />
 
                 <TextView
                     android:id="@+id/lastTrainingDateTextV"
@@ -170,7 +170,7 @@
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
-                android:background="#bbb" />
+                android:theme="@style/baseLine" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -193,7 +193,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginRight="10dp"
-                    android:background="#bbb" />
+                    android:theme="@style/baseLine" />
 
                 <TextView
                     android:id="@+id/lastTimeTextV"
@@ -217,7 +217,7 @@
             android:layout_height="1dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:background="#bbb" />
+            android:theme="@style/baseLine" />
 
 
         <LinearLayout
@@ -248,7 +248,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginLeft="10dp"
-                    android:background="#bbb" />
+                    android:theme="@style/baseLine" />
 
                 <TextView
                     android:id="@+id/lastDistanceTextV"
@@ -269,7 +269,7 @@
                 android:layout_height="match_parent"
 
                 android:layout_marginBottom="10dp"
-                android:background="#bbb" />
+                android:theme="@style/baseLine" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -292,7 +292,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginRight="10dp"
-                    android:background="#bbb" />
+                    android:theme="@style/baseLine" />
 
                 <TextView
                     android:id="@+id/lastAverageSpeedTextV"
@@ -323,15 +323,14 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center"
-
             android:background="@drawable/start_button"
             android:forceHasOverlappingRendering="false"
             android:foreground="@drawable/ic_start"
             android:foregroundGravity="center|fill"
-            android:textColor="#FFFFFF"
-            android:textColorHighlight="#FFFFFF"
-            android:textColorHint="#FFFFFF"
-            android:textColorLink="#FFFFFF"
+            android:textColor="?attr/colorSecondary"
+            android:textColorHighlight="?attr/colorSecondary"
+            android:textColorHint="?attr/colorSecondary"
+            android:textColorLink="?attr/colorSecondary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

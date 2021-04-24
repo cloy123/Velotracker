@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
-    android:background="#424242"
     android:orientation="vertical"
+    android:background="?attr/colorOnBackground"
     android:layout_height="match_parent">
 
     <Space
@@ -15,7 +15,6 @@
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#424242" />
+        android:layout_height="match_parent" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>
