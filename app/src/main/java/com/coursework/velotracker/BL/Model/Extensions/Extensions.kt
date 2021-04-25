@@ -1,5 +1,6 @@
 package com.coursework.velotracker.BL.Model.Extensions
 
+import android.graphics.Bitmap
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.time.LocalDate

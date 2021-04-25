@@ -1,54 +1,81 @@
 package com.coursework.velotracker
 
 import android.Manifest
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.MenuItem
+import android.view.View
+import android.view.View.VISIBLE
+import android.view.ViewAnimationUtils
+import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.widget.AppCompatCheckBox
-import androidx.appcompat.widget.Toolbar
+import androidx.appcompat.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.viewpager2.widget.ViewPager2
 import com.coursework.velotracker.BL.Controller.TrainingController
 import com.coursework.velotracker.databinding.ActivityMainBinding
 import com.coursework.velotracker.ui.main.PageStart
 import com.coursework.velotracker.ui.main.ViewPagerAdapter
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-
 
 class MainActivity : AppCompatActivity(), PageStart.OnSomeEventListener, NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var binding: ActivityMainBinding
-
+    private lateinit var header: View
+    private lateinit var themeBtn: AppCompatImageButton
     private val REQUEST_PERMISSION_ACCESS_FINE_LOCATION = 111
     private val REQUEST_PERMISSION_READ_PHONE_STATE = 333
 
     private var gpsEnabled = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         super.onCreate(savedInstanceState)
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
     }
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private fun changeTheme(){
+        val sharedPreferences = getSharedPreferences("theme", MODE_PRIVATE)
+        if(sharedPreferences.getBoolean("dark", false)){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            sharedPreferences.edit().putBoolean("light", true).apply()
+            sharedPreferences.edit().putBoolean("dark", false).apply()
+            themeBtn.foreground = getDrawable(R.drawable.ic_light_mode_foreground)
+        }
+        else if(sharedPreferences.getBoolean("light", false)){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            sharedPreferences.edit().putBoolean("dark", true).apply()
+            sharedPreferences.edit().putBoolean("light", false).apply()
+            themeBtn.foreground = getDrawable(R.drawable.ic_dark_mode_foreground)
+        }
+        else{
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            sharedPreferences.edit().putBoolean("light", true).apply()
+            sharedPreferences.edit().putBoolean("dark", false).apply()
+            themeBtn.foreground = getDrawable(R.drawable.ic_light_mode_foreground)
+        }
+    }
+
 
     override fun onStart() {
         super.onStart()
@@ -60,6 +87,27 @@ class MainActivity : AppCompatActivity(), PageStart.OnSomeEventListener, Navigat
         setSupportActionBar(binding.toolbar)
         binding.toolbar.setNavigationOnClickListener { binding.drawerLayout.open() }
         binding.navView.setNavigationItemSelectedListener(this)
+        header = binding.navView.getHeaderView(0)
+        themeBtn = header.findViewById<AppCompatImageButton>(R.id.themeBtn)
+        themeBtn.setOnClickListener {changeTheme()}
+        setCurrentTheme()
+    }
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private fun setCurrentTheme(){
+        val sharedPreferences = getSharedPreferences("theme", MODE_PRIVATE)
+        if(sharedPreferences.contains("dark") && sharedPreferences.getBoolean("dark", false)){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            sharedPreferences.edit().putBoolean("dark", true).apply()
+            sharedPreferences.edit().putBoolean("light", false).apply()
+            themeBtn.foreground = getDrawable(R.drawable.ic_light_mode_foreground)
+        }
+        else if(sharedPreferences.contains("light") && sharedPreferences.getBoolean("light", false)){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            sharedPreferences.edit().putBoolean("dark", false).apply()
+            sharedPreferences.edit().putBoolean("light", true).apply()
+            themeBtn.foreground = getDrawable(R.drawable.ic_dark_mode_foreground)
+        }
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -92,7 +140,11 @@ class MainActivity : AppCompatActivity(), PageStart.OnSomeEventListener, Navigat
     }
 
     @SuppressLint("ResourceType")
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         var allowed = false
         val currentPer = permissions[0]
         allowed = grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
@@ -100,10 +152,14 @@ class MainActivity : AppCompatActivity(), PageStart.OnSomeEventListener, Navigat
             startTraining()
             return
         }
-        if(currentPer == Manifest.permission.ACCESS_FINE_LOCATION && !shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+        if(currentPer == Manifest.permission.ACCESS_FINE_LOCATION && !shouldShowRequestPermissionRationale(
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )) {
             dialogOpenPermissionsSettings(getString(R.string.dialog_open_sett_access_fine_location_text))
         }
-        if (currentPer == Manifest.permission.READ_PHONE_STATE && !shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE)){
+        if (currentPer == Manifest.permission.READ_PHONE_STATE && !shouldShowRequestPermissionRationale(
+                Manifest.permission.READ_PHONE_STATE
+            )){
             dialogOpenPermissionsSettings(getString(R.string.dialog_open_sett_read_phone_state_text))
         }
     }
@@ -141,7 +197,12 @@ class MainActivity : AppCompatActivity(), PageStart.OnSomeEventListener, Navigat
         val textView = cl.getViewById(R.id.textView) as TextView
         textView.text = text
         cl.getViewById(R.id.openSettB).setOnClickListener {
-            startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:$packageName")))
+            startActivity(
+                Intent(
+                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    Uri.parse("package:$packageName")
+                )
+            )
             dialog.dismiss()
         }
         dialog.setView(cl)
@@ -150,9 +211,15 @@ class MainActivity : AppCompatActivity(), PageStart.OnSomeEventListener, Navigat
 
     private fun dialogBatteryOptimizationSettings() {
         //если таких настроек не существует, они создаются
-        val sharedPreferences = getSharedPreferences(getString(R.string.settings_checkboxes), MODE_PRIVATE)
+        val sharedPreferences = getSharedPreferences(
+            getString(R.string.settings_checkboxes),
+            MODE_PRIVATE
+        )
         if (sharedPreferences.contains(getString(R.string.dialog_battery_optimization_settings_checkbox_key))) {
-            if (sharedPreferences.getBoolean(getString(R.string.dialog_battery_optimization_settings_checkbox_key), false)) {
+            if (sharedPreferences.getBoolean(
+                    getString(R.string.dialog_battery_optimization_settings_checkbox_key),
+                    false
+                )) {
                 //если стоит больше не показывать
                 startActivityTraining()
                 return
@@ -160,7 +227,10 @@ class MainActivity : AppCompatActivity(), PageStart.OnSomeEventListener, Navigat
         }
         val isInSettings = booleanArrayOf(false)
         //добавляю настройку и потом вызываю диалог
-        sharedPreferences.edit().putBoolean(getString(R.string.dialog_battery_optimization_settings_checkbox_key), false).apply()
+        sharedPreferences.edit().putBoolean(
+            getString(R.string.dialog_battery_optimization_settings_checkbox_key),
+            false
+        ).apply()
         val dialog = AlertDialog.Builder(this).create()
         val cl = layoutInflater.inflate(R.layout.dialog_open_settings_with_checkbox, null) as ConstraintLayout
         val textView = cl.getViewById(R.id.textView) as TextView
@@ -173,8 +243,14 @@ class MainActivity : AppCompatActivity(), PageStart.OnSomeEventListener, Navigat
         val compatCheckBox = cl.getViewById(R.id.checkbox) as AppCompatCheckBox
         dialog.setOnDismissListener(DialogInterface.OnDismissListener {
             if (compatCheckBox.isChecked) {
-                val sharedPreferences = getSharedPreferences(getString(R.string.settings_checkboxes), MODE_PRIVATE)
-                sharedPreferences.edit().putBoolean(getString(R.string.dialog_battery_optimization_settings_checkbox_key), true).apply()
+                val sharedPreferences = getSharedPreferences(
+                    getString(R.string.settings_checkboxes),
+                    MODE_PRIVATE
+                )
+                sharedPreferences.edit().putBoolean(
+                    getString(R.string.dialog_battery_optimization_settings_checkbox_key),
+                    true
+                ).apply()
             }
             if (!isInSettings[0]) {
                 startActivityTraining()
@@ -186,17 +262,31 @@ class MainActivity : AppCompatActivity(), PageStart.OnSomeEventListener, Navigat
     }
 
     override fun startTraining() {
-        val accessFineLocation = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-        val readPhoneState = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED
+        val accessFineLocation = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+        val readPhoneState = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.READ_PHONE_STATE
+        ) == PackageManager.PERMISSION_GRANTED
         val locationManager = applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
         if (!accessFineLocation) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_PERMISSION_ACCESS_FINE_LOCATION)
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                REQUEST_PERMISSION_ACCESS_FINE_LOCATION
+            )
             return
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             if (!readPhoneState) {
-                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_PHONE_STATE), REQUEST_PERMISSION_READ_PHONE_STATE)
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.READ_PHONE_STATE),
+                    REQUEST_PERMISSION_READ_PHONE_STATE
+                )
                 return
             }
         }
