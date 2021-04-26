@@ -32,8 +32,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.coursework.velotracker.BL.Controller.TrainingController
 import com.coursework.velotracker.databinding.ActivityMainBinding
-import com.coursework.velotracker.ui.main.PageStart
-import com.coursework.velotracker.ui.main.ViewPagerAdapter
+import com.coursework.velotracker.ui.fragments.main.PageStart
+import com.coursework.velotracker.ui.fragments.main.ViewPagerAdapter
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayoutMediator
 

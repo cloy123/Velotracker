@@ -1,4 +1,4 @@
-package com.coursework.velotracker.ui.main
+package com.coursework.velotracker.ui.fragments.main
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -45,7 +45,7 @@ class PageStatistics(): Fragment(), OnMapReadyCallback {
     private lateinit var trainings: MutableList<TrainingStatistics>
 
     companion object{
-        fun newInstance(page: Int): PageStatistics{
+        fun newInstance(page: Int): PageStatistics {
             val fragment = PageStatistics()
             val args = Bundle()
             args.putInt("num", page)

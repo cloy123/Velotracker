@@ -1,11 +1,10 @@
-package com.coursework.velotracker.ui.training
+package com.coursework.velotracker.ui.fragments.training
 
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -25,7 +24,7 @@ class PageStat(): Fragment() {
     private var pageNumber: Int = 1
 
     companion object{
-        fun newInstance(page: Int):PageStat{
+        fun newInstance(page: Int): PageStat {
             val fragment = PageStat()
             val args = Bundle()
             args.putInt("num", page)

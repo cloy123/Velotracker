@@ -5,19 +5,15 @@ import android.os.Bundle
 import android.os.IBinder
 import android.view.View
 import android.view.WindowManager
-import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStore
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import androidx.viewpager2.widget.ViewPager2
 import com.coursework.velotracker.BL.Model.Training.ParcelableTraining
 import com.coursework.velotracker.ViewModels.SharedViewModel
 import com.coursework.velotracker.Services.LocationService
 import com.coursework.velotracker.databinding.ActivityTrainingBinding
-import com.coursework.velotracker.ui.training.PageMap
-import com.coursework.velotracker.ui.training.ViewPagerAdapter
-import com.google.android.material.tabs.TabLayout
+import com.coursework.velotracker.ui.fragments.training.PageMap
+import com.coursework.velotracker.ui.fragments.training.ViewPagerAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 
 

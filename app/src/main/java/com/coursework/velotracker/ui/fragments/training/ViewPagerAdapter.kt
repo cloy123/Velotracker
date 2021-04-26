@@ -1,8 +1,10 @@
-package com.coursework.velotracker.ui.training
+package com.coursework.velotracker.ui.fragments.training
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.coursework.velotracker.ui.fragments.training.PageMap
+import com.coursework.velotracker.ui.fragments.training.PageStat
 
 class ViewPagerAdapter(fragmentActivity: FragmentActivity): FragmentStateAdapter(fragmentActivity) {
 

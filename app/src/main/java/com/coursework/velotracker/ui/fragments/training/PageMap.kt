@@ -1,4 +1,4 @@
-package com.coursework.velotracker.ui.training
+package com.coursework.velotracker.ui.fragments.training
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -7,9 +7,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
@@ -37,8 +34,6 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.plugins.annotation.LineManager
 import com.mapbox.mapboxsdk.plugins.annotation.LineOptions
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import java.lang.ClassCastException
 
 
@@ -65,7 +60,7 @@ class PageMap(): Fragment(), OnMapReadyCallback, OnCameraTrackingChangedListener
     }
 
     companion object{
-        fun newInstance(page: Int): PageMap{
+        fun newInstance(page: Int): PageMap {
             val fragment = PageMap()
             val args = Bundle()
             args.putInt("num", page)

@@ -1,4 +1,4 @@
-package com.coursework.velotracker.ui.main
+package com.coursework.velotracker.ui.fragments.main
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -35,7 +35,7 @@ class PageStart(): Fragment() {
     }
 
     companion object{
-         fun newInstance(page: Int): PageStart{
+         fun newInstance(page: Int): PageStart {
             val fragment = PageStart()
             val args = Bundle()
             args.putInt("num", page)

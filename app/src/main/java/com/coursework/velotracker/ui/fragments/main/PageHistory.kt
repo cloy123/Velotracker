@@ -1,5 +1,6 @@
-package com.coursework.velotracker.ui.main
+package com.coursework.velotracker.ui.fragments.main
 
+import android.R
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -28,7 +29,7 @@ class PageHistory: Fragment(), AdapterView.OnItemClickListener {
     private var pageNumber: Int = 1
 
     companion object{
-        fun newInstance(page: Int):PageHistory {
+        fun newInstance(page: Int): PageHistory {
             val fragment = PageHistory()
             val args = Bundle()
             args.putInt("num", page)
@@ -64,7 +65,7 @@ class PageHistory: Fragment(), AdapterView.OnItemClickListener {
         }
         val adapter = MyArrayAdapter(
             requireContext(),
-            android.R.layout.simple_list_item_1,
+            R.layout.simple_list_item_1,
             listDate
         )
         binding.listView.adapter = adapter
