@@ -31,6 +31,7 @@ class LocationService: Service(), Timer.OnTickListener {
 
     private val mBinder: IBinder = LocalBinder()
     private var secondsBeforeStart = 5
+    private var locationsBeforeStart = 1
     private var isStart = false
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     var trainingRecorder: TrainingRecorder = TrainingRecorder()
@@ -243,10 +244,15 @@ class LocationService: Service(), Timer.OnTickListener {
             //первое местоположение не считаю т.к. оно может быть совсем не правильным
             //если второе местоположение не приходит то жду 5 секунд и начинаю считать уже все местоположения
             if (!isStart) {
-                isStart = true
-                timer.resume()
-                trainingRecorder.resume()
-                return
+                if(locationsBeforeStart != 0){
+                    locationsBeforeStart -=1
+                }
+                else{
+                    isStart = true
+                    timer.resume()
+                    trainingRecorder.resume()
+                    return
+                }
             }else{
                 trainingRecorder.setValuesFromLocation(locationResult.lastLocation)
             }

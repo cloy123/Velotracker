@@ -42,11 +42,7 @@ class PageHistory: Fragment(), AdapterView.OnItemClickListener {
         pageNumber = arguments?.getInt("num")?:1
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = HistoryPageBinding.inflate(inflater, container, false)
         binding.listView.onItemClickListener = this
         return binding.root
@@ -63,10 +59,8 @@ class PageHistory: Fragment(), AdapterView.OnItemClickListener {
         val trainingController = TrainingController(context)
         val trainings: MutableList<TrainingStatistics> = trainingController.loadTrainings()
         val listDate: ArrayList<String> = ArrayList()
-        GlobalScope.launch {
-            trainings.forEach {
-                listDate.add(it.date.toStringExtension(AppConstants.DATE_FORMAT))
-            }
+        trainings.forEach {
+            listDate.add(it.date.toStringExtension(AppConstants.DATE_FORMAT))
         }
         val adapter = MyArrayAdapter(
             requireContext(),
