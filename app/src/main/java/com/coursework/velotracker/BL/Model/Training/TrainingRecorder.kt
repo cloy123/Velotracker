@@ -48,8 +48,6 @@ class TrainingRecorder {
 
     var originLocation: Location? = null
 
-    private var sumSpeed : Double = 0.0
-
     var lines: MutableList<Line> = ArrayList()
     var currentLine: Line = Line()
 
@@ -117,7 +115,6 @@ class TrainingRecorder {
             if (speed > maxSpeed) {
                 maxSpeed = speed
             }
-            sumSpeed += speed
             averageSpeed = totalDistance / (getAllSeconds(totalTime).toDouble() / 3600)
         }
     }
