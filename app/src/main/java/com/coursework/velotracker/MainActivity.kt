@@ -43,7 +43,6 @@ class MainActivity : AppCompatActivity(), PageStart.OnSomeEventListener, Navigat
     private lateinit var header: View
     private lateinit var themeBtn: AppCompatImageButton
     private val REQUEST_PERMISSION_ACCESS_FINE_LOCATION = 111
-    private val REQUEST_PERMISSION_READ_PHONE_STATE = 333
 
     private var gpsEnabled = false
 
@@ -157,11 +156,6 @@ class MainActivity : AppCompatActivity(), PageStart.OnSomeEventListener, Navigat
             )) {
             dialogOpenPermissionsSettings(getString(R.string.dialog_open_sett_access_fine_location_text))
         }
-        if (currentPer == Manifest.permission.READ_PHONE_STATE && !shouldShowRequestPermissionRationale(
-                Manifest.permission.READ_PHONE_STATE
-            )){
-            dialogOpenPermissionsSettings(getString(R.string.dialog_open_sett_read_phone_state_text))
-        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -262,33 +256,12 @@ class MainActivity : AppCompatActivity(), PageStart.OnSomeEventListener, Navigat
     }
 
     override fun startTraining() {
-        val accessFineLocation = ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED
-        val readPhoneState = ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.READ_PHONE_STATE
-        ) == PackageManager.PERMISSION_GRANTED
+        val accessFineLocation = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
         val locationManager = applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
         if (!accessFineLocation) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                REQUEST_PERMISSION_ACCESS_FINE_LOCATION
-            )
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_PERMISSION_ACCESS_FINE_LOCATION)
             return
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            if (!readPhoneState) {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.READ_PHONE_STATE),
-                    REQUEST_PERMISSION_READ_PHONE_STATE
-                )
-                return
-            }
         }
         if (!gpsEnabled) {
             val gpsUtils = GpsUtils(this)
