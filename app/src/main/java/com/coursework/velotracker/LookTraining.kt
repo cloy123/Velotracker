@@ -2,14 +2,9 @@ package com.coursework.velotracker
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.view.MenuItem
-import android.view.View
-import android.widget.TextView
-import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatButton
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.coursework.velotracker.BL.Controller.TrainingController
 import com.coursework.velotracker.BL.Model.Extensions.round
@@ -21,7 +16,6 @@ import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.maps.Style
@@ -29,7 +23,6 @@ import com.mapbox.mapboxsdk.plugins.annotation.LineManager
 import com.mapbox.mapboxsdk.plugins.annotation.LineOptions
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-
 
 class LookTraining(): AppCompatActivity(), OnMapReadyCallback {
 

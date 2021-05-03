@@ -1,0 +1,406 @@
+@startuml
+class com.govnokoder.velotracker.BL.Model.Date {
++ int Year
++ int Month
++ int Day
+- String DayStr
+- String MonthStr
+- String YearStr
++ void setCurrentDate()
++ String toString()
+}
+class com.govnokoder.velotracker.BL.Model.Time {
++ int Hours
++ int Minutes
++ int Seconds
++ void addSecond()
+- void addMinute()
++ long getAllSeconds()
++ {static} Time getTimeFromSeconds(long)
++ String toString()
+}
+class com.govnokoder.velotracker.LookTraining {
+- TextView averageSpeedText
+- int index
+~ List<Training> trainings
+~ Training CurrentTraining
+- MapViewInScroll mapView
+- MapboxMap mapboxMap
+- LineManager lineManager
+- AppCompatButton DeleteButton
+- TrainingController trainingController
+# void onCreate(Bundle)
+- void dialogRemoveTraining()
++ boolean onOptionsItemSelected(MenuItem)
++ void onMapReady(MapboxMap)
+- void drawLine(LineList)
++ void onStart()
++ void onResume()
++ void onPause()
++ void onStop()
++ void onSaveInstanceState(Bundle)
++ void onLowMemory()
++ void onDestroy()
+}
+class com.govnokoder.velotracker.ui.main.PageStatistics {
+- int pageNumber
+- MapViewInScroll mapView
+- MapboxMap mapboxMap
+- LineManager lineManager
+- SymbolManager symbolManager
+- TextView totalDistanceTextView
+- List<Training> trainings
++ {static} PageStatistics newInstance(int)
++ void onCreate(Bundle)
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
++ void onMapReady(MapboxMap)
+- void drawLine(LineList)
+- void drawMarker(LatLng,String)
++ void onStart()
++ void onResume()
++ void onPause()
++ void onStop()
++ void onSaveInstanceState(Bundle)
++ void onLowMemory()
++ void onDestroy()
+}
+class com.govnokoder.velotracker.AboutProgramActivity {
+# void onCreate(Bundle)
++ boolean onOptionsItemSelected(MenuItem)
+}
+class com.govnokoder.velotracker.ui.training.PageStat {
+- int pageNumber
+- TextView timeText
++ {static} PageStat newInstance(int)
++ void onCreate(Bundle)
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
++ void onViewCreated(View,Bundle)
++ void onResume()
++ void onStop()
+}
+class com.govnokoder.velotracker.BL.Model.Training {
++ Date Date
++ Time Time
++ double Distance
++ double MaxSpeed
++ double AverageSpeed
++ List<LineList> Lines
+- double startLatitude
+- double startLongitude
++ long MaxHeight
++ long MinHeight
++ long AverageHeight
++ List<Long> Heights
++ List<Double> Speeds
++ Time getTemp(Units)
++ double convertToMiles(double)
++ LatLng getStartPoint()
++ void setStartPoint(LatLng)
++ {static} double round(double,int)
+}
+class com.govnokoder.velotracker.ui.training.ViewPagerAdapterTr {
++ Fragment createFragment(int)
++ int getItemCount()
+}
+class com.govnokoder.velotracker.services.TrainingServiceNotificationManager {
++ {static} int NOTIFICATION_ID
+- {static} String CHANNEL_ID
+- NotificationCompat.Builder notificationBuilder
+- NotificationManager notificationManager
++ void updateNotificationText(String,String)
++ void updatePendingIntent(PendingIntent)
++ void cancelNotification()
++ Notification getNotification()
+- void updateNotification()
+}
+class com.govnokoder.velotracker.BL.LineList {
++ {static} Parcelable.Creator<LineList> CREATOR
++ int describeContents()
++ void writeToParcel(Parcel,int)
+}
+class com.govnokoder.velotracker.GpsUtils {
+- Context context
+- SettingsClient mSettingsClient
+- LocationSettingsRequest mLocationSettingsRequest
+- LocationManager locationManager
+- LocationRequest locationRequest
++ void turnGPSOn(onGpsListener)
+}
+interface com.govnokoder.velotracker.GpsUtils.onGpsListener {
+~ void gpsStatus(boolean)
+}
+class com.govnokoder.velotracker.ui.main.PageStart {
+- int pageNumber
+- Button StartButton
+- LinearLayout linearStat
+- TextView totalDistanceText
+~ onSomeEventListener someEventListener
++ void onAttach(Context)
++ {static} PageStart newInstance(int)
++ void onResume()
++ void onCreate(Bundle)
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
+}
+interface com.govnokoder.velotracker.ui.main.PageStart.onSomeEventListener {
++ void startTraining()
++ void openLastTraining()
++ void openStatistic()
+}
+class com.govnokoder.velotracker.messages.SharedViewModel {
++ MutableLiveData<ParcelableTraining> messagesParcelableTraining
++ void sendMessage(ParcelableTraining)
+}
+class com.govnokoder.velotracker.BL.ParcelableTraining {
++ Time time
++ double distance
++ double maxSpeed
++ double speed
++ double averageSpeed
+- List<LineList> _lines
++ LineList currentLine
++ long maxHeight
++ long minHeight
++ long averageHeight
++ boolean isRunning
++ Location originLocation
++ long height
++ {static} Creator<ParcelableTraining> CREATOR
++ List<LineList> getLines()
++ void setLines(List<LineList>)
++ int describeContents()
++ void writeToParcel(Parcel,int)
+}
+class com.govnokoder.velotracker.ui.main.ViewPagerAdapter {
++ Fragment createFragment(int)
++ int getItemCount()
+}
+class com.govnokoder.velotracker.AppConstants {
++ {static} int GPS_REQUEST
++ {static} long UPDATE_INTERVAL_IN_MILLISECONDS
++ {static} long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS
++ {static} long MAX_WAIT_TIME_IN_IN_MILLISECONDS
++ {static} String LINE_COLOR
++ {static} float LINE_WIDTH
++ {static} String MAP_STYLE
+}
+class com.govnokoder.velotracker.BL.CurrentTraining {
++ Date Date
++ Time Time
++ double Distance
++ List<Double> SpeedList
++ double MaxSpeed
++ double CurrentSpeed
++ double SumSpeed
++ double AverageSpeed
++ List<LineList> Lines
++ LineList CurrentLine
++ List<Long> Heights
++ long MaxHeight
++ long MinHeight
++ long SumHeight
++ long AverageHeight
++ boolean isRunning
++ Location originLocation
++ void Pause()
++ void Resume()
++ void StopAndSave(Context)
++ void setValuesFromLocation(Location)
+}
+class com.govnokoder.velotracker.ui.main.PageHistory {
+- int pageNumber
+- ListView listView
++ {static} PageHistory newInstance(int)
++ void onCreate(Bundle)
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
++ void onStart()
++ void onResume()
+}
+class com.govnokoder.velotracker.MainActivity {
+~ TabLayout tabLayout
+- NavigationView navigationView
+- DrawerLayout drawerLayout
+~ ViewPager2 pager
+- int REQUEST_PERMISSION_ACCESS_FINE_LOCATION
+- int REQUEST_PERMISSION_READ_PHONE_STATE
+~ boolean gpsEnabled
+# void onCreate(Bundle)
++ void onRequestPermissionsResult(int,String[],int[])
+# void onActivityResult(int,int,Intent)
+- void startActivityTraining()
++ void openLastTraining()
++ void openStatistic()
+- void dialogOpenPermissionsSettings(String)
+- void dialogBatteryOptimizationSettings()
++ void startTraining()
+}
+class com.govnokoder.velotracker.ui.training.PageMap {
+- int pageNumber
+- MapView mapView
+- MapboxMap mapboxMap
+- TextView CurrentSpeedTextView
++ Button PauseButton
+- ImageButton LocationButton
+- LineManager lineManager
+- boolean isInTrackingMode
+- LocationComponent locationComponent
++ {static} String TAG
+- boolean isFinish
+- ParcelableTraining mParcelableTraining
+- LocationEngine locationEngine
+- long DEFAULT_INTERVAL_IN_MILLISECONDS
+- long DEFAULT_MAX_WAIT_TIME
+- LocationListeningCallback callback
+~ onSomeEventListener someEventListener
++ void onAttach(Context)
++ {static} PageMap newInstance(int)
++ void onCreate(Bundle)
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
+- void onClickPauseButton(View)
+- void onClickResumeButton(View)
+- void onClickStopButton(View)
+- void setButtonsState(boolean)
++ void onMapReady(MapboxMap)
+- void setCameraPosition(Location)
+- void enableLocationComponent(Style)
+- void drawLine(LineList)
++ void onStart()
++ void onResume()
++ void onPause()
++ void onStop()
++ void onSaveInstanceState(Bundle)
++ void onLowMemory()
++ void onDestroy()
++ void onCameraTrackingDismissed()
++ void onCameraTrackingChanged(int)
+- void initLocationEngine()
+}
+interface com.govnokoder.velotracker.ui.training.PageMap.onSomeEventListener {
++ void onPauseTraining()
++ void onStopTraining(boolean)
++ void onResumeTraining()
+}
+class com.govnokoder.velotracker.ui.training.PageMap.LocationListeningCallback {
+- WeakReference<PageMap> fragmentWeakReference
++ void onSuccess(LocationEngineResult)
++ void onFailure(Exception)
+}
+class com.govnokoder.velotracker.ui.training.MapViewInScroll {
++ boolean dispatchTouchEvent(MotionEvent)
+}
+class com.govnokoder.velotracker.services.MyReceiver {
++ void onReceive(Context,Intent)
+}
+class com.govnokoder.velotracker.TrainingActivity {
+~ TabLayout tabLayout
+~ ViewPager2 viewPager
+~ ViewPagerAdapterTr viewPagerAdapterTr
+~ ProgressBar progressBar
+- MyReceiver myReceiver
+- LocationService mService
+- boolean isStart
+- boolean mBound
+- ServiceConnection mServiceConnection
++ void onBackPressed()
+# void onCreate(Bundle)
+# void onStart()
+# void onResume()
+# void onPause()
+# void onStop()
+- void sendParcelableTraining(ParcelableTraining)
++ void onPauseTraining()
++ void onStopTraining(boolean)
++ void onResumeTraining()
+}
+class com.govnokoder.velotracker.TrainingActivity.MyReceiver {
++ void onReceive(Context,Intent)
+}
+class com.govnokoder.velotracker.services.LocationService {
+- {static} String PACKAGE_NAME
+- {static} String TAG
++ {static} String ACTION_BROADCAST
++ {static} String EXTRA_PARCELABLE_TRAINING
+- IBinder mBinder
+- LocationRequest mLocationRequest
+- int locationsBeforeStart
+- int secondsBeforeStart
+- boolean isStart
+- FusedLocationProviderClient mFusedLocationClient
+- LocationCallback mLocationCallback
+~ CurrentTraining currentTraining
+- CountDownTimer countDownTimer
+- TrainingServiceNotificationManager notificationManager
+- Handler mServiceHandler
+- PowerManager.WakeLock wakeLock
++ void onPause()
++ void onResume()
++ void onStop(boolean)
++ void onCreate()
+- void sendMessageToActivity()
++ int onStartCommand(Intent,int,int)
++ void onConfigurationChanged(Configuration)
++ IBinder onBind(Intent)
++ void onRebind(Intent)
++ boolean onUnbind(Intent)
++ void onDestroy()
++ void releaseWakeLock()
++ void acquireWakeLock()
++ void startNotification()
+- void getLastLocation()
+- void createLocationRequest()
+}
+class com.govnokoder.velotracker.services.LocationService.LocalBinder {
++ LocationService getService()
+}
+class com.govnokoder.velotracker.BL.Controller.TrainingController {
+- String TRAINING_FILE_NAME
+- List<Training> trainings
+- Training training
+- Context context
++ void RemoveTraining(int)
++ void DeleteAll()
++ void setNewTrainingData(Date,Time,double,double,double,List<LineList>,LatLng,List<Long>,List<Double>,long,long,long)
++ List<Training> LoadTrainingsData()
+- boolean Save()
+}
+class com.govnokoder.velotracker.BL.Controller.TrainingController.DataItems {
+- List<Training> trainings
+~ List<Training> getTrainings()
+~ void setTrainings(List<Training>)
+}
+
+
+com.mapbox.mapboxsdk.maps.OnMapReadyCallback <|.. com.govnokoder.velotracker.LookTraining
+androidx.appcompat.app.AppCompatActivity <|-- com.govnokoder.velotracker.LookTraining
+com.mapbox.mapboxsdk.maps.OnMapReadyCallback <|.. com.govnokoder.velotracker.ui.main.PageStatistics
+androidx.fragment.app.Fragment <|-- com.govnokoder.velotracker.ui.main.PageStatistics
+androidx.appcompat.app.AppCompatActivity <|-- com.govnokoder.velotracker.AboutProgramActivity
+androidx.fragment.app.Fragment <|-- com.govnokoder.velotracker.ui.training.PageStat
+androidx.viewpager2.adapter.FragmentStateAdapter <|-- com.govnokoder.velotracker.ui.training.ViewPagerAdapterTr
+android.os.Parcelable <|.. com.govnokoder.velotracker.BL.LineList
+java.util.ArrayList <|-- com.govnokoder.velotracker.BL.LineList
+com.govnokoder.velotracker.GpsUtils +.. com.govnokoder.velotracker.GpsUtils.onGpsListener
+androidx.fragment.app.Fragment <|-- com.govnokoder.velotracker.ui.main.PageStart
+com.govnokoder.velotracker.ui.main.PageStart +.. com.govnokoder.velotracker.ui.main.PageStart.onSomeEventListener
+androidx.lifecycle.ViewModel <|-- com.govnokoder.velotracker.messages.SharedViewModel
+android.os.Parcelable <|.. com.govnokoder.velotracker.BL.ParcelableTraining
+androidx.viewpager2.adapter.FragmentStateAdapter <|-- com.govnokoder.velotracker.ui.main.ViewPagerAdapter
+androidx.fragment.app.Fragment <|-- com.govnokoder.velotracker.ui.main.PageHistory
+com.govnokoder.velotracker.onSomeEventListener <|.. com.govnokoder.velotracker.MainActivity
+androidx.appcompat.app.AppCompatActivity <|-- com.govnokoder.velotracker.MainActivity
+com.mapbox.mapboxsdk.maps.OnMapReadyCallback <|.. com.govnokoder.velotracker.ui.training.PageMap
+com.mapbox.mapboxsdk.location.OnCameraTrackingChangedListener <|.. com.govnokoder.velotracker.ui.training.PageMap
+androidx.fragment.app.Fragment <|-- com.govnokoder.velotracker.ui.training.PageMap
+com.govnokoder.velotracker.ui.training.PageMap +.. com.govnokoder.velotracker.ui.training.PageMap.onSomeEventListener
+com.govnokoder.velotracker.ui.training.PageMap +.. com.govnokoder.velotracker.ui.training.PageMap.LocationListeningCallback
+com.govnokoder.velotracker.ui.training.LocationEngineCallback <|.. com.govnokoder.velotracker.ui.training.PageMap.LocationListeningCallback
+com.mapbox.mapboxsdk.maps.MapView <|-- com.govnokoder.velotracker.ui.training.MapViewInScroll
+android.content.BroadcastReceiver <|-- com.govnokoder.velotracker.services.MyReceiver
+com.govnokoder.velotracker.onSomeEventListener <|.. com.govnokoder.velotracker.TrainingActivity
+androidx.appcompat.app.AppCompatActivity <|-- com.govnokoder.velotracker.TrainingActivity
+com.govnokoder.velotracker.TrainingActivity +.. com.govnokoder.velotracker.TrainingActivity.MyReceiver
+com.govnokoder.velotracker.BroadcastReceiver <|-- com.govnokoder.velotracker.TrainingActivity.MyReceiver
+android.app.Service <|-- com.govnokoder.velotracker.services.LocationService
+com.govnokoder.velotracker.services.LocationService +.. com.govnokoder.velotracker.services.LocationService.LocalBinder
+com.govnokoder.velotracker.services.Binder <|-- com.govnokoder.velotracker.services.LocationService.LocalBinder
+com.govnokoder.velotracker.BL.Controller.TrainingController +.. com.govnokoder.velotracker.BL.Controller.TrainingController.DataItems
+@enduml

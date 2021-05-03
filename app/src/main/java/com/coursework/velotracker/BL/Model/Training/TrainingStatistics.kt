@@ -5,11 +5,8 @@ import com.coursework.velotracker.BL.Model.Extensions.timeFromSeconds
 import com.coursework.velotracker.BL.Model.Line
 import com.coursework.velotracker.BL.Model.UnitsConverter
 import com.mapbox.mapboxsdk.geometry.LatLng
-import java.math.BigDecimal
-import java.math.RoundingMode
 import java.time.LocalDate
 import java.time.LocalTime
-import java.time.format.DateTimeFormatter
 
 class TrainingStatistics() {
 

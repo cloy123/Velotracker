@@ -8,7 +8,6 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 
-
 class GpsUtils(context: Context) {
 
     private var context: Context = context

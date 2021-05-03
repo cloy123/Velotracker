@@ -2,10 +2,8 @@ package com.coursework.velotracker
 
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import com.coursework.velotracker.databinding.ActivityAboutProgramBinding
-
 
 class AboutProgramActivity(): AppCompatActivity() {
 

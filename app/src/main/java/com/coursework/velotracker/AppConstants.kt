@@ -3,7 +3,6 @@ package com.coursework.velotracker
 import android.graphics.Color
 import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.utils.ColorUtils
-import java.time.format.FormatStyle
 
 object AppConstants {
     const val GPS_REQUEST = 3424

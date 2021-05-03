@@ -4,12 +4,10 @@ import android.content.Context
 import com.coursework.velotracker.BL.Model.Training.TrainingRecorder
 import com.coursework.velotracker.BL.Model.Training.TrainingStatistics
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStreamReader
-import java.util.*
 import kotlin.collections.ArrayList
 
 class TrainingController(context: Context?) {

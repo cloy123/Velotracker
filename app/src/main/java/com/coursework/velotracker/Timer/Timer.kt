@@ -1,13 +1,7 @@
 package com.coursework.velotracker.Timer
 
 import android.os.CountDownTimer
-import java.sql.Time
-import java.time.Duration
-import java.time.LocalDateTime
 import java.time.LocalTime
-import java.util.*
-import java.util.Timer
-import kotlin.concurrent.timer
 
 class Timer(onTickListener: OnTickListener){
 

@@ -3,7 +3,6 @@ package com.coursework.velotracker.ui.fragments.main
 import android.R
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -17,8 +16,6 @@ import com.coursework.velotracker.BL.Model.Extensions.toStringExtension
 import com.coursework.velotracker.BL.Model.Training.TrainingStatistics
 import com.coursework.velotracker.LookTraining
 import com.coursework.velotracker.databinding.HistoryPageBinding
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import java.util.*
 
 

@@ -16,7 +16,6 @@ import com.coursework.velotracker.ui.fragments.training.PageMap
 import com.coursework.velotracker.ui.fragments.training.ViewPagerAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 
-
 class TrainingActivity: AppCompatActivity(), PageMap.OnSomeEventListener {
 
     private lateinit var binding: ActivityTrainingBinding

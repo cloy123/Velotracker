@@ -6,10 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import com.coursework.velotracker.AppConstants
 import com.coursework.velotracker.BL.Controller.TrainingController
@@ -17,9 +13,7 @@ import com.coursework.velotracker.BL.Model.Extensions.round
 import com.coursework.velotracker.BL.Model.Extensions.toStringExtension
 import com.coursework.velotracker.BL.Model.Training.TrainingStatistics
 import com.coursework.velotracker.R
-import com.coursework.velotracker.databinding.HistoryPageBinding
 import com.coursework.velotracker.databinding.StartPageBinding
-
 
 class PageStart(): Fragment() {
 

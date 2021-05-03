@@ -5,8 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.coursework.velotracker.AppConstants
 import com.coursework.velotracker.BL.Controller.TrainingController
@@ -14,13 +12,10 @@ import com.coursework.velotracker.BL.Model.Extensions.*
 import com.coursework.velotracker.BL.Model.Line
 import com.coursework.velotracker.BL.Model.Training.*
 import com.coursework.velotracker.MapViewInScroll
-//import com.coursework.velotracker.MapViewInScroll
 import com.coursework.velotracker.R
-import com.coursework.velotracker.databinding.StartPageBinding
 import com.coursework.velotracker.databinding.StatisticsPageBinding
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.plugins.annotation.LineManager
@@ -30,7 +25,6 @@ import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.time.LocalTime
-
 
 class PageStatistics(): Fragment(), OnMapReadyCallback {
 

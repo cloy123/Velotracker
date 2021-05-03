@@ -36,7 +36,6 @@ import com.mapbox.mapboxsdk.plugins.annotation.LineManager
 import com.mapbox.mapboxsdk.plugins.annotation.LineOptions
 import java.lang.ClassCastException
 
-
 class PageMap(): Fragment(), OnMapReadyCallback, OnCameraTrackingChangedListener {
 
     private var _binding: TrainingMapPageBinding? = null
