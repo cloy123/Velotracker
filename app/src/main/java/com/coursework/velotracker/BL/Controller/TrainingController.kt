@@ -15,8 +15,8 @@ class TrainingController(context: Context?) {
     private val TRAINING_FILE_NAME = "data.json"
     private var trainings: MutableList<TrainingStatistics> = ArrayList()
     private var currentTraining: TrainingStatistics = TrainingStatistics()
-    private var context: Context? = context
 
+    private var context: Context? = context
     private var streamReader: InputStreamReader? = null
     private var fileInputStream: FileInputStream? = null
     private var fileOutputStream: FileOutputStream? = null

@@ -16,6 +16,7 @@
         app:title="@string/title_activity_look_training"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:titleTextColor="@color/white"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView

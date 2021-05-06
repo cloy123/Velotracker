@@ -42,8 +42,6 @@ class TrainingRecorder {
     var averageHeight: Long = Long.MIN_VALUE
         get() = UnitsConverter().convertMetersToUnits(field, units)
 
-    var sumHeight: Long = 0
-
     var isRunning = false
 
     var originLocation: Location? = null
@@ -79,28 +77,25 @@ class TrainingRecorder {
     }
 
     fun setValuesFromLocation(location: Location) {
-        setSpeedValues(location)
-        setHeightValues(location)
-        setDistanceValues(location)
-        setLinesValues(location)
-        if (location.hasAccuracy()) {
+        if(location.hasAccuracy()){
+            setHeightValues(location)
+            setLinesValues(location)
+            setDistanceValues(location)
+            setSpeedValues(location)
             originLocation = location
         }
     }
 
     private fun setLinesValues(location: Location){
-        if (location.hasAccuracy() && isRunning) {
+        if (isRunning) {
             val latLng = LatLng(location.latitude, location.longitude)
             currentLine.add(latLng)
         }
     }
 
     private fun setDistanceValues(location: Location){
-        if (location.hasAccuracy() && isRunning) {
-            var distance = 0.0
-            if (originLocation != null) {
-                distance = (originLocation!!.distanceTo(location) / 1000).toDouble()
-            }
+        if (isRunning && originLocation != null) {
+            val distance = (originLocation!!.distanceTo(location) / 1000).toDouble()
             totalDistance += distance
         }
     }
@@ -122,12 +117,13 @@ class TrainingRecorder {
     private fun setHeightValues(location: Location){
         if (location.hasAltitude()) {//location.hasVerticalAccuracy() &&
             val height = location.altitude.toLong()
-                currentHeight = height
+            currentHeight = height
+            if(isRunning){
                 heights.add(height)
                 minHeight = java.lang.Long.min(height, minHeight)
                 maxHeight = java.lang.Long.max(height, maxHeight)
-                sumHeight += height
-                averageHeight = sumHeight / heights.size
+                averageHeight = heights.sum() / heights.size
+            }
         }
     }
 }
