@@ -13,4 +13,5 @@ On some OC, it is necessary to disable battery saving mode for the app in order 
 EMUI: Settings-Battery-App launch.
 Others: I don't know.
 
-![](Velotracker/screens/1.png)
+![](/screens/1.png)
+![](/screens/Screenshot_1620249623.png)
