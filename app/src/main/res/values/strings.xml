@@ -12,7 +12,7 @@
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="title_activity_about_program">AboutProgramActivity</string>
 
-    <string name="access_token">pk.eyJ1IjoiY2xveSIsImEiOiJja2g3aXBwNTMwZGFvMnRydG02Z2N1cThmIn0.DnBlGpercJNbzT0Nz7UPhw</string>
+    <string name="access_token">your public token</string>
 
     <!-- Strings used for fragments for navigation -->
 
@@ -95,7 +95,7 @@
     <string name="dialog_open_sett_access_fine_location_text">Для работы приложения требуется разрешение на местоположение устройства!</string>
 
     <string name="about_program_title">Velotracker:</string>
-    <string name="about_program_text">Приложение создано в качестве курсовой работы студента второго курса специальности "Программная инженерия" НЧИ К(П)ФУ Чернова Ильи Николаевича.</string>
+    <string name="about_program_text">Приложение создано в качестве курсовой работы</string>
     <string name="about_program_link_to_github">github.com/cloy123</string>
     <string name="about_program_email">monsieur.cloy@gmail.com</string>
     <string name="about_program">О программе</string>
