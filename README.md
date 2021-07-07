@@ -14,4 +14,3 @@ EMUI: Settings-Battery-App launch.
 Others: I don't know.
 
 ![](Velotracker/screens/1.png)
-![](Velotracker/screens/Screenshot_1620249623.png)
