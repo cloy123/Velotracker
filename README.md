@@ -14,5 +14,5 @@ EMUI: Settings-Battery-App launch.
 Others: I don't know.
 
 ![](/screens/1.png)
-<img src="/screens/Screenshot_1620249623.png" width="200"/>
+<img src="/screens/Screenshot_1620249623.png" width="400"/>
 
